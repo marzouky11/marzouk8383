@@ -1,10 +1,9 @@
 'use client';
 
-import { notFound } from 'next/navigation';
+import { useParams, notFound } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Phone,
@@ -13,7 +12,6 @@ import {
   Wallet,
   Star,
   CalendarDays,
-  FileText,
   Heart,
   User as UserIcon,
   Briefcase
@@ -25,7 +23,8 @@ import { CopyButton } from './copy-button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
+export default function JobDetailPage() {
+  const params = useParams<{ id: string }>();
   const job = getJobById(params.id);
 
   if (!job) {
