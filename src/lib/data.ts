@@ -33,6 +33,7 @@ const jobs: Job[] = [
     phone: '+212612345678',
     whatsapp: '+212612345678',
     rating: 4.5,
+    likes: 23,
     isFavorite: true,
   },
   {
@@ -47,6 +48,7 @@ const jobs: Job[] = [
     phone: '+966512345678',
     whatsapp: '+966512345678',
     rating: 5,
+    likes: 50,
     isFavorite: false,
   },
   {
@@ -61,6 +63,7 @@ const jobs: Job[] = [
     phone: '+971501234567',
     whatsapp: '+971501234567',
     rating: 4.8,
+    likes: 12,
     isFavorite: true,
   },
   {
@@ -74,6 +77,7 @@ const jobs: Job[] = [
     phone: '+201012345678',
     whatsapp: '+201012345678',
     rating: 4.2,
+    likes: 5,
     isFavorite: false,
   },
   {
@@ -88,6 +92,7 @@ const jobs: Job[] = [
     phone: '+962791234567',
     whatsapp: '+962791234567',
     rating: 4.9,
+    likes: 8,
     isFavorite: false,
   },
   {
@@ -102,6 +107,7 @@ const jobs: Job[] = [
     phone: '+212623456789',
     whatsapp: '+212623456789',
     rating: 4.0,
+    likes: 18,
     isFavorite: true,
   },
 ];

@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Heart, MapPin, Star, Hammer, DollarSign } from 'lucide-react';
+import { Heart, MapPin, Star, Clock, Wallet } from 'lucide-react';
 import type { Job } from '@/lib/types';
 import { getCategoryById } from '@/lib/data';
 import { CategoryIcon } from '@/components/icons';
@@ -23,50 +22,48 @@ export function JobCard({ job }: JobCardProps) {
 
   return (
     <Card className="flex flex-col overflow-hidden transition-shadow hover:shadow-lg">
-      <CardHeader className="p-4">
-        <CardTitle className="text-lg font-bold">{job.title}</CardTitle>
-        {category && (
-          <p className="text-sm text-muted-foreground">{category.name}</p>
-        )}
-      </CardHeader>
-      <CardContent className="p-4 pt-0 flex-grow">
-        <div className="flex justify-between items-start">
-          <div className="flex flex-col gap-2 text-sm">
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-muted-foreground" />
-              <span>{job.city}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-              <span>{job.salary}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Hammer className="h-4 w-4 text-muted-foreground" />
-              <span>{workTypeTranslations[job.workType]}</span>
-            </div>
-          </div>
+      <CardContent className="p-4 flex-grow">
+        <div className="flex justify-between items-start mb-3">
+          {category && <Badge variant="outline">{category.name}</Badge>}
           {category && (
-            <div className="flex-shrink-0">
-               <CategoryIcon name={category.iconName} className="w-16 h-16 text-primary/20" />
+            <div className="flex-shrink-0 bg-accent p-3 rounded-lg">
+               <CategoryIcon name={category.iconName} className="w-8 h-8 text-primary" />
             </div>
           )}
         </div>
-      </CardContent>
-      <Separator className="my-0" />
-      <CardFooter className="p-2">
-        <div className="flex items-center justify-between w-full">
+        
+        <h3 className="text-lg font-bold text-primary mb-3">{job.title}</h3>
+
+        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500">
-              <Heart className={`h-5 w-5 ${job.isFavorite ? 'fill-current' : ''}`} />
-            </Button>
-            <div className="flex items-center gap-1">
-              <span className="text-sm">{job.rating}</span>
-              <Star className="h-4 w-4 text-yellow-400 fill-current" />
-            </div>
+            <MapPin className="h-4 w-4" />
+            <span>المدينة: {job.city}</span>
           </div>
-          <Button asChild size="sm">
+          <div className="flex items-center gap-2">
+            <Wallet className="h-4 w-4" />
+            <span>الأجر: {job.salary}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4" />
+            <span>طبيعة العمل: {workTypeTranslations[job.workType]}</span>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="p-4 bg-gray-50/50">
+        <div className="flex items-center justify-between w-full">
+           <Button asChild size="sm">
             <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
           </Button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1 text-red-500">
+               <Heart className={`h-5 w-5 ${job.isFavorite ? 'fill-current' : ''}`} />
+               <span className="text-sm font-bold">{job.likes}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Star className="h-4 w-4 text-yellow-400 fill-current" />
+              <span className="text-sm font-bold">({job.rating})</span>
+            </div>
+          </div>
         </div>
       </CardFooter>
     </Card>

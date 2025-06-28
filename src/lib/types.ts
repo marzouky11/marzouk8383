@@ -20,6 +20,7 @@ export interface Job {
   phone: string;
   whatsapp: string;
   rating: number;
+  likes: number;
   isFavorite: boolean;
 }
 
