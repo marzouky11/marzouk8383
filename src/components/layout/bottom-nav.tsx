@@ -1,10 +1,8 @@
-
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Home, Briefcase, Plus, Users, Bell } from 'lucide-react';
+import { Home, Briefcase, Plus, Users, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function BottomNav() {
@@ -15,7 +13,7 @@ export function BottomNav() {
     { href: '/jobs', label: 'الوظائف', icon: Briefcase },
     { href: '/post-job', label: 'إضافة', icon: Plus, isCentral: true },
     { href: '/workers', label: 'العمال', icon: Users },
-    { href: '/notifications', label: 'الإشعارات', icon: Bell, hasBadge: true },
+    { href: '/profile', label: 'الإعدادات', icon: Settings },
   ];
 
   return (
@@ -40,9 +38,6 @@ export function BottomNav() {
               )}>
                 <item.icon className="h-6 w-6" />
                 <span className="text-xs">{item.label}</span>
-                {item.hasBadge && (
-                    <div className="absolute top-0 right-1/2 mr-[-18px] w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full border-2 border-card">N</div>
-                )}
               </Link>
             );
           })}

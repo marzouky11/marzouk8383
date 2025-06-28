@@ -14,7 +14,7 @@ export function Header() {
           <h1 className="text-2xl font-bold">Zafay</h1>
           <p className="text-xs opacity-80">منصة الربط بين العمال وأصحاب العمل</p>
         </div>
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/profile">
           <div className="p-2 bg-white/20 rounded-lg">
             <Handshake className="h-6 w-6 text-white" />
           </div>
