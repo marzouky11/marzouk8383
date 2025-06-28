@@ -63,7 +63,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
   const jobDescription = form.watch('description');
   const postType = form.watch('postType');
   
-  const themeColor = postType === 'seeking_job' ? 'text-accent' : 'text-primary';
+  const themeColor = postType === 'seeking_job' ? 'text-accent' : postType === 'seeking_worker' ? 'text-destructive' : 'text-muted-foreground';
 
   useEffect(() => {
     if (selectedCountry) {
@@ -116,7 +116,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
   
   const FormLabelIcon = ({icon: Icon, label}: {icon: React.ElementType, label: string}) => (
     <FormLabel className="flex items-center gap-2">
-      <Icon className={cn('h-4 w-4', postType ? themeColor : 'text-muted-foreground')} />
+      <Icon className={cn('h-4 w-4', themeColor)} />
       {label}
     </FormLabel>
   )
@@ -137,7 +137,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
                       className={cn(
                         'p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2',
                         field.value === 'seeking_worker'
-                          ? 'border-primary bg-primary/10 text-primary'
+                          ? 'border-destructive bg-destructive/10 text-destructive'
                           : 'hover:bg-muted'
                       )}
                     >
@@ -183,7 +183,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
               {suggestedCategories.map((catName) => {
                 const categoryObj = categories.find(c => c.name === catName);
                 return categoryObj ? (
-                  <Badge key={categoryObj.id} variant={postType === 'seeking_job' ? 'accent' : 'default'} className="cursor-pointer" onClick={() => form.setValue('categoryId', categoryObj.id)}>{categoryObj.name}</Badge>
+                  <Badge key={categoryObj.id} variant={postType === 'seeking_job' ? 'accent' : 'destructive'} className="cursor-pointer" onClick={() => form.setValue('categoryId', categoryObj.id)}>{categoryObj.name}</Badge>
                 ) : null;
               })}
             </div>
@@ -216,7 +216,20 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
               <FormItem><FormLabelIcon icon={MessageSquare} label="رقم واتساب" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
             )} />
           </div>
-          <Button type="submit" size="lg" className={cn("w-full", postType === 'seeking_job' ? 'bg-accent text-accent-foreground hover:bg-accent/90' : '')}>نشر الإعلان</Button>
+          <Button
+            type="submit"
+            size="lg"
+            className={cn(
+              'w-full',
+              postType === 'seeking_job'
+                ? 'bg-accent text-accent-foreground hover:bg-accent/90'
+                : postType === 'seeking_worker'
+                ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                : ''
+            )}
+          >
+            نشر الإعلان
+          </Button>
         </fieldset>
       </form>
     </Form>

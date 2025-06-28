@@ -31,8 +31,8 @@ export function JobCard({ job }: JobCardProps) {
             <div className="flex items-start gap-2">
               {isWorkerAd 
                 ? <User className="h-4 w-4 text-accent flex-shrink-0 mt-1" /> 
-                : <Briefcase className="h-4 w-4 text-primary flex-shrink-0 mt-1" />}
-              <h3 className={cn("font-bold leading-tight text-sm", isWorkerAd ? "text-accent" : "text-primary")}>
+                : <Briefcase className="h-4 w-4 text-destructive flex-shrink-0 mt-1" />}
+              <h3 className={cn("font-bold leading-tight text-sm", isWorkerAd ? "text-accent" : "text-destructive")}>
                 {job.title}
               </h3>
             </div>
@@ -40,11 +40,11 @@ export function JobCard({ job }: JobCardProps) {
           {category && (
             <div className={cn(
               "flex-shrink-0 p-2 rounded-lg", 
-              isWorkerAd ? "bg-accent/10" : "bg-primary/10"
+              isWorkerAd ? "bg-accent/10" : "bg-destructive/10"
             )}>
               <CategoryIcon 
                 name={category.iconName} 
-                className={cn("w-5 h-5", isWorkerAd ? "text-accent" : "text-primary")} 
+                className={cn("w-5 h-5", isWorkerAd ? "text-accent" : "text-destructive")} 
               />
             </div>
           )}
@@ -79,7 +79,9 @@ export function JobCard({ job }: JobCardProps) {
         </div>
         <Button asChild size="sm" className={cn(
             "h-7 text-xs rounded-lg px-3",
-            isWorkerAd && "bg-accent text-accent-foreground hover:bg-accent/90"
+            isWorkerAd 
+              ? "bg-accent text-accent-foreground hover:bg-accent/90" 
+              : "bg-destructive text-destructive-foreground hover:bg-destructive/90"
         )}>
           <Link href={`/jobs/${job.id}`}>التفاصيل</Link>
         </Button>

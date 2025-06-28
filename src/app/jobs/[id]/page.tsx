@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils';
 
 export default function JobDetailPage() {
   const params = useParams<{ id: string }>();
+  if (!params) return null;
   const job = getJobById(params.id);
 
   if (!job) {
@@ -33,10 +34,10 @@ export default function JobDetailPage() {
 
   const category = getCategoryById(job.categoryId);
   const isWorkerAd = job.postType === 'seeking_job';
-  const themeColor = isWorkerAd ? 'text-accent' : 'text-primary';
-  const themeBg = isWorkerAd ? 'bg-accent/10' : 'bg-primary/10';
-  const themeBorder = isWorkerAd ? 'border-accent' : 'border-primary';
-  const themeButton = isWorkerAd ? 'bg-accent text-accent-foreground hover:bg-accent/90' : 'bg-primary text-primary-foreground hover:bg-primary/90';
+  const themeColor = isWorkerAd ? 'text-accent' : 'text-destructive';
+  const themeBg = isWorkerAd ? 'bg-accent/10' : 'bg-destructive/10';
+  const themeBorder = isWorkerAd ? 'border-accent' : 'border-destructive';
+  const themeButton = isWorkerAd ? 'bg-accent text-accent-foreground hover:bg-accent/90' : 'bg-destructive text-destructive-foreground hover:bg-destructive/90';
 
   const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | undefined }) => (
     <div className="flex items-center gap-2 text-sm text-muted-foreground">
