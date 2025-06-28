@@ -35,6 +35,9 @@ export interface User {
   city: string;
   phone: string;
   whatsapp: string;
+  avatarUrl?: string;
+  categoryId?: string;
+  description?: string;
 }
 
 export interface Country {

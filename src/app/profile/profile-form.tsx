@@ -8,12 +8,14 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from "@/hooks/use-toast"
-import type { Country, User } from '@/lib/types';
+import type { Country, User, Category } from '@/lib/types';
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'الاسم مطلوب.' }),
+  categoryId: z.string().optional(),
+  description: z.string().optional(),
   country: z.string().min(1, { message: 'الدولة مطلوبة.' }),
   city: z.string().min(1, { message: 'المدينة مطلوبة.' }),
   phone: z.string().min(1, { message: 'رقم الهاتف مطلوب.' }),
@@ -22,10 +24,11 @@ const formSchema = z.object({
 
 interface ProfileFormProps {
   countries: Country[];
+  categories: Category[];
   user: User;
 }
 
-export function ProfileForm({ countries, user }: ProfileFormProps) {
+export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,7 +37,6 @@ export function ProfileForm({ countries, user }: ProfileFormProps) {
 
   const [cities, setCities] = useState<string[]>([]);
   const selectedCountry = form.watch('country');
-  const userName = form.watch('name');
 
   useEffect(() => {
     if (selectedCountry) {
@@ -63,25 +65,42 @@ export function ProfileForm({ countries, user }: ProfileFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="flex items-center gap-4">
-            <Avatar className="h-20 w-20">
-                <AvatarImage src={`https://placehold.co/100x100.png`} data-ai-hint="user avatar" alt={userName} />
-                <AvatarFallback className="text-3xl">
-                    {userName ? userName.charAt(0).toUpperCase() : 'U'}
-                </AvatarFallback>
-            </Avatar>
-            <FormField control={form.control} name="name" render={({ field }) => (
-                <FormItem className="flex-grow">
-                    <FormLabel>الاسم</FormLabel>
-                    <FormControl><Input placeholder="اسمك الكامل" {...field} /></FormControl>
-                    <FormMessage />
-                </FormItem>
-            )} />
-        </div>
+        <FormField control={form.control} name="name" render={({ field }) => (
+            <FormItem>
+                <FormLabel>الاسم</FormLabel>
+                <FormControl><Input placeholder="اسمك الكامل" {...field} /></FormControl>
+                <FormMessage />
+            </FormItem>
+        )} />
+
+        <FormField control={form.control} name="categoryId" render={({ field }) => (
+          <FormItem>
+            <FormLabel>فئة العمل</FormLabel>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر فئة عملك الرئيسية" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )} />
+
+        <FormField control={form.control} name="description" render={({ field }) => (
+            <FormItem>
+                <FormLabel>نبذة تعريفية</FormLabel>
+                <FormControl><Textarea placeholder="اكتب وصفاً قصيراً عنك أو عن مهاراتك..." {...field} /></FormControl>
+                <FormMessage />
+            </FormItem>
+        )} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField control={form.control} name="country" render={({ field }) => (
-            <FormItem><FormLabel>الدولة</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر دولتك" /></SelectTrigger></FormControl><SelectContent>{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+            <FormItem><FormLabel>الدولة</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر دولتك" /></SelectTrigger></FormControl><SelectContent>{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="city" render={({ field }) => (
             <FormItem><FormLabel>المدينة</FormLabel><Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountry}><FormControl><SelectTrigger><SelectValue placeholder="اختر مدينتك" /></SelectTrigger></FormControl><SelectContent>{cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>

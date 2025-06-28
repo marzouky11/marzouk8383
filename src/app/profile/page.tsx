@@ -14,10 +14,12 @@ import {
 } from '@/components/ui/sheet';
 import { User, Moon, Globe, LogIn, LogOut, ChevronLeft } from 'lucide-react';
 import { ProfileForm } from './profile-form';
-import { getCountries } from '@/lib/data';
+import { getCountries, getCategories } from '@/lib/data';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function SettingsPage() {
   const countries = getCountries();
+  const categories = getCategories();
   // Simulate user login state. Change to false to see the logged-out view.
   const [isLoggedIn, setIsLoggedIn] = useState(true); 
   const user = {
@@ -26,6 +28,9 @@ export default function SettingsPage() {
     city: 'الدار البيضاء',
     phone: '+212600000000',
     whatsapp: '+212600000000',
+    avatarUrl: 'https://i.postimg.cc/SNf0f4j6/avatar-1.png',
+    categoryId: '17',
+    description: 'مبرمج تطبيقات ويب بخبرة 5 سنوات، أبحث عن فرص جديدة في مجال التكنولوجيا وتطوير المنتجات الرقمية.',
   };
 
   const SettingItem = ({ icon: Icon, label, action }: { icon: React.ElementType, label: string, action: React.ReactNode }) => (
@@ -42,6 +47,22 @@ export default function SettingsPage() {
     <AppLayout>
       <div className="container mx-auto max-w-2xl px-4 py-8">
         <div className="space-y-6">
+          
+          {isLoggedIn && (
+            <Card>
+              <CardContent className="p-4 flex items-center gap-4">
+                 <Avatar className="h-16 w-16">
+                    <AvatarImage src={user.avatarUrl} data-ai-hint="user avatar" alt={user.name} />
+                    <AvatarFallback className="text-2xl">{user.name.charAt(0)}</AvatarFallback>
+                 </Avatar>
+                 <div>
+                    <h2 className="text-xl font-bold">{user.name}</h2>
+                    <p className="text-sm text-muted-foreground">{categories.find(c => c.id === user.categoryId)?.name || 'لم تحدد الفئة'}</p>
+                 </div>
+              </CardContent>
+            </Card>
+          )}
+
           <Card>
             <CardContent className="p-0">
               <ul className="divide-y divide-border">
@@ -51,7 +72,7 @@ export default function SettingsPage() {
                       <li className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
                         <div className="flex items-center gap-4">
                           <User className="h-5 w-5 text-primary" />
-                          <span className="font-medium">الملف الشخصي</span>
+                          <span className="font-medium">تعديل الملف الشخصي</span>
                         </div>
                         <ChevronLeft className="h-5 w-5 text-muted-foreground" />
                       </li>
@@ -61,7 +82,7 @@ export default function SettingsPage() {
                         <SheetTitle>تعديل الملف الشخصي</SheetTitle>
                       </SheetHeader>
                       <div className="py-4">
-                         <ProfileForm countries={countries} user={user} />
+                         <ProfileForm countries={countries} categories={categories} user={user} />
                       </div>
                     </SheetContent>
                   </Sheet>
