@@ -29,13 +29,23 @@ export function JobCard({ job }: JobCardProps) {
           <div className="flex-grow pr-2">
             {category && <Badge variant="secondary" className="mb-1 font-normal text-xs">{category.name}</Badge>}
             <div className="flex items-start gap-2">
-              {isWorkerAd ? <User className="h-4 w-4 text-primary flex-shrink-0 mt-1" /> : <Briefcase className="h-4 w-4 text-primary flex-shrink-0 mt-1" />}
-              <h3 className="font-bold text-primary leading-tight text-sm">{job.title}</h3>
+              {isWorkerAd 
+                ? <User className="h-4 w-4 text-accent flex-shrink-0 mt-1" /> 
+                : <Briefcase className="h-4 w-4 text-primary flex-shrink-0 mt-1" />}
+              <h3 className={cn("font-bold leading-tight text-sm", isWorkerAd ? "text-accent" : "text-primary")}>
+                {job.title}
+              </h3>
             </div>
           </div>
           {category && (
-            <div className="flex-shrink-0 bg-primary/10 p-2 rounded-lg">
-              <CategoryIcon name={category.iconName} className="w-5 h-5 text-primary" />
+            <div className={cn(
+              "flex-shrink-0 p-2 rounded-lg", 
+              isWorkerAd ? "bg-accent/10" : "bg-primary/10"
+            )}>
+              <CategoryIcon 
+                name={category.iconName} 
+                className={cn("w-5 h-5", isWorkerAd ? "text-accent" : "text-primary")} 
+              />
             </div>
           )}
         </div>

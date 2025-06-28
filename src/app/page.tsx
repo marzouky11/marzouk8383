@@ -15,7 +15,7 @@ export default function HomePage() {
 
   return (
     <AppLayout>
-      <div className="container relative z-10 -mt-8">
+      <div className="container relative z-10 -mt-10">
         <JobFilters categories={categories} countries={countries} />
       </div>
       
