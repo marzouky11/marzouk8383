@@ -29,7 +29,7 @@ export function Header() {
   let Icon: React.ElementType | null = null;
   
   if (!isHomePage) {
-    const config = pageConfig[pathname];
+    const config = Object.entries(pageConfig).find(([path]) => pathname.startsWith(path))?.[1];
     if (config) {
       title = config.title;
       Icon = config.icon;
@@ -43,7 +43,7 @@ export function Header() {
     <header className="bg-primary text-primary-foreground rounded-b-3xl shadow-lg relative z-20">
       <div className="container">
         {isHomePage ? (
-          <div className="pt-4 pb-10 text-center">
+          <div className="pt-6 pb-12 text-center">
             <div className="flex items-center justify-center gap-2 mb-1">
                 <Handshake className="h-7 w-7 text-white" />
                 <h1 className="text-2xl font-bold">Zafay</h1>

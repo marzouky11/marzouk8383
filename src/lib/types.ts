@@ -7,9 +7,11 @@ export interface Category {
 }
 
 export type WorkType = 'daily' | 'monthly' | 'project';
+export type PostType = 'seeking_worker' | 'seeking_job';
 
 export interface Job {
   id: string;
+  postType: PostType;
   title: string;
   categoryId: string;
   country: string;

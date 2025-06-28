@@ -1,4 +1,4 @@
-import type { Job, Category, Country } from './types';
+import type { Job, Category, Country, PostType } from './types';
 
 const categories: Category[] = [
   { id: '1', name: 'نجارة', iconName: 'Hammer' },
@@ -24,6 +24,7 @@ const countries: Country[] = [
 const jobs: Job[] = [
   {
     id: '1',
+    postType: 'seeking_worker',
     title: 'مطلوب نجار محترف',
     categoryId: '1',
     country: 'المغرب',
@@ -42,6 +43,7 @@ const jobs: Job[] = [
   },
   {
     id: '2',
+    postType: 'seeking_worker',
     title: 'كهربائي للعمل الشهري',
     categoryId: '2',
     country: 'السعودية',
@@ -60,6 +62,7 @@ const jobs: Job[] = [
   },
   {
     id: '3',
+    postType: 'seeking_worker',
     title: 'طباخ في مطعم فاخر',
     categoryId: '3',
     country: 'الإمارات',
@@ -78,6 +81,7 @@ const jobs: Job[] = [
   },
   {
     id: '4',
+    postType: 'seeking_worker',
     title: 'بناء محترف',
     categoryId: '4',
     country: 'مصر',
@@ -96,62 +100,66 @@ const jobs: Job[] = [
   },
   {
     id: '5',
-    title: 'مصمم جرافيك لمشروع',
+    postType: 'seeking_job',
+    title: 'مصمم جرافيك يبحث عن عمل',
     categoryId: '5',
     country: 'الأردن',
     city: 'عمان',
     salary: '400 دينار',
     workType: 'project',
-    description: 'تصميم هوية بصرية كاملة لشركة ناشئة. العمل عن بعد.',
+    description: 'مصمم جرافيك بخبرة 3 سنوات في تصميم الهويات البصرية والمواد التسويقية، أبحث عن فرصة عمل لمشروع أو دوام كامل.',
     phone: '+962791234567',
     whatsapp: '+962791234567',
     rating: 4.9,
     likes: 8,
     isFavorite: false,
     postedAt: 'نشر اليوم',
-    ownerName: 'ستارت أب الأردن',
+    ownerName: 'سارة أحمد',
     ownerAvatar: 'https://placehold.co/100x100.png'
   },
   {
     id: '6',
-    title: 'عامل توصيل طلبات',
-    categoryId: '7',
+    postType: 'seeking_job',
+    title: 'سائق خاص يبحث عن وظيفة',
+    categoryId: '9',
     country: 'المغرب',
     city: 'الدار البيضاء',
-    salary: '150 درهم',
-    workType: 'daily',
-    description: 'توصيل طلبات لمطعم في المعاريف. يشترط توفر دراجة نارية.',
+    salary: '4000 درهم',
+    workType: 'monthly',
+    description: 'سائق خاص بخبرة في شوارع الدار البيضاء، أمتلك رخصة سياقة وألتزم بالمواعيد.',
     phone: '+212623456789',
     whatsapp: '+212623456789',
     rating: 4.0,
     likes: 18,
     isFavorite: true,
     postedAt: 'نشر قبل 3 ساعات',
-    ownerName: 'سناك السعادة',
+    ownerName: 'يوسف العلمي',
     ownerAvatar: 'https://placehold.co/100x100.png'
   },
    {
     id: '7',
-    title: 'حلاق محترف',
+    postType: 'seeking_job',
+    title: 'حلاق محترف جاهز للعمل',
     categoryId: '10',
     country: 'المغرب',
     city: 'الدار البيضاء',
-    salary: '3000 درهم',
+    salary: 'حسب الاتفاق',
     workType: 'monthly',
-    description: 'مطلوب حلاق محترف لصالون في وسط المدينة. خبرة لا تقل عن سنتين.',
+    description: 'حلاق محترف بخبرة في أحدث القصات والتسريحات، أبحث عن فرصة عمل في صالون راقٍ.',
     phone: '+212611223344',
     whatsapp: '+212611223344',
     rating: 4.6,
     likes: 19,
     isFavorite: false,
     postedAt: 'نشر قبل 4 أيام',
-    ownerName: 'صالون VIP',
+    ownerName: 'كريم التازي',
     ownerAvatar: 'https://placehold.co/100x100.png'
   },
 ];
 
-export function getJobs() {
-  return jobs;
+export function getJobs(postType?: PostType) {
+  if (!postType) return jobs;
+  return jobs.filter((job) => job.postType === postType);
 }
 
 export function getJobById(id: string) {

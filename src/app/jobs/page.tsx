@@ -5,7 +5,7 @@ import type { Job } from '@/lib/types';
 import { JobFilters } from '@/components/job-filters';
 
 export default function JobsPage() {
-  const jobs: Job[] = getJobs();
+  const jobs: Job[] = getJobs('seeking_worker');
   const categories = getCategories();
   const countries = getCountries();
 
@@ -13,7 +13,6 @@ export default function JobsPage() {
     <AppLayout>
       <div className="container py-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-4">جميع الوظائف</h1>
           <JobFilters categories={categories} countries={countries} showSort={true} />
         </div>
         

@@ -9,12 +9,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/hooks/use-toast"
-import type { Category, Country, WorkType } from '@/lib/types';
+import type { Category, Country } from '@/lib/types';
 import { suggestJobCategories } from '@/ai/flows/suggest-job-categories';
-import { Sparkles, Loader2 } from 'lucide-react';
+import { Sparkles, Loader2, Briefcase, Users } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
   postType: z.enum(['seeking_worker', 'seeking_job'], { required_error: 'الرجاء تحديد نوع الإعلان.' }),
@@ -39,6 +40,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      postType: undefined,
       title: '',
       categoryId: '',
       country: '',
@@ -100,7 +102,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
     console.log(values);
     toast({
       title: "تم النشر بنجاح!",
-      description: "تم نشر إعلانك وسيظهر للباحثين عن عمل.",
+      description: "تم نشر إعلانك وسيظهر في القسم المناسب.",
     });
     form.reset();
     setSuggestedCategories([]);
@@ -114,22 +116,34 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
           name="postType"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>هل تبحث عن:</FormLabel>
+              <FormLabel>ماذا تريد أن تنشر؟</FormLabel>
               <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-row gap-4"
-                >
-                  <FormItem className="flex items-center space-x-2 space-x-reverse">
-                    <FormControl><RadioGroupItem value="seeking_worker" /></FormControl>
-                    <FormLabel className="font-normal">عامل</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-2 space-x-reverse">
-                    <FormControl><RadioGroupItem value="seeking_job" /></FormControl>
-                    <FormLabel className="font-normal">وظيفة</FormLabel>
-                  </FormItem>
-                </RadioGroup>
+                 <div className="grid grid-cols-2 gap-4">
+                    <Card
+                      onClick={() => field.onChange('seeking_worker')}
+                      className={cn(
+                        'p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2',
+                        field.value === 'seeking_worker'
+                          ? 'border-primary bg-primary/10'
+                          : 'hover:bg-muted'
+                      )}
+                    >
+                      <Briefcase className="h-8 w-8 text-primary" />
+                      <span className="font-semibold text-center">أبحث عن عامل</span>
+                    </Card>
+                     <Card
+                      onClick={() => field.onChange('seeking_job')}
+                      className={cn(
+                        'p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2',
+                        field.value === 'seeking_job'
+                          ? 'border-primary bg-primary/10'
+                          : 'hover:bg-muted'
+                      )}
+                    >
+                      <Users className="h-8 w-8 text-primary" />
+                      <span className="font-semibold text-center">أبحث عن عمل</span>
+                    </Card>
+                 </div>
               </FormControl>
               <FormMessage />
             </FormItem>

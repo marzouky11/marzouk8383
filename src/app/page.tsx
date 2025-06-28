@@ -6,10 +6,10 @@ import { JobFilters } from '@/components/job-filters';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
-import type { Job } from '@/lib/types';
 
 export default function HomePage() {
-  const jobs: Job[] = getJobs();
+  const jobOffers = getJobs('seeking_worker');
+  const jobSeekers = getJobs('seeking_job');
   const categories = getCategories();
   const countries = getCountries();
 
@@ -46,7 +46,7 @@ export default function HomePage() {
             </Button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {jobs.slice(0, 4).map((job) => (
+            {jobOffers.slice(0, 4).map((job) => (
               <JobCard key={job.id} job={job} />
             ))}
           </div>
@@ -62,7 +62,7 @@ export default function HomePage() {
             </Button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {jobs.slice(4).map((job) => (
+            {jobSeekers.slice(0, 4).map((job) => (
               <JobCard key={job.id} job={job} />
             ))}
           </div>

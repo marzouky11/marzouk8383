@@ -6,7 +6,7 @@ import { JobFilters } from '@/components/job-filters';
 
 
 export default function WorkersPage() {
-  const jobs: Job[] = getJobs();
+  const jobs: Job[] = getJobs('seeking_job');
   const categories = getCategories();
   const countries = getCountries();
 
@@ -14,7 +14,6 @@ export default function WorkersPage() {
     <AppLayout>
       <div className="container py-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-4">قائمة العمال</h1>
           <JobFilters categories={categories} countries={countries} showSort={true} />
         </div>
         
