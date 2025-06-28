@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,8 @@ import { getCountries } from '@/lib/data';
 
 export default function SettingsPage() {
   const countries = getCountries();
+  // Simulate user login state. Change to false to see the logged-out view.
+  const [isLoggedIn, setIsLoggedIn] = useState(true); 
   const user = {
     name: 'مستخدم جديد',
     country: 'المغرب',
@@ -43,25 +45,27 @@ export default function SettingsPage() {
           <Card>
             <CardContent className="p-0">
               <ul className="divide-y divide-border">
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <li className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
-                      <div className="flex items-center gap-4">
-                        <User className="h-5 w-5 text-primary" />
-                        <span className="font-medium">الملف الشخصي</span>
+                {isLoggedIn && (
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <li className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
+                        <div className="flex items-center gap-4">
+                          <User className="h-5 w-5 text-primary" />
+                          <span className="font-medium">الملف الشخصي</span>
+                        </div>
+                        <ChevronLeft className="h-5 w-5 text-muted-foreground" />
+                      </li>
+                    </SheetTrigger>
+                    <SheetContent>
+                      <SheetHeader>
+                        <SheetTitle>تعديل الملف الشخصي</SheetTitle>
+                      </SheetHeader>
+                      <div className="py-4">
+                         <ProfileForm countries={countries} user={user} />
                       </div>
-                      <ChevronLeft className="h-5 w-5 text-muted-foreground" />
-                    </li>
-                  </SheetTrigger>
-                  <SheetContent>
-                    <SheetHeader>
-                      <SheetTitle>تعديل الملف الشخصي</SheetTitle>
-                    </SheetHeader>
-                    <div className="py-4">
-                       <ProfileForm countries={countries} user={user} />
-                    </div>
-                  </SheetContent>
-                </Sheet>
+                    </SheetContent>
+                  </Sheet>
+                )}
 
                 <SettingItem
                   icon={Moon}
@@ -79,14 +83,17 @@ export default function SettingsPage() {
           
           <Card>
              <CardContent className="p-4 space-y-4">
-                <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                  <LogIn className="ml-2 h-4 w-4" />
-                  تسجيل الدخول أو إنشاء حساب
-                </Button>
-                <Button variant="destructive" className="w-full">
-                  <LogOut className="ml-2 h-4 w-4" />
-                  تسجيل الخروج
-                </Button>
+                {isLoggedIn ? (
+                  <Button variant="destructive" className="w-full" onClick={() => setIsLoggedIn(false)}>
+                    <LogOut className="ml-2 h-4 w-4" />
+                    تسجيل الخروج
+                  </Button>
+                ) : (
+                  <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => setIsLoggedIn(true)}>
+                    <LogIn className="ml-2 h-4 w-4" />
+                    تسجيل الدخول أو إنشاء حساب
+                  </Button>
+                )}
              </CardContent>
           </Card>
 
