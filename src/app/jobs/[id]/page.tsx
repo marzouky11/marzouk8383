@@ -1,6 +1,6 @@
 'use client';
 
-import { notFound, useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,6 @@ import {
   CalendarDays,
   FileText,
   Heart,
-  ArrowRight,
   User as UserIcon
 } from 'lucide-react';
 import { getJobById, getCategoryById } from '@/lib/data';
@@ -26,7 +25,6 @@ import { Separator } from '@/components/ui/separator';
 
 export default function JobDetailPage({ params }: { params: { id: string } }) {
   const job = getJobById(params.id);
-  const router = useRouter();
 
   if (!job) {
     notFound();
@@ -42,26 +40,9 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   );
 
   return (
-    <AppLayout showHeader={false}>
+    <AppLayout showHeader={true}>
       <div className="bg-muted/30 min-h-full">
-        <header className="bg-primary text-primary-foreground p-4 rounded-b-3xl shadow-lg sticky top-0 z-50">
-          <div className="container mx-auto flex items-center justify-between relative h-12">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-0 text-primary-foreground hover:bg-white/20"
-              onClick={() => router.back()}
-            >
-              <ArrowRight className="h-5 w-5" />
-            </Button>
-            <h1 className="text-xl font-bold flex items-center gap-2 mx-auto">
-              <FileText className="h-5 w-5" />
-              تفاصيل الإعلان
-            </h1>
-          </div>
-        </header>
-
-        <main className="container mx-auto max-w-2xl px-4 py-6 -mt-12">
+        <main className="container mx-auto max-w-2xl px-4 py-6">
           <Card className="overflow-hidden shadow-xl border-none relative z-10 rounded-2xl">
             <CardContent className="p-4 sm:p-6 space-y-5">
               <div className="flex justify-between items-start">

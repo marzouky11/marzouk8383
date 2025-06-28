@@ -16,7 +16,7 @@ export default function HomePage() {
 
   return (
     <AppLayout showHeader={false}>
-      <header className="bg-primary text-primary-foreground pt-4 pb-20 rounded-b-3xl">
+      <header className="bg-primary text-primary-foreground pt-4 pb-12 rounded-b-3xl">
         <div className="container flex h-16 items-center justify-between">
             <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20">
               <Sun className="h-6 w-6" />
@@ -32,7 +32,7 @@ export default function HomePage() {
         </div>
       </header>
       
-      <main className="container -mt-16 space-y-6 pb-28">
+      <main className="container pt-6 space-y-6 pb-28">
         <div>
           <JobFilters categories={categories} countries={countries} />
         </div>
