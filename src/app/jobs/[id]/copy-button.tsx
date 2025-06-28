@@ -19,7 +19,7 @@ export function CopyButton({ textToCopy }: { textToCopy: string }) {
   };
 
   return (
-    <Button onClick={handleCopy} variant="outline">
+    <Button onClick={handleCopy} variant="outline" className="flex-grow">
       <Clipboard className="ml-2 h-4 w-4" />
       نسخ الرقم
     </Button>

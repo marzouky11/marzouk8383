@@ -22,6 +22,9 @@ export interface Job {
   rating: number;
   likes: number;
   isFavorite: boolean;
+  postedAt: string;
+  ownerName: string;
+  ownerAvatar?: string;
 }
 
 export interface User {

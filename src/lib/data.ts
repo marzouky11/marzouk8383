@@ -36,6 +36,9 @@ const jobs: Job[] = [
     rating: 4.5,
     likes: 23,
     isFavorite: true,
+    postedAt: 'نشر قبل يومين',
+    ownerName: 'شركة الأثاث العصري',
+    ownerAvatar: 'https://placehold.co/100x100.png'
   },
   {
     id: '2',
@@ -51,6 +54,9 @@ const jobs: Job[] = [
     rating: 5,
     likes: 50,
     isFavorite: false,
+    postedAt: 'نشر قبل أسبوع',
+    ownerName: 'مقاولات المملكة',
+    ownerAvatar: 'https://placehold.co/100x100.png'
   },
   {
     id: '3',
@@ -66,6 +72,9 @@ const jobs: Job[] = [
     rating: 4.8,
     likes: 12,
     isFavorite: true,
+    postedAt: 'نشر قبل 5 أيام',
+    ownerName: 'مطعم بيلا إيطاليا',
+    ownerAvatar: 'https://placehold.co/100x100.png'
   },
   {
     id: '4',
@@ -81,6 +90,9 @@ const jobs: Job[] = [
     rating: 4.2,
     likes: 5,
     isFavorite: false,
+    postedAt: 'نشر قبل 10 أيام',
+    ownerName: 'أحمد المصري',
+    ownerAvatar: 'https://placehold.co/100x100.png'
   },
   {
     id: '5',
@@ -96,6 +108,9 @@ const jobs: Job[] = [
     rating: 4.9,
     likes: 8,
     isFavorite: false,
+    postedAt: 'نشر اليوم',
+    ownerName: 'ستارت أب الأردن',
+    ownerAvatar: 'https://placehold.co/100x100.png'
   },
   {
     id: '6',
@@ -111,6 +126,9 @@ const jobs: Job[] = [
     rating: 4.0,
     likes: 18,
     isFavorite: true,
+    postedAt: 'نشر قبل 3 ساعات',
+    ownerName: 'سناك السعادة',
+    ownerAvatar: 'https://placehold.co/100x100.png'
   },
    {
     id: '7',
@@ -126,6 +144,9 @@ const jobs: Job[] = [
     rating: 4.6,
     likes: 19,
     isFavorite: false,
+    postedAt: 'نشر قبل 4 أيام',
+    ownerName: 'صالون VIP',
+    ownerAvatar: 'https://placehold.co/100x100.png'
   },
 ];
 

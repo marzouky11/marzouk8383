@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/hooks/use-toast"
 import type { Category, Country, WorkType } from '@/lib/types';
@@ -16,6 +17,7 @@ import { suggestJobCategories } from '@/ai/flows/suggest-job-categories';
 import { Sparkles, Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
+  postType: z.enum(['seeking_worker', 'seeking_job'], { required_error: 'الرجاء تحديد نوع الإعلان.' }),
   title: z.string().min(1, { message: 'اسم الإعلان مطلوب.' }),
   categoryId: z.string().min(1, { message: 'الفئة مطلوبة.' }),
   country: z.string().min(1, { message: 'الدولة مطلوبة.' }),
@@ -107,6 +109,33 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="postType"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>هل تبحث عن:</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-row gap-4"
+                >
+                  <FormItem className="flex items-center space-x-2 space-x-reverse">
+                    <FormControl><RadioGroupItem value="seeking_worker" /></FormControl>
+                    <FormLabel className="font-normal">عامل</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2 space-x-reverse">
+                    <FormControl><RadioGroupItem value="seeking_job" /></FormControl>
+                    <FormLabel className="font-normal">وظيفة</FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
         <FormField control={form.control} name="title" render={({ field }) => (
           <FormItem><FormLabel>📝 اسم الإعلان</FormLabel><FormControl><Input placeholder="مثال: مطلوب كهربائي..." {...field} /></FormControl><FormMessage /></FormItem>
         )} />
