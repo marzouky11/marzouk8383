@@ -4,9 +4,7 @@ import React from 'react';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import {
   Sheet,
   SheetContent,
@@ -41,7 +39,6 @@ export default function SettingsPage() {
   return (
     <AppLayout>
       <div className="container mx-auto max-w-2xl px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">الإعدادات</h1>
         <div className="space-y-6">
           <Card>
             <CardContent className="p-0">

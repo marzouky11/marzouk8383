@@ -40,9 +40,8 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   );
 
   return (
-    <AppLayout showHeader={true}>
-      <div className="bg-muted/30 min-h-full">
-        <main className="container mx-auto max-w-2xl px-4 py-6">
+    <AppLayout>
+      <div className="container mx-auto max-w-2xl px-4 py-6">
           <Card className="overflow-hidden shadow-xl border-none relative z-10 rounded-2xl">
             <CardContent className="p-4 sm:p-6 space-y-5">
               <div className="flex justify-between items-start">
@@ -124,7 +123,6 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
               </div>
             </CardContent>
           </Card>
-        </main>
       </div>
     </AppLayout>
   );
