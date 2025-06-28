@@ -38,15 +38,15 @@ export function JobCard({ job }: JobCardProps) {
         <div className="flex flex-col gap-1.5 text-xs text-muted-foreground mt-2">
           <div className="flex items-center gap-1.5">
             <MapPin className="h-3.5 w-3.5" />
-            <span>{job.city}</span>
+            <span>{job.country}, {job.city}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Wallet className="h-3.5 w-3.5" />
-            <span>{job.salary}</span>
+            <span>الأجر: {job.salary}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5" />
-            <span>{workTypeTranslations[job.workType]}</span>
+            <span>طبيعة العمل: {workTypeTranslations[job.workType]}</span>
           </div>
         </div>
       </div>

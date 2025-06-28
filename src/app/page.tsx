@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
 import type { Job } from '@/lib/types';
+import { Handshake, Sun } from 'lucide-react';
 
 export default function HomePage() {
   const jobs: Job[] = getJobs();
@@ -15,18 +16,23 @@ export default function HomePage() {
 
   return (
     <AppLayout showHeader={false}>
-      <header className="bg-primary text-primary-foreground pt-4 pb-28 rounded-b-3xl">
-        <div className="container">
-          <div className="flex h-16 items-center justify-center text-center relative">
-            <div className="w-full">
-              <h1 className="text-3xl font-bold">Zafay</h1>
-              <p className="text-sm opacity-80">منصة الربط بين العمال وأصحاب العمل</p>
+      <header className="bg-primary text-primary-foreground pt-4 pb-20 rounded-b-3xl">
+        <div className="container flex h-16 items-center justify-between">
+            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20">
+              <Sun className="h-6 w-6" />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+            <div className="text-center">
+              <h1 className="text-2xl font-bold">Zafay</h1>
+              <p className="text-xs opacity-80">منصة الربط بين العمال وأصحاب العمل</p>
             </div>
-          </div>
+            <div className="p-2 bg-white/20 rounded-lg">
+              <Handshake className="h-6 w-6 text-white" />
+            </div>
         </div>
       </header>
       
-      <main className="container -mt-24 space-y-6 pb-28">
+      <main className="container -mt-16 space-y-6 pb-28">
         <div>
           <JobFilters categories={categories} countries={countries} />
         </div>
