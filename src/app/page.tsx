@@ -17,7 +17,7 @@ export default function HomePage() {
   return (
     <AppLayout showHeader={false}>
       {/* Custom Header for Home Page */}
-      <div className="bg-primary text-primary-foreground pt-4 pb-16 rounded-b-3xl">
+      <div className="bg-primary text-primary-foreground pt-4 pb-12 rounded-b-3xl">
         <div className="container">
           <div className="flex h-16 items-center justify-between">
             <Button variant="ghost" size="icon">
@@ -34,14 +34,15 @@ export default function HomePage() {
               </div>
             </Link>
           </div>
-          <div className="mt-4">
-            <JobFilters categories={categories} countries={countries} />
-          </div>
         </div>
       </div>
       
-      <main className="container -mt-12 space-y-8 pb-4">
-        <Card className="overflow-hidden rounded-2xl shadow-lg border-none">
+      <main className="container -mt-8 space-y-6 pb-28">
+        <div>
+          <JobFilters categories={categories} countries={countries} />
+        </div>
+        
+        <Card className="overflow-hidden rounded-2xl shadow-md border-none">
             <div className="relative h-48">
               <Image
                 src="https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg"
@@ -66,25 +67,11 @@ export default function HomePage() {
               </Link>
             </Button>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {jobs.slice(0, 2).map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
-        </section>
-        
-        <section>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">باحثون عن عمل</h2>
-            <Button variant="link" asChild>
-              <Link href="/workers">
-                عرض الكل
-              </Link>
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-             {jobs.slice(2, 4).map((job) => (
-              <JobCard key={job.id} job={job} />
+          <div className="flex overflow-x-auto space-x-4 space-x-reverse pb-4 -mx-4 px-4">
+            {jobs.slice(0, 4).map((job) => (
+              <div key={job.id} className="w-4/5 sm:w-2/5 flex-shrink-0">
+                  <JobCard job={job} />
+              </div>
             ))}
           </div>
         </section>

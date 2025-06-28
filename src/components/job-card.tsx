@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Heart, MapPin, Star, Clock, Wallet } from 'lucide-react';
@@ -21,21 +21,21 @@ export function JobCard({ job }: JobCardProps) {
   const category = getCategoryById(job.categoryId);
 
   return (
-    <Card className="flex flex-col overflow-hidden transition-shadow hover:shadow-lg rounded-2xl border-none h-full">
-      <CardContent className="p-4 flex-grow">
+    <Card className="flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4">
+      <div className="flex-grow">
         <div className="flex justify-between items-start mb-3">
-            <div className="flex-grow">
-                {category && <Badge variant="outline" className="mb-1 font-normal border-primary/50 text-primary">{category.name}</Badge>}
-                <h3 className="text-lg font-bold text-card-foreground">{job.title}</h3>
+          <div className="flex-grow">
+            {category && <Badge variant="secondary" className="mb-2 font-normal">{category.name}</Badge>}
+            <h3 className="text-lg font-bold text-primary">{job.title}</h3>
+          </div>
+          {category && (
+            <div className="flex-shrink-0 bg-primary/10 p-4 rounded-xl">
+              <CategoryIcon name={category.iconName} className="w-6 h-6 text-primary" />
             </div>
-            {category && (
-                <div className="flex-shrink-0 bg-primary/10 p-4 rounded-xl">
-                   <CategoryIcon name={category.iconName} className="w-6 h-6 text-primary" />
-                </div>
-            )}
+          )}
         </div>
         
-        <div className="flex flex-col gap-2 text-sm text-muted-foreground mt-3">
+        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <MapPin className="h-4 w-4" />
             <span>المدينة: {job.city}</span>
@@ -49,24 +49,23 @@ export function JobCard({ job }: JobCardProps) {
             <span>طبيعة العمل: {workTypeTranslations[job.workType]}</span>
           </div>
         </div>
-      </CardContent>
-      <CardFooter className="p-4 border-t">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1 text-red-500">
-               <Heart className={`h-5 w-5 ${job.isFavorite ? 'fill-current' : ''}`} />
-               <span className="text-sm font-bold">{job.likes}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 text-yellow-400 fill-current" />
-              <span className="text-sm font-bold">({job.rating})</span>
-            </div>
+      </div>
+      
+      <div className="flex items-center justify-between pt-4 mt-4 border-t">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1 text-red-500">
+            <Heart className={`h-5 w-5 ${job.isFavorite ? 'fill-current' : ''}`} />
+            <span className="text-sm font-medium">{job.likes}</span>
           </div>
-          <Button asChild size="sm">
-            <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
-          </Button>
+          <div className="flex items-center gap-1">
+            <Star className="h-5 w-5 text-yellow-400 fill-current" />
+            <span className="text-sm font-medium text-muted-foreground">({job.rating})</span>
+          </div>
         </div>
-      </CardFooter>
+        <Button asChild size="sm">
+          <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
+        </Button>
+      </div>
     </Card>
   );
 }

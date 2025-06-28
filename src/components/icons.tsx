@@ -2,7 +2,7 @@ import {
   Hammer,
   Zap,
   Utensils,
-  BrickWall,
+  HardHat,
   PenTool,
   SprayCan,
   Bike,
@@ -10,18 +10,20 @@ import {
   Car,
   LucideIcon,
   Briefcase,
+  Scissors,
 } from 'lucide-react';
 
 const iconMap: { [key: string]: LucideIcon } = {
   Hammer,
   Zap,
   Utensils,
-  BrickWall,
+  HardHat,
   PenTool,
   SprayCan,
   Bike,
   Wrench,
   Car,
+  Scissors,
   Default: Briefcase,
 };
 
