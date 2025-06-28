@@ -15,13 +15,15 @@ import {
   CalendarDays,
   FileText,
   Heart,
-  User as UserIcon
+  User as UserIcon,
+  Briefcase
 } from 'lucide-react';
 import { getJobById, getCategoryById } from '@/lib/data';
 import type { Job } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
 import { CopyButton } from './copy-button';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 export default function JobDetailPage({ params }: { params: { id: string } }) {
   const job = getJobById(params.id);
@@ -31,10 +33,15 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   }
 
   const category = getCategoryById(job.categoryId);
+  const isWorkerAd = job.postType === 'seeking_job';
+  const themeColor = isWorkerAd ? 'text-accent' : 'text-primary';
+  const themeBg = isWorkerAd ? 'bg-accent/10' : 'bg-primary/10';
+  const themeBorder = isWorkerAd ? 'border-accent' : 'border-primary';
+  const themeButton = isWorkerAd ? 'bg-accent text-accent-foreground hover:bg-accent/90' : 'bg-primary text-primary-foreground hover:bg-primary/90';
 
   const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | undefined }) => (
     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-      <Icon className="h-4 w-4 text-primary" />
+      <Icon className={cn('h-4 w-4', themeColor)} />
       <span>{text || 'غير محدد'}</span>
     </div>
   );
@@ -42,19 +49,21 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   return (
     <AppLayout>
       <div className="container mx-auto max-w-2xl px-4 py-6">
-          <Card className="overflow-hidden shadow-xl border-none relative z-10 rounded-2xl">
+          <Card className={cn('overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl', themeBorder)}>
             <CardContent className="p-4 sm:p-6 space-y-5">
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-2xl font-bold text-primary">{job.title}</h2>
+                  <h2 className={cn('text-2xl font-bold', themeColor)}>
+                    {job.title}
+                  </h2>
                   <div className="flex items-center gap-2 text-muted-foreground mt-1">
                     <MapPin className="h-4 w-4" />
                     <span className="text-md">{job.city}</span>
                   </div>
                 </div>
                 {category && (
-                  <div className="bg-primary/10 p-3 rounded-full">
-                    <CategoryIcon name={category.iconName} className="w-7 h-7 text-primary" />
+                  <div className={cn('p-3 rounded-full', themeBg)}>
+                    <CategoryIcon name={category.iconName} className={cn('w-7 h-7', themeColor)} />
                   </div>
                 )}
               </div>
@@ -77,9 +86,9 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
               <Separator />
 
               <div>
-                <h3 className="text-lg font-bold flex items-center gap-2 mb-2">
-                  <FileText className="h-5 w-5 text-primary" />
-                  وصف الوظيفة
+                <h3 className={cn('text-lg font-bold flex items-center gap-2 mb-2', themeColor)}>
+                    {isWorkerAd ? <UserIcon className="h-5 w-5" /> : <Briefcase className="h-5 w-5" />}
+                    {isWorkerAd ? 'معلومات الباحث عن عمل' : 'وصف الوظيفة'}
                 </h3>
                 <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
                   {job.description || 'لا يوجد وصف متاح.'}
@@ -87,8 +96,8 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
               </div>
 
               <div className="bg-muted/50 rounded-xl p-4">
-                  <h3 className="text-lg font-bold flex items-center gap-2 mb-3">
-                    <UserIcon className="h-5 w-5 text-primary" />
+                  <h3 className={cn('text-lg font-bold flex items-center gap-2 mb-3', themeColor)}>
+                    <UserIcon className="h-5 w-5" />
                     صاحب الإعلان
                   </h3>
                   <div className="flex items-center gap-3">
@@ -101,8 +110,8 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
               </div>
 
               <div>
-                <h3 className="text-lg font-bold flex items-center gap-2 mb-3">
-                  <Phone className="h-5 w-5 text-primary" />
+                <h3 className={cn('text-lg font-bold flex items-center gap-2 mb-3', themeColor)}>
+                  <Phone className="h-5 w-5" />
                   معلومات التواصل
                 </h3>
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -112,7 +121,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
                       واتساب
                     </a>
                   </Button>
-                  <Button asChild className="flex-grow">
+                  <Button asChild className={cn('flex-grow', themeButton)}>
                     <a href={`tel:${job.phone}`}>
                       <Phone className="ml-2 h-4 w-4" />
                       اتصال

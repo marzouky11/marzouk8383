@@ -13,7 +13,10 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/hooks/use-toast"
 import type { Category, Country } from '@/lib/types';
 import { suggestJobCategories } from '@/ai/flows/suggest-job-categories';
-import { Sparkles, Loader2, Briefcase, Users } from 'lucide-react';
+import { 
+  Sparkles, Loader2, Briefcase, Users, FileText, FileSignature, 
+  LayoutGrid, Globe, MapPin, Wallet, Phone, MessageSquare
+} from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
@@ -58,6 +61,9 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
 
   const selectedCountry = form.watch('country');
   const jobDescription = form.watch('description');
+  const postType = form.watch('postType');
+  
+  const themeColor = postType === 'seeking_job' ? 'text-accent' : 'text-primary';
 
   useEffect(() => {
     if (selectedCountry) {
@@ -107,6 +113,13 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
     form.reset();
     setSuggestedCategories([]);
   }
+  
+  const FormLabelIcon = ({icon: Icon, label}: {icon: React.ElementType, label: string}) => (
+    <FormLabel className="flex items-center gap-2">
+      <Icon className={cn('h-4 w-4', postType ? themeColor : 'text-muted-foreground')} />
+      {label}
+    </FormLabel>
+  )
 
   return (
     <Form {...form}>
@@ -124,11 +137,11 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
                       className={cn(
                         'p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2',
                         field.value === 'seeking_worker'
-                          ? 'border-primary bg-primary/10'
+                          ? 'border-primary bg-primary/10 text-primary'
                           : 'hover:bg-muted'
                       )}
                     >
-                      <Briefcase className="h-8 w-8 text-primary" />
+                      <Briefcase className="h-8 w-8" />
                       <span className="font-semibold text-center">أبحث عن عامل</span>
                     </Card>
                      <Card
@@ -136,11 +149,11 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
                       className={cn(
                         'p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2',
                         field.value === 'seeking_job'
-                          ? 'border-primary bg-primary/10'
+                          ? 'border-accent bg-accent/10 text-accent'
                           : 'hover:bg-muted'
                       )}
                     >
-                      <Users className="h-8 w-8 text-primary" />
+                      <Users className="h-8 w-8" />
                       <span className="font-semibold text-center">أبحث عن عمل</span>
                     </Card>
                  </div>
@@ -150,59 +163,61 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
           )}
         />
         
-        <FormField control={form.control} name="title" render={({ field }) => (
-          <FormItem><FormLabel>📝 اسم الإعلان</FormLabel><FormControl><Input placeholder="مثال: مطلوب كهربائي..." {...field} /></FormControl><FormMessage /></FormItem>
-        )} />
+        <fieldset disabled={!postType} className="space-y-6 disabled:opacity-50">
+          <FormField control={form.control} name="title" render={({ field }) => (
+            <FormItem><FormLabelIcon icon={FileText} label="اسم الإعلان" /><FormControl><Input placeholder={postType === 'seeking_job' ? "مثال: كهربائي محترف..." : "مثال: مطلوب كهربائي..."} {...field} /></FormControl><FormMessage /></FormItem>
+          )} />
 
-        <FormField control={form.control} name="description" render={({ field }) => (
-          <FormItem><FormLabel>🧾 وصف الإعلان (اختياري)</FormLabel><FormControl><Textarea placeholder="اكتب تفاصيل عن العمل، المتطلبات، إلخ." {...field} /></FormControl><FormMessage /></FormItem>
-        )} />
-        
-        <div className="flex items-center gap-4">
-          <Button type="button" variant="outline" onClick={handleSuggestCategories} disabled={isSuggesting || !jobDescription}>
-            {isSuggesting ? <Loader2 className="ml-2 h-4 w-4 animate-spin" /> : <Sparkles className="ml-2 h-4 w-4" />}
-            اقترح لي فئات
-          </Button>
-        </div>
-        {suggestedCategories.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {suggestedCategories.map((catName) => {
-              const categoryObj = categories.find(c => c.name === catName);
-              return categoryObj ? (
-                <Badge key={categoryObj.id} variant="default" className="cursor-pointer" onClick={() => form.setValue('categoryId', categoryObj.id)}>{categoryObj.name}</Badge>
-              ) : null;
-            })}
+          <FormField control={form.control} name="description" render={({ field }) => (
+            <FormItem><FormLabelIcon icon={FileSignature} label="وصف الإعلان (اختياري)"/><FormControl><Textarea placeholder="اكتب تفاصيل عن العمل، المتطلبات، إلخ." {...field} /></FormControl><FormMessage /></FormItem>
+          )} />
+          
+          <div className="flex items-center gap-4">
+            <Button type="button" variant="outline" onClick={handleSuggestCategories} disabled={isSuggesting || !jobDescription}>
+              {isSuggesting ? <Loader2 className="ml-2 h-4 w-4 animate-spin" /> : <Sparkles className="ml-2 h-4 w-4" />}
+              اقترح لي فئات
+            </Button>
           </div>
-        )}
+          {suggestedCategories.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {suggestedCategories.map((catName) => {
+                const categoryObj = categories.find(c => c.name === catName);
+                return categoryObj ? (
+                  <Badge key={categoryObj.id} variant={postType === 'seeking_job' ? 'accent' : 'default'} className="cursor-pointer" onClick={() => form.setValue('categoryId', categoryObj.id)}>{categoryObj.name}</Badge>
+                ) : null;
+              })}
+            </div>
+          )}
 
-        <FormField control={form.control} name="categoryId" render={({ field }) => (
-          <FormItem><FormLabel>🧰 الفئة</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر فئة العمل" /></SelectTrigger></FormControl><SelectContent>{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
-        )} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField control={form.control} name="country" render={({ field }) => (
-            <FormItem><FormLabel>🌍 الدولة</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر الدولة" /></SelectTrigger></FormControl><SelectContent>{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+          <FormField control={form.control} name="categoryId" render={({ field }) => (
+            <FormItem><FormLabelIcon icon={LayoutGrid} label="الفئة"/><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر فئة العمل" /></SelectTrigger></FormControl><SelectContent>{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
           )} />
-          <FormField control={form.control} name="city" render={({ field }) => (
-            <FormItem><FormLabel>🏙️ المدينة</FormLabel><Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountry}><FormControl><SelectTrigger><SelectValue placeholder="اختر المدينة" /></SelectTrigger></FormControl><SelectContent>{cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
-          )} />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField control={form.control} name="salary" render={({ field }) => (
-            <FormItem><FormLabel>💰 الأجر</FormLabel><FormControl><Input placeholder="مثال: 200 درهم / يوم" {...field} /></FormControl><FormMessage /></FormItem>
-          )} />
-          <FormField control={form.control} name="workType" render={({ field }) => (
-            <FormItem><FormLabel>⚒️ طبيعة العمل</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر طبيعة العمل" /></SelectTrigger></FormControl><SelectContent><SelectItem value="daily">يومي</SelectItem><SelectItem value="monthly">شهري</SelectItem><SelectItem value="project">مشروع</SelectItem></SelectContent></Select><FormMessage /></FormItem>
-          )} />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField control={form.control} name="phone" render={({ field }) => (
-            <FormItem><FormLabel>📞 رقم الهاتف</FormLabel><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
-          )} />
-          <FormField control={form.control} name="whatsapp" render={({ field }) => (
-            <FormItem><FormLabel>💬 رقم واتساب</FormLabel><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
-          )} />
-        </div>
-        <Button type="submit" size="lg" className="w-full">نشر الإعلان</Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField control={form.control} name="country" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={Globe} label="الدولة" /><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر الدولة" /></SelectTrigger></FormControl><SelectContent>{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="city" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={MapPin} label="المدينة"/><Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountry}><FormControl><SelectTrigger><SelectValue placeholder="اختر المدينة" /></SelectTrigger></FormControl><SelectContent>{cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+            )} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField control={form.control} name="salary" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={Wallet} label="الأجر" /><FormControl><Input placeholder="مثال: 200 درهم / يوم" {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="workType" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={Briefcase} label="طبيعة العمل" /><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر طبيعة العمل" /></SelectTrigger></FormControl><SelectContent><SelectItem value="daily">يومي</SelectItem><SelectItem value="monthly">شهري</SelectItem><SelectItem value="project">مشروع</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+            )} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField control={form.control} name="phone" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={Phone} label="رقم الهاتف" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="whatsapp" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={MessageSquare} label="رقم واتساب" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+          </div>
+          <Button type="submit" size="lg" className={cn("w-full", postType === 'seeking_job' ? 'bg-accent text-accent-foreground hover:bg-accent/90' : '')}>نشر الإعلان</Button>
+        </fieldset>
       </form>
     </Form>
   );
