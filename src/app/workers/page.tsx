@@ -12,11 +12,7 @@ export default function WorkersPage() {
     <AppLayout>
       <div className="container py-8">
         <h1 className="text-2xl font-bold mb-6">قائمة العمال</h1>
-         <div className="text-center py-12 text-muted-foreground">
-              <p>سيتم عرض قائمة العمال هنا قريباً.</p>
-        </div>
-        {/* Placeholder Content */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {jobs.map((job) => (
             <JobCard key={job.id} job={job} />
           ))}

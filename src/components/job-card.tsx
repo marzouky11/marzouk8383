@@ -21,49 +21,49 @@ export function JobCard({ job }: JobCardProps) {
   const category = getCategoryById(job.categoryId);
 
   return (
-    <Card className="flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4">
+    <Card className="flex flex-col overflow-hidden rounded-xl border bg-card shadow-sm h-full p-3 transition-shadow hover:shadow-lg">
       <div className="flex-grow">
-        <div className="flex justify-between items-start mb-3">
-          <div className="flex-grow">
-            {category && <Badge variant="secondary" className="mb-2 font-normal">{category.name}</Badge>}
-            <h3 className="text-lg font-bold text-primary">{job.title}</h3>
+        <div className="flex justify-between items-start mb-2">
+          <div className="flex-grow pr-2">
+            {category && <Badge variant="secondary" className="mb-1 font-normal text-xs">{category.name}</Badge>}
+            <h3 className="font-bold text-primary leading-tight text-sm">{job.title}</h3>
           </div>
           {category && (
-            <div className="flex-shrink-0 bg-primary/10 p-4 rounded-xl">
-              <CategoryIcon name={category.iconName} className="w-6 h-6 text-primary" />
+            <div className="flex-shrink-0 bg-primary/10 p-2 rounded-lg">
+              <CategoryIcon name={category.iconName} className="w-5 h-5 text-primary" />
             </div>
           )}
         </div>
         
-        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4" />
-            <span>المدينة: {job.city}</span>
+        <div className="flex flex-col gap-1.5 text-xs text-muted-foreground mt-2">
+          <div className="flex items-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5" />
+            <span>{job.city}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Wallet className="h-4 w-4" />
-            <span>الأجر: {job.salary}</span>
+          <div className="flex items-center gap-1.5">
+            <Wallet className="h-3.5 w-3.5" />
+            <span>{job.salary}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4" />
-            <span>طبيعة العمل: {workTypeTranslations[job.workType]}</span>
+          <div className="flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" />
+            <span>{workTypeTranslations[job.workType]}</span>
           </div>
         </div>
       </div>
       
-      <div className="flex items-center justify-between pt-4 mt-4 border-t">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between pt-3 mt-3 border-t">
+        <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 text-red-500">
-            <Heart className={`h-5 w-5 ${job.isFavorite ? 'fill-current' : ''}`} />
-            <span className="text-sm font-medium">{job.likes}</span>
+            <Heart className={`h-4 w-4 ${job.isFavorite ? 'fill-current' : ''}`} />
+            <span className="text-xs font-medium">{job.likes}</span>
           </div>
           <div className="flex items-center gap-1">
-            <Star className="h-5 w-5 text-yellow-400 fill-current" />
-            <span className="text-sm font-medium text-muted-foreground">({job.rating})</span>
+            <Star className="h-4 w-4 text-yellow-400 fill-current" />
+            <span className="text-xs font-medium text-muted-foreground">({job.rating})</span>
           </div>
         </div>
-        <Button asChild size="sm">
-          <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
+        <Button asChild size="sm" className="h-7 text-xs rounded-lg px-3">
+          <Link href={`/jobs/${job.id}`}>التفاصيل</Link>
         </Button>
       </div>
     </Card>
