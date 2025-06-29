@@ -10,9 +10,13 @@ import {
   Plus,
   FileText,
   Handshake,
+  LogIn,
+  UserPlus,
 } from 'lucide-react';
 
 const pageConfig: { [key: string]: { title: string; icon: React.ElementType } } = {
+  '/login': { title: 'تسجيل الدخول', icon: LogIn },
+  '/signup': { title: 'إنشاء حساب', icon: UserPlus },
   '/jobs': { title: 'الوظائف', icon: Briefcase },
   '/workers': { title: 'العمال', icon: Users },
   '/profile': { title: 'الإعدادات', icon: Settings },

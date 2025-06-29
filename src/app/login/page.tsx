@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { AppLayout } from '@/components/layout/app-layout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -46,11 +46,8 @@ export default function LoginPage() {
     <AppLayout>
       <div className="container mx-auto max-w-md py-8">
         <Card>
-          <CardHeader className="text-center">
-            <CardTitle>تسجيل الدخول</CardTitle>
-            <CardDescription>أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى حسابك.</CardDescription>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
+            <p className="text-center text-sm text-muted-foreground mb-6">أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى حسابك.</p>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">البريد الإلكتروني</Label>

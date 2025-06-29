@@ -6,7 +6,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { AppLayout } from '@/components/layout/app-layout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -67,11 +67,8 @@ export default function SignupPage() {
     <AppLayout>
       <div className="container mx-auto max-w-md py-8">
         <Card>
-          <CardHeader className="text-center">
-            <CardTitle>إنشاء حساب جديد</CardTitle>
-            <CardDescription>املأ النموذج أدناه للانضمام إلى المنصة.</CardDescription>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
+            <p className="text-center text-sm text-muted-foreground mb-6">املأ النموذج أدناه للانضمام إلى المنصة.</p>
             <form onSubmit={handleSignup} className="space-y-4">
                <div className="space-y-2">
                 <Label htmlFor="name">الاسم الكامل</Label>
