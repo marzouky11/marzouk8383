@@ -1,29 +1,38 @@
 
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // ملف المستخدم
     match /users/{userId} {
-      // Authenticated users can create their own user document (on signup)
-      allow create: if request.auth != null && request.auth.uid == userId;
-      // Users can only read and update their own document
-      allow read, update: if request.auth != null && request.auth.uid == userId;
-    }
-
-    match /jobs/{jobId} {
-      // Anyone can read job listings
       allow read: if true;
-      // Authenticated users can create listings and can only update/delete their own
-      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-      allow update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow create, update: if request.auth != null && request.auth.uid == userId;
     }
 
+    // الإعلانات
+    match /ads/{adId} {
+      allow read: if true;
+
+      // إنشاء إعلان: فقط إذا كان المستخدم مسجل و userId يطابق معرفه
+      allow create: if request.auth != null &&
+                    request.auth.uid == request.resource.data.userId;
+
+      // التحديث والحذف: فقط إذا كان صاحب الإعلان
+      allow update, delete: if request.auth != null &&
+                            request.auth.uid == resource.data.userId;
+    }
+
+    // التفاعلات مثل "مهتم"
     match /interests/{interestId} {
-      // The document ID is a composite of userId_jobId
-      // Users can only create, read, or delete their own "interest" records
-      allow read, delete: if request.auth != null && request.auth.uid == interestId.split('_')[0];
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read: if true;
+
+      // إنشاء تفاعل: المستخدم المسجل فقط
+      allow create: if request.auth != null &&
+                    request.auth.uid == request.resource.data.userId;
+
+      // حذف التفاعل: فقط إذا كان هو من أنشأه
+      allow delete: if request.auth != null &&
+                    request.auth.uid == resource.data.userId;
     }
   }
 }

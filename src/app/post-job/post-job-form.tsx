@@ -126,11 +126,11 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
     try {
       const newJobData = {
         ...values,
-        uid: user.uid,
+        userId: user.uid,
         ownerName: userData.name,
         ownerAvatar: userData.avatarUrl || '',
       };
-      // @ts-ignore
+      
       const newJobId = await postJob(newJobData);
       toast({
         title: "تم النشر بنجاح!",

@@ -92,13 +92,13 @@ function formatTimeAgo(timestamp: any) {
 
 export async function getJobs(postType?: PostType, count?: number): Promise<Job[]> {
   try {
-    const jobsRef = collection(db, 'jobs');
+    const adsRef = collection(db, 'ads');
     let q;
 
     if (postType) {
-      q = query(jobsRef, where('postType', '==', postType), orderBy('createdAt', 'desc'));
+      q = query(adsRef, where('postType', '==', postType), orderBy('createdAt', 'desc'));
     } else {
-      q = query(jobsRef, orderBy('createdAt', 'desc'));
+      q = query(adsRef, orderBy('createdAt', 'desc'));
     }
 
     if (count) {
@@ -122,7 +122,7 @@ export async function getJobs(postType?: PostType, count?: number): Promise<Job[
 
 export async function getJobById(id: string): Promise<Job | null> {
   try {
-    const docRef = doc(db, 'jobs', id);
+    const docRef = doc(db, 'ads', id);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -145,14 +145,14 @@ export async function getJobById(id: string): Promise<Job | null> {
 // Post a new job to Firestore
 export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 'rating' | 'postedAt'>) {
     try {
-        const jobsCollection = collection(db, 'jobs');
+        const adsCollection = collection(db, 'ads');
         const newJob = {
             ...jobData,
             createdAt: serverTimestamp(),
             likes: 0,
             rating: 0,
         };
-        const docRef = await addDoc(jobsCollection, newJob);
+        const docRef = await addDoc(adsCollection, newJob);
         return docRef.id;
     } catch (e) {
         console.error("Error adding document: ", e);
@@ -182,18 +182,18 @@ export async function hasUserLikedJob(jobId: string, userId: string): Promise<bo
 
 export async function toggleLikeJob(jobId: string, userId: string) {
     const interestRef = doc(db, 'interests', `${userId}_${jobId}`);
-    const jobRef = doc(db, 'jobs', jobId);
+    const adRef = doc(db, 'ads', jobId);
     const interestDoc = await getDoc(interestRef);
 
     if (interestDoc.exists()) {
         await deleteDoc(interestRef);
-        await updateDoc(jobRef, {
+        await updateDoc(adRef, {
             likes: increment(-1)
         });
         return 'unliked';
     } else {
         await setDoc(interestRef, { userId, jobId, createdAt: serverTimestamp() });
-        await updateDoc(jobRef, {
+        await updateDoc(adRef, {
             likes: increment(1)
         });
         return 'liked';
