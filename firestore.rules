@@ -2,49 +2,38 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users can read their own data and update it. Anyone can read public profiles.
+    // User profile
     match /users/{userId} {
       allow read: if true;
       allow create, update: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Ads can be read by anyone.
-    // They can be created by authenticated users.
-    // They can be deleted only by their owner.
-    // They can be updated by their owner, OR any user can update ONLY the 'likes' field.
+    // Job Ads
     match /ads/{adId} {
       allow read: if true;
-
-      allow create: if request.auth != null &&
-                    request.auth.uid == request.resource.data.userId;
-
-      allow update: if request.auth != null &&
-                    (
-                      // Owner can update their ad
-                      (request.auth.uid == resource.data.userId) ||
-                      // Any logged-in user can update ONLY the likes field.
-                      (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']))
-                    );
-
-      allow delete: if request.auth != null &&
-                    request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      
+      allow update: if request.auth != null && (
+        // The owner can update the document, but cannot change the likes count directly.
+        (request.auth.uid == resource.data.userId &&
+         request.resource.data.likes == resource.data.likes
+        ) ||
+        // Or, any authenticated user can change ONLY the likes count by exactly 1.
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']) &&
+          (request.resource.data.likes == resource.data.likes + 1 || request.resource.data.likes == resource.data.likes - 1)
+        )
+      );
+      
+      allow delete: if request.auth != null && request.auth.uid == resource.data.userId;
     }
 
-    // Interests can be read by anyone.
-    // They can be created and deleted only by the user who is expressing interest.
+    // Interests (Likes)
     match /interests/{interestId} {
       allow read: if true;
-
-      // The document ID is in the format {userId}_{jobId}
-      // This rule ensures the creator's UID matches the first part of the doc ID,
-      // and also matches the userId field in the document data.
-      allow create: if request.auth != null &&
-                    request.auth.uid == request.resource.data.userId &&
-                    interestId.split('_')[0] == request.auth.uid;
-
-      // Allow deletion only if the user's UID matches the first part of the document ID.
-      allow delete: if request.auth != null &&
-                    interestId.split('_')[0] == request.auth.uid;
+      // The interestId is formatted as {userId}_{adId}
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow delete: if request.auth != null && request.auth.uid == resource.data.userId;
     }
   }
 }

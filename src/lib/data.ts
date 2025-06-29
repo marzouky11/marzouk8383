@@ -143,7 +143,7 @@ export async function getJobById(id: string): Promise<Job | null> {
 }
 
 // Post a new job to Firestore
-export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 'rating' | 'postedAt'>) {
+export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 'rating' | 'isFavorite' | 'postedAt'>) {
     try {
         const adsCollection = collection(db, 'ads');
         const newJob = {
@@ -179,32 +179,36 @@ export async function hasUserLikedJob(jobId: string, userId: string): Promise<bo
     return interestDoc.exists();
 }
 
-
 export async function toggleLikeJob(jobId: string, userId: string): Promise<'liked' | 'unliked'> {
     const adRef = doc(db, 'ads', jobId);
     const interestRef = doc(db, 'interests', `${userId}_${jobId}`);
 
     try {
-        let isLikedNow = false;
-        await runTransaction(db, async (transaction) => {
+        const result = await runTransaction(db, async (transaction) => {
             const interestDoc = await transaction.get(interestRef);
+            const adDoc = await transaction.get(adRef);
+
+            if (!adDoc.exists()) {
+                throw new Error("Document does not exist!");
+            }
             
+            const currentLikes = adDoc.data().likes;
+
             if (interestDoc.exists()) {
                 // User is unliking the job
                 transaction.delete(interestRef);
-                transaction.update(adRef, { likes: increment(-1) });
-                isLikedNow = false;
+                transaction.update(adRef, { likes: currentLikes - 1 });
+                return 'unliked';
             } else {
                 // User is liking the job
                 transaction.set(interestRef, { userId, jobId, createdAt: serverTimestamp() });
-                transaction.update(adRef, { likes: increment(1) });
-                isLikedNow = true;
+                transaction.update(adRef, { likes: currentLikes + 1 });
+                return 'liked';
             }
         });
-        return isLikedNow ? 'liked' : 'unliked';
+        return result;
     } catch (e) {
         console.error("Like/Unlike Transaction failed: ", e);
-        // Re-throw the error so it can be handled by the calling component
         throw new Error("Failed to update like status due to a database error.");
     }
 }
