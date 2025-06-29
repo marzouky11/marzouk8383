@@ -2,40 +2,40 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users can read their own data, and update their own data.
+    // User profile
     match /users/{userId} {
       allow read: if true;
       allow create, update: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Ads can be read by anyone.
-    // Ads can only be created by authenticated users.
-    // Ads can only be deleted or updated by the user who created them.
-    // Any authenticated user can update the 'likes' field.
+    // Ads
     match /ads/{adId} {
       allow read: if true;
 
+      // Create ad: Only if logged in and userId matches their own ID
       allow create: if request.auth != null &&
                     request.auth.uid == request.resource.data.userId;
 
-      // Update: Owner can update anything.
-      // Any authenticated user can update ONLY the 'likes' field.
-      allow update: if request.auth != null &&
-                    (request.auth.uid == resource.data.userId ||
-                     request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']));
+      // Update: Allow owner to update everything, OR any authenticated user to ONLY update 'likes'
+      allow update: if request.auth != null && (
+                      (request.auth.uid == resource.data.userId) || 
+                      (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']))
+                    );
 
+      // Delete: Only the owner of the ad
       allow delete: if request.auth != null &&
-                            request.auth.uid == resource.data.userId;
+                    request.auth.uid == resource.data.userId;
     }
 
-    // Interests can be read by anyone.
-    // Interests can only be created or deleted by the user who owns them.
+    // Interests (Likes)
     match /interests/{interestId} {
       allow read: if true;
 
+      // Create interest: Only authenticated users
       allow create: if request.auth != null &&
                     request.auth.uid == request.resource.data.userId;
 
+      // Delete interest: Only the user who created it
       allow delete: if request.auth != null &&
                     request.auth.uid == resource.data.userId;
     }
