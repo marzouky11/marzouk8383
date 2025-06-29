@@ -1,4 +1,6 @@
-import type { Job, Category, Country, PostType } from './types';
+import { db } from '@/lib/firebase';
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, increment, setDoc, deleteDoc } from 'firebase/firestore';
+import type { Job, Category, Country, PostType, User } from './types';
 
 const categories: Category[] = [
   { id: '1', name: 'نجارة', iconName: 'Hammer' },
@@ -56,149 +58,146 @@ const countries: Country[] = [
     { name: 'ليبيا', cities: ['طرابلس', 'بنغازي', 'مصراتة', 'البيضاء', 'سبها', 'طبرق', 'سرت'] },
 ];
 
-const jobs: Job[] = [
-  {
-    id: '1',
-    postType: 'seeking_worker',
-    title: 'مطلوب نجار محترف',
-    categoryId: '1',
-    country: 'المغرب',
-    city: 'طنجة',
-    salary: '200 درهم',
-    workType: 'daily',
-    description: 'مطلوب نجار محترف للعمل على مشروع أثاث فندقي. خبرة لا تقل عن 5 سنوات.',
-    phone: '+212612345678',
-    whatsapp: '+212612345678',
-    rating: 4.5,
-    likes: 23,
-    isFavorite: true,
-    postedAt: 'نشر قبل يومين',
-    ownerName: 'شركة الأثاث العصري',
-    ownerAvatar: 'https://placehold.co/100x100.png'
-  },
-  {
-    id: '2',
-    postType: 'seeking_worker',
-    title: 'كهربائي للعمل الشهري',
-    categoryId: '2',
-    country: 'السعودية',
-    city: 'الرياض',
-    salary: '5000 ريال',
-    workType: 'monthly',
-    description: 'شركة مقاولات كبرى تبحث عن كهربائيين للعمل بنظام الراتب الشهري. توفر الشركة السكن والمواصلات.',
-    phone: '+966512345678',
-    whatsapp: '+966512345678',
-    rating: 5,
-    likes: 50,
-    isFavorite: false,
-    postedAt: 'نشر قبل أسبوع',
-    ownerName: 'مقاولات المملكة',
-    ownerAvatar: 'https://placehold.co/100x100.png'
-  },
-  {
-    id: '3',
-    postType: 'seeking_worker',
-    title: 'طباخ في مطعم فاخر',
-    categoryId: '12',
-    country: 'الإمارات',
-    city: 'دبي',
-    salary: '7000 درهم إماراتي',
-    workType: 'monthly',
-    description: 'مطعم إيطالي في دبي مارينا يبحث عن شيف متخصص في المطبخ الإيطالي.',
-    phone: '+971501234567',
-    whatsapp: '+971501234567',
-    rating: 4.8,
-    likes: 12,
-    isFavorite: true,
-    postedAt: 'نشر قبل 5 أيام',
-    ownerName: 'مطعم بيلا إيطاليا',
-    ownerAvatar: 'https://placehold.co/100x100.png'
-  },
-  {
-    id: '4',
-    postType: 'seeking_worker',
-    title: 'بناء محترف',
-    categoryId: '4',
-    country: 'مصر',
-    city: 'القاهرة',
-    salary: '300 جنيه',
-    workType: 'daily',
-    phone: '+201012345678',
-    whatsapp: 'غير محدد',
-    description: 'مطلوب عامل بناء محترف لمشروع بناء فيلا.',
-    rating: 4.2,
-    likes: 5,
-    isFavorite: false,
-    postedAt: 'نشر قبل 10 أيام',
-    ownerName: 'أحمد المصري',
-    ownerAvatar: 'https://placehold.co/100x100.png'
-  },
-  {
-    id: '5',
-    postType: 'seeking_job',
-    title: 'مصمم جرافيك يبحث عن عمل',
-    categoryId: '5',
-    country: 'الأردن',
-    city: 'عمان',
-    salary: '400 دينار',
-    workType: 'project',
-    description: 'مصمم جرافيك بخبرة 3 سنوات في تصميم الهويات البصرية والمواد التسويقية، أبحث عن فرصة عمل لمشروع أو دوام كامل.',
-    phone: '+962791234567',
-    whatsapp: '+962791234567',
-    rating: 4.9,
-    likes: 8,
-    isFavorite: false,
-    postedAt: 'نشر اليوم',
-    ownerName: 'سارة أحمد',
-    ownerAvatar: 'https://i.postimg.cc/SNf0f4j6/avatar-1.png'
-  },
-  {
-    id: '6',
-    postType: 'seeking_job',
-    title: 'سائق خاص يبحث عن وظيفة',
-    categoryId: '9',
-    country: 'المغرب',
-    city: 'الدار البيضاء',
-    salary: '4000 درهم',
-    workType: 'monthly',
-    description: 'سائق خاص بخبرة في شوارع الدار البيضاء، أمتلك رخصة سياقة وألتزم بالمواعيد.',
-    phone: '+212623456789',
-    whatsapp: '+212623456789',
-    rating: 4.0,
-    likes: 18,
-    isFavorite: true,
-    postedAt: 'نشر قبل 3 ساعات',
-    ownerName: 'يوسف العلمي',
-    ownerAvatar: 'https://i.postimg.cc/zXvLgLzP/avatar-2.png'
-  },
-   {
-    id: '7',
-    postType: 'seeking_job',
-    title: 'حلاق محترف جاهز للعمل',
-    categoryId: '10',
-    country: 'المغرب',
-    city: 'الدار البيضاء',
-    salary: 'حسب الاتفاق',
-    workType: 'monthly',
-    description: 'حلاق محترف بخبرة في أحدث القصات والتسريحات، أبحث عن فرصة عمل في صالون راقٍ.',
-    phone: '+212611223344',
-    whatsapp: '+212611223344',
-    rating: 4.6,
-    likes: 19,
-    isFavorite: false,
-    postedAt: 'نشر قبل 4 أيام',
-    ownerName: 'كريم التازي',
-    ownerAvatar: 'https://i.postimg.cc/8CKxH4YQ/avatar-3.png'
-  },
-];
+function formatTimeAgo(timestamp: any) {
+  if (!timestamp || !timestamp.toDate) {
+    return 'غير معروف';
+  }
+  const date = timestamp.toDate();
+  const now = new Date();
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-export function getJobs(postType?: PostType) {
-  if (!postType) return jobs;
-  return jobs.filter((job) => job.postType === postType);
+  let interval = seconds / 31536000;
+  if (interval > 1) {
+    return `قبل ${Math.floor(interval)} سنوات`;
+  }
+  interval = seconds / 2592000;
+  if (interval > 1) {
+    return `قبل ${Math.floor(interval)} أشهر`;
+  }
+  interval = seconds / 86400;
+  if (interval > 1) {
+    return `قبل ${Math.floor(interval)} أيام`;
+  }
+  interval = seconds / 3600;
+  if (interval > 1) {
+    return `قبل ${Math.floor(interval)} ساعات`;
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return `قبل ${Math.floor(interval)} دقائق`;
+  }
+  return 'الآن';
 }
 
-export function getJobById(id: string) {
-  return jobs.find((job) => job.id === id);
+
+export async function getJobs(postType?: PostType, count?: number): Promise<Job[]> {
+  try {
+    const jobsRef = collection(db, 'jobs');
+    let q;
+
+    if (postType) {
+      q = query(jobsRef, where('postType', '==', postType), orderBy('createdAt', 'desc'));
+    } else {
+      q = query(jobsRef, orderBy('createdAt', 'desc'));
+    }
+
+    if (count) {
+      q = query(q, limit(count));
+    }
+
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            ...data,
+            postedAt: formatTimeAgo(data.createdAt),
+        } as Job;
+    });
+  } catch (error) {
+    console.error("Error fetching jobs: ", error);
+    return [];
+  }
+}
+
+export async function getJobById(id: string): Promise<Job | null> {
+  try {
+    const docRef = doc(db, 'jobs', id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return { 
+          id: docSnap.id, 
+          ...data,
+          postedAt: formatTimeAgo(data.createdAt),
+     } as Job;
+    } else {
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching job by ID: ", error);
+    return null;
+  }
+}
+
+// Post a new job to Firestore
+export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 'rating' | 'postedAt'>) {
+    try {
+        const jobsCollection = collection(db, 'jobs');
+        const newJob = {
+            ...jobData,
+            createdAt: serverTimestamp(),
+            likes: 0,
+            rating: 0,
+        };
+        const docRef = await addDoc(jobsCollection, newJob);
+        return docRef.id;
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        throw new Error("Failed to post job");
+    }
+}
+
+export async function updateUserProfile(uid: string, profileData: Partial<User>) {
+    try {
+        const userRef = doc(db, 'users', uid);
+        await updateDoc(userRef, {
+            ...profileData,
+            updatedAt: serverTimestamp()
+        });
+    } catch (e) {
+        console.error("Error updating user profile: ", e);
+        throw new Error("Failed to update profile");
+    }
+}
+
+export async function hasUserLikedJob(jobId: string, userId: string): Promise<boolean> {
+    const interestRef = doc(db, 'interests', `${userId}_${jobId}`);
+    const interestDoc = await getDoc(interestRef);
+    return interestDoc.exists();
+}
+
+
+export async function toggleLikeJob(jobId: string, userId: string) {
+    const interestRef = doc(db, 'interests', `${userId}_${jobId}`);
+    const jobRef = doc(db, 'jobs', jobId);
+    const interestDoc = await getDoc(interestRef);
+
+    if (interestDoc.exists()) {
+        await deleteDoc(interestRef);
+        await updateDoc(jobRef, {
+            likes: increment(-1)
+        });
+        return 'unliked';
+    } else {
+        await setDoc(interestRef, { userId, jobId, createdAt: serverTimestamp() });
+        await updateDoc(jobRef, {
+            likes: increment(1)
+        });
+        return 'liked';
+    }
 }
 
 export function getCategories() {

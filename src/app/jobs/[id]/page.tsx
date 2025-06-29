@@ -1,10 +1,12 @@
 'use client';
 
-import { useParams, notFound } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useParams, notFound, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Phone,
   MessageSquare,
@@ -16,17 +18,93 @@ import {
   User as UserIcon,
   Briefcase
 } from 'lucide-react';
-import { getJobById, getCategoryById } from '@/lib/data';
+import { getJobById, getCategoryById, toggleLikeJob, hasUserLikedJob } from '@/lib/data';
 import type { Job } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
 import { CopyButton } from './copy-button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/hooks/use-toast';
 
 export default function JobDetailPage() {
   const params = useParams<{ id: string }>();
-  if (!params) return null;
-  const job = getJobById(params.id);
+  const router = useRouter();
+  const [job, setJob] = useState<Job | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isLiked, setIsLiked] = useState(false);
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (params?.id) {
+      const fetchJob = async () => {
+        setLoading(true);
+        const jobData = await getJobById(params.id as string);
+        if (jobData) {
+            setJob(jobData);
+            if(user) {
+                const liked = await hasUserLikedJob(jobData.id, user.uid);
+                setIsLiked(liked);
+            }
+        }
+        setLoading(false);
+      };
+      fetchJob();
+    }
+  }, [params?.id, user]);
+
+  const handleLike = async () => {
+    if (!user) {
+      toast({ variant: 'destructive', title: 'الرجاء تسجيل الدخول أولاً' });
+      router.push('/login');
+      return;
+    }
+    if (job) {
+      try {
+        const result = await toggleLikeJob(job.id, user.uid);
+        if (result === 'liked') {
+            setIsLiked(true);
+            setJob(prevJob => prevJob ? { ...prevJob, likes: prevJob.likes + 1 } : null);
+            toast({ title: 'شكراً لاهتمامك!' });
+        } else {
+            setIsLiked(false);
+            setJob(prevJob => prevJob ? { ...prevJob, likes: prevJob.likes - 1 } : null);
+            toast({ title: 'تم إلغاء الاهتمام' });
+        }
+      } catch (error) {
+        toast({ variant: 'destructive', title: 'حدث خطأ' });
+      }
+    }
+  };
+
+
+  if (loading) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto max-w-2xl px-4 py-6">
+            <Card className="overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl border-muted">
+                <CardContent className="p-6 space-y-6">
+                    <Skeleton className="h-8 w-3/4" />
+                    <Skeleton className="h-6 w-1/4" />
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                        <Skeleton className="h-6 w-24" />
+                        <Skeleton className="h-6 w-24" />
+                    </div>
+                    <Separator />
+                    <Skeleton className="h-20 w-full" />
+                    <Separator />
+                    <div className="flex gap-2">
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+      </AppLayout>
+    );
+  }
 
   if (!job) {
     notFound();
@@ -78,8 +156,8 @@ export default function JobDetailPage() {
                 <InfoItem icon={CalendarDays} text={job.postedAt} />
               </div>
               
-              <Button variant="outline" className="w-fit">
-                <Heart className="ml-2 h-4 w-4" />
+              <Button variant="outline" className="w-fit" onClick={handleLike}>
+                <Heart className={cn("ml-2 h-4 w-4", isLiked && "fill-destructive text-destructive")} />
                 مهتم ({job.likes})
               </Button>
 

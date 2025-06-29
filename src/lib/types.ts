@@ -1,4 +1,4 @@
-import type { LucideIcon } from 'lucide-react';
+import type { Timestamp } from 'firebase/firestore';
 
 export interface Category {
   id: string;
@@ -11,6 +11,7 @@ export type PostType = 'seeking_worker' | 'seeking_job';
 
 export interface Job {
   id: string;
+  uid: string;
   postType: PostType;
   title: string;
   categoryId: string;
@@ -23,21 +24,24 @@ export interface Job {
   whatsapp: string;
   rating: number;
   likes: number;
-  isFavorite: boolean;
-  postedAt: string;
+  postedAt: string; // This is a derived string like "2 days ago"
+  createdAt: Timestamp;
   ownerName: string;
   ownerAvatar?: string;
 }
 
 export interface User {
+  id: string;
   name: string;
-  country: string;
-  city: string;
-  phone: string;
-  whatsapp: string;
+  email: string;
+  country?: string;
+  city?: string;
+  phone?: string;
+  whatsapp?: string;
   avatarUrl?: string;
   categoryId?: string;
   description?: string;
+  createdAt?: Timestamp;
 }
 
 export interface Country {

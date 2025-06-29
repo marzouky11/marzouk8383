@@ -1,11 +1,10 @@
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
-import type { Job } from '@/lib/types';
 import { JobFilters } from '@/components/job-filters';
 
-export default function JobsPage() {
-  const jobs: Job[] = getJobs('seeking_worker');
+export default async function JobsPage() {
+  const jobs = await getJobs('seeking_worker');
   const categories = getCategories();
   const countries = getCountries();
 
@@ -17,9 +16,11 @@ export default function JobsPage() {
         </div>
         
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {jobs.map((job) => (
-            <JobCard key={job.id} job={job} />
-          ))}
+          {jobs.length > 0 ? (
+            jobs.map((job) => <JobCard key={job.id} job={job} />)
+          ) : (
+            <p className="col-span-full text-center text-muted-foreground">لا توجد عروض عمل حالياً.</p>
+          )}
         </div>
       </div>
     </AppLayout>

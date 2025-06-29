@@ -1,6 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { useAuth } from '@/context/auth-context';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,21 +20,26 @@ import { User, Moon, Globe, LogIn, LogOut, ChevronLeft } from 'lucide-react';
 import { ProfileForm } from './profile-form';
 import { getCountries, getCategories } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useToast } from '@/hooks/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SettingsPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const { user, userData, loading } = useAuth();
+  const isLoggedIn = !!user;
+
   const countries = getCountries();
   const categories = getCategories();
-  // Simulate user login state. Change to false to see the logged-out view.
-  const [isLoggedIn, setIsLoggedIn] = useState(true); 
-  const user = {
-    name: 'مستخدم جديد',
-    country: 'المغرب',
-    city: 'الدار البيضاء',
-    phone: '+212600000000',
-    whatsapp: '+212600000000',
-    avatarUrl: 'https://i.postimg.cc/SNf0f4j6/avatar-1.png',
-    categoryId: '17',
-    description: 'مبرمج تطبيقات ويب بخبرة 5 سنوات، أبحث عن فرص جديدة في مجال التكنولوجيا وتطوير المنتجات الرقمية.',
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({ title: 'تم تسجيل الخروج بنجاح.' });
+      router.push('/');
+    } catch (error) {
+      toast({ variant: 'destructive', title: 'حدث خطأ أثناء تسجيل الخروج.' });
+    }
   };
 
   const SettingItem = ({ icon: Icon, label, action }: { icon: React.ElementType, label: string, action: React.ReactNode }) => (
@@ -48,16 +57,26 @@ export default function SettingsPage() {
       <div className="container mx-auto max-w-2xl px-4 py-8">
         <div className="space-y-6">
           
-          {isLoggedIn && (
+          {loading ? (
+             <Card>
+              <CardContent className="p-4 flex items-center gap-4">
+                 <Skeleton className="h-16 w-16 rounded-full" />
+                 <div className='space-y-2'>
+                    <Skeleton className="h-6 w-32" />
+                    <Skeleton className="h-4 w-24" />
+                 </div>
+              </CardContent>
+            </Card>
+          ) : isLoggedIn && userData && (
             <Card>
               <CardContent className="p-4 flex items-center gap-4">
                  <Avatar className="h-16 w-16">
-                    <AvatarImage src={user.avatarUrl} data-ai-hint="user avatar" alt={user.name} />
-                    <AvatarFallback className="text-2xl">{user.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={userData.avatarUrl} data-ai-hint="user avatar" alt={userData.name} />
+                    <AvatarFallback className="text-2xl">{userData.name.charAt(0)}</AvatarFallback>
                  </Avatar>
                  <div>
-                    <h2 className="text-xl font-bold">{user.name}</h2>
-                    <p className="text-sm text-muted-foreground">{categories.find(c => c.id === user.categoryId)?.name || 'لم تحدد الفئة'}</p>
+                    <h2 className="text-xl font-bold">{userData.name}</h2>
+                    <p className="text-sm text-muted-foreground">{categories.find(c => c.id === userData.categoryId)?.name || 'لم تحدد الفئة'}</p>
                  </div>
               </CardContent>
             </Card>
@@ -66,7 +85,7 @@ export default function SettingsPage() {
           <Card>
             <CardContent className="p-0">
               <ul className="divide-y divide-border">
-                {isLoggedIn && (
+                {isLoggedIn && userData && (
                   <Sheet>
                     <SheetTrigger asChild>
                       <li className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
@@ -82,7 +101,7 @@ export default function SettingsPage() {
                         <SheetTitle>تعديل الملف الشخصي</SheetTitle>
                       </SheetHeader>
                       <div className="py-4">
-                         <ProfileForm countries={countries} categories={categories} user={user} />
+                         <ProfileForm countries={countries} categories={categories} user={userData} />
                       </div>
                     </SheetContent>
                   </Sheet>
@@ -102,21 +121,23 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
           
-          <Card>
-             <CardContent className="p-4 space-y-4">
-                {isLoggedIn ? (
-                  <Button variant="destructive" className="w-full" onClick={() => setIsLoggedIn(false)}>
-                    <LogOut className="ml-2 h-4 w-4" />
-                    تسجيل الخروج
-                  </Button>
-                ) : (
-                  <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => setIsLoggedIn(true)}>
-                    <LogIn className="ml-2 h-4 w-4" />
-                    تسجيل الدخول أو إنشاء حساب
-                  </Button>
-                )}
-             </CardContent>
-          </Card>
+          {!loading && (
+             <Card>
+               <CardContent className="p-4 space-y-4">
+                  {isLoggedIn ? (
+                    <Button variant="destructive" className="w-full" onClick={handleLogout}>
+                      <LogOut className="ml-2 h-4 w-4" />
+                      تسجيل الخروج
+                    </Button>
+                  ) : (
+                    <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => router.push('/login')}>
+                      <LogIn className="ml-2 h-4 w-4" />
+                      تسجيل الدخول أو إنشاء حساب
+                    </Button>
+                  )}
+               </CardContent>
+            </Card>
+          )}
 
         </div>
       </div>

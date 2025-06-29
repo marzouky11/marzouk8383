@@ -11,15 +11,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from "@/hooks/use-toast"
 import type { Country, User, Category } from '@/lib/types';
+import { updateUserProfile } from '@/lib/data';
+import { useAuth } from '@/context/auth-context';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'الاسم مطلوب.' }),
   categoryId: z.string().optional(),
   description: z.string().optional(),
-  country: z.string().min(1, { message: 'الدولة مطلوبة.' }),
-  city: z.string().min(1, { message: 'المدينة مطلوبة.' }),
-  phone: z.string().min(1, { message: 'رقم الهاتف مطلوب.' }),
-  whatsapp: z.string().min(1, { message: 'رقم واتساب مطلوب.' }),
+  country: z.string().optional(),
+  city: z.string().optional(),
+  phone: z.string().optional(),
+  whatsapp: z.string().optional(),
 });
 
 interface ProfileFormProps {
@@ -30,9 +33,20 @@ interface ProfileFormProps {
 
 export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
   const { toast } = useToast();
+  const { user: authUser } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: user,
+    defaultValues: {
+      name: user?.name || '',
+      categoryId: user?.categoryId || '',
+      description: user?.description || '',
+      country: user?.country || '',
+      city: user?.city || '',
+      phone: user?.phone || '',
+      whatsapp: user?.whatsapp || '',
+    },
   });
 
   const [cities, setCities] = useState<string[]>([]);
@@ -47,19 +61,34 @@ export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
   
   useEffect(() => {
     // Set initial cities based on default user country
-    const initialCountry = countries.find(c => c.name === user.country);
-    if(initialCountry) {
-        setCities(initialCountry.cities);
+    if (user?.country) {
+        const initialCountry = countries.find(c => c.name === user.country);
+        if(initialCountry) {
+            setCities(initialCountry.cities);
+        }
     }
-  }, [countries, user.country]);
+  }, [countries, user]);
 
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-      title: "تم تحديث الملف الشخصي",
-      description: "تم حفظ معلوماتك بنجاح.",
-    });
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!authUser) return;
+
+    setIsSubmitting(true);
+    try {
+        await updateUserProfile(authUser.uid, values);
+        toast({
+            title: "تم تحديث الملف الشخصي",
+            description: "تم حفظ معلوماتك بنجاح.",
+        });
+    } catch (error) {
+         toast({
+            variant: "destructive",
+            title: "خطأ",
+            description: "فشل تحديث الملف الشخصي.",
+        });
+    } finally {
+        setIsSubmitting(false);
+    }
   }
 
   return (
@@ -114,7 +143,10 @@ export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
             <FormItem><FormLabel>رقم واتساب</FormLabel><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
           )} />
         </div>
-        <Button type="submit" size="lg" className="w-full">حفظ التغييرات</Button>
+        <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+            {isSubmitting && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+            حفظ التغييرات
+        </Button>
       </form>
     </Form>
   );

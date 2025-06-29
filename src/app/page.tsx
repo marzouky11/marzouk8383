@@ -6,10 +6,27 @@ import { JobFilters } from '@/components/job-filters';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
+import { Skeleton } from '@/components/ui/skeleton';
+import React from 'react';
 
-export default function HomePage() {
-  const jobOffers = getJobs('seeking_worker');
-  const jobSeekers = getJobs('seeking_job');
+function JobSectionSkeleton() {
+    return (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="p-3 border rounded-xl space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                    <Skeleton className="h-4 w-2/3" />
+                </div>
+            ))}
+        </div>
+    );
+}
+
+
+export default async function HomePage() {
+  const jobOffers = await getJobs('seeking_worker', 4);
+  const jobSeekers = await getJobs('seeking_job', 4);
   const categories = getCategories();
   const countries = getCountries();
 
@@ -45,11 +62,13 @@ export default function HomePage() {
               </Link>
             </Button>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {jobOffers.slice(0, 4).map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
+          <React.Suspense fallback={<JobSectionSkeleton />}>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {jobOffers.map((job) => (
+                <JobCard key={job.id} job={job} />
+              ))}
+            </div>
+          </React.Suspense>
         </section>
 
         <section>
@@ -61,11 +80,13 @@ export default function HomePage() {
               </Link>
             </Button>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {jobSeekers.slice(0, 4).map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
+           <React.Suspense fallback={<JobSectionSkeleton />}>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {jobSeekers.map((job) => (
+                <JobCard key={job.id} job={job} />
+              ))}
+            </div>
+          </React.Suspense>
         </section>
       </div>
     </AppLayout>

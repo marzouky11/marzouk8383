@@ -13,6 +13,9 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/hooks/use-toast"
 import type { Category, Country } from '@/lib/types';
 import { suggestJobCategories } from '@/ai/flows/suggest-job-categories';
+import { postJob } from '@/lib/data';
+import { useAuth } from '@/context/auth-context';
+import { useRouter } from 'next/navigation';
 import { 
   Sparkles, Loader2, Briefcase, Users, FileText, FileSignature, 
   LayoutGrid, Globe, MapPin, Wallet, Phone, MessageSquare
@@ -40,6 +43,9 @@ interface PostJobFormProps {
 
 export function PostJobForm({ categories, countries }: PostJobFormProps) {
   const { toast } = useToast();
+  const { user, userData } = useAuth();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,6 +64,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
   const [cities, setCities] = useState<string[]>([]);
   const [suggestedCategories, setSuggestedCategories] = useState<string[]>([]);
   const [isSuggesting, setIsSuggesting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const selectedCountry = form.watch('country');
   const jobDescription = form.watch('description');
@@ -104,14 +111,43 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
     }
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-      title: "تم النشر بنجاح!",
-      description: "تم نشر إعلانك وسيظهر في القسم المناسب.",
-    });
-    form.reset();
-    setSuggestedCategories([]);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!user || !userData) {
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "يجب عليك تسجيل الدخول أولاً لنشر إعلان.",
+      });
+      router.push('/login');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const newJobData = {
+        ...values,
+        uid: user.uid,
+        ownerName: userData.name,
+        ownerAvatar: userData.avatarUrl || '',
+      };
+      // @ts-ignore
+      const newJobId = await postJob(newJobData);
+      toast({
+        title: "تم النشر بنجاح!",
+        description: "تم نشر إعلانك وسيظهر في القسم المناسب.",
+      });
+      form.reset();
+      setSuggestedCategories([]);
+      router.push(`/jobs/${newJobId}`);
+    } catch (error) {
+       toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "حدث خطأ أثناء نشر الإعلان.",
+      });
+    } finally {
+        setIsSubmitting(false);
+    }
   }
   
   const FormLabelIcon = ({icon: Icon, label}: {icon: React.ElementType, label: string}) => (
@@ -219,6 +255,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
           <Button
             type="submit"
             size="lg"
+            disabled={isSubmitting}
             className={cn(
               'w-full',
               postType === 'seeking_job'
@@ -228,6 +265,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
                 : ''
             )}
           >
+            {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             نشر الإعلان
           </Button>
         </fieldset>
