@@ -2,42 +2,49 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // User profile
+    // Users can read their own data and update it. Anyone can read public profiles.
     match /users/{userId} {
       allow read: if true;
       allow create, update: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Ads
+    // Ads can be read by anyone.
+    // They can be created by authenticated users.
+    // They can be deleted only by their owner.
+    // They can be updated by their owner, OR any user can update ONLY the 'likes' field.
     match /ads/{adId} {
       allow read: if true;
 
-      // Create ad: Only if logged in and userId matches their own ID
       allow create: if request.auth != null &&
                     request.auth.uid == request.resource.data.userId;
 
-      // Update: Allow owner to update everything, OR any authenticated user to ONLY update 'likes'
-      allow update: if request.auth != null && (
-                      (request.auth.uid == resource.data.userId) || 
+      allow update: if request.auth != null &&
+                    (
+                      // Owner can update their ad
+                      (request.auth.uid == resource.data.userId) ||
+                      // Any logged-in user can update ONLY the likes field.
                       (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']))
                     );
 
-      // Delete: Only the owner of the ad
       allow delete: if request.auth != null &&
                     request.auth.uid == resource.data.userId;
     }
 
-    // Interests (Likes)
+    // Interests can be read by anyone.
+    // They can be created and deleted only by the user who is expressing interest.
     match /interests/{interestId} {
       allow read: if true;
 
-      // Create interest: Only authenticated users
+      // The document ID is in the format {userId}_{jobId}
+      // This rule ensures the creator's UID matches the first part of the doc ID,
+      // and also matches the userId field in the document data.
       allow create: if request.auth != null &&
-                    request.auth.uid == request.resource.data.userId;
+                    request.auth.uid == request.resource.data.userId &&
+                    interestId.split('_')[0] == request.auth.uid;
 
-      // Delete interest: Only the user who created it
+      // Allow deletion only if the user's UID matches the first part of the document ID.
       allow delete: if request.auth != null &&
-                    request.auth.uid == resource.data.userId;
+                    interestId.split('_')[0] == request.auth.uid;
     }
   }
 }
