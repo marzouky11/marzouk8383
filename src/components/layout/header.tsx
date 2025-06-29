@@ -48,11 +48,11 @@ export function Header() {
       <div className="container">
         {isHomePage ? (
           <div className="pt-4 pb-8 text-center">
-            <div className="flex items-center justify-center gap-2 mb-1">
-                <Handshake className="h-7 w-7 text-white" />
-                <h1 className="text-2xl font-bold">Zafay</h1>
+            <div className="flex items-center justify-center gap-2 mb-2">
+                <Handshake className="h-8 w-8 text-white" />
+                <h1 className="text-3xl font-bold">الخدمة الآن</h1>
             </div>
-            <p className="text-xs opacity-80">منصة الربط بين العمال وأصحاب العمل</p>
+            <p className="text-sm opacity-80">بوابتك الأولى للخدمات والوظائف</p>
           </div>
         ) : (
           <div className="flex h-20 items-center justify-center relative">

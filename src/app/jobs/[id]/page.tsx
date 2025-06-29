@@ -115,7 +115,6 @@ export default function JobDetailPage() {
   const themeColor = isWorkerAd ? 'text-accent' : 'text-destructive';
   const themeBg = isWorkerAd ? 'bg-accent/10' : 'bg-destructive/10';
   const themeBorder = isWorkerAd ? 'border-accent' : 'border-destructive';
-  const themeButton = isWorkerAd ? 'bg-accent text-accent-foreground hover:bg-accent/90' : 'bg-destructive text-destructive-foreground hover:bg-destructive/90';
 
   const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | undefined }) => (
     <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -136,7 +135,7 @@ export default function JobDetailPage() {
                   </h2>
                   <div className="flex items-center gap-2 text-muted-foreground mt-1">
                     <MapPin className="h-4 w-4" />
-                    <span className="text-md">{job.city}</span>
+                    <span className="text-md">{job.country}, {job.city}</span>
                   </div>
                 </div>
                 {category && (
@@ -199,7 +198,7 @@ export default function JobDetailPage() {
                       واتساب
                     </a>
                   </Button>
-                  <Button asChild className={cn('flex-grow', themeButton)}>
+                  <Button asChild className={cn('flex-grow', isWorkerAd ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-destructive text-destructive-foreground hover:bg-destructive/90')}>
                     <a href={`tel:${job.phone}`}>
                       <Phone className="ml-2 h-4 w-4" />
                       اتصال
