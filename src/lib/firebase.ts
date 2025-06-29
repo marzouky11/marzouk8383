@@ -1,4 +1,3 @@
-'use client';
 // It is recommended to store these values in environment variables
 // For example, in a .env.local file
 // NEXT_PUBLIC_FIREBASE_API_KEY=...
