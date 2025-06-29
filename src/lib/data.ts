@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, increment, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, increment, setDoc, deleteDoc, runTransaction } from 'firebase/firestore';
 import type { Job, Category, Country, PostType, User } from './types';
 
 const categories: Category[] = [
@@ -180,25 +180,35 @@ export async function hasUserLikedJob(jobId: string, userId: string): Promise<bo
 }
 
 
-export async function toggleLikeJob(jobId: string, userId: string) {
-    const interestRef = doc(db, 'interests', `${userId}_${jobId}`);
+export async function toggleLikeJob(jobId: string, userId: string): Promise<'liked' | 'unliked'> {
     const adRef = doc(db, 'ads', jobId);
-    const interestDoc = await getDoc(interestRef);
+    const interestRef = doc(db, 'interests', `${userId}_${jobId}`);
 
-    if (interestDoc.exists()) {
-        await deleteDoc(interestRef);
-        await updateDoc(adRef, {
-            likes: increment(-1)
+    try {
+        let isLikedNow = false;
+        await runTransaction(db, async (transaction) => {
+            const interestDoc = await transaction.get(interestRef);
+            
+            if (interestDoc.exists()) {
+                // User is unliking the job
+                transaction.delete(interestRef);
+                transaction.update(adRef, { likes: increment(-1) });
+                isLikedNow = false;
+            } else {
+                // User is liking the job
+                transaction.set(interestRef, { userId, jobId, createdAt: serverTimestamp() });
+                transaction.update(adRef, { likes: increment(1) });
+                isLikedNow = true;
+            }
         });
-        return 'unliked';
-    } else {
-        await setDoc(interestRef, { userId, jobId, createdAt: serverTimestamp() });
-        await updateDoc(adRef, {
-            likes: increment(1)
-        });
-        return 'liked';
+        return isLikedNow ? 'liked' : 'unliked';
+    } catch (e) {
+        console.error("Like/Unlike Transaction failed: ", e);
+        // Re-throw the error so it can be handled by the calling component
+        throw new Error("Failed to update like status due to a database error.");
     }
 }
+
 
 export function getCategories() {
   return categories;

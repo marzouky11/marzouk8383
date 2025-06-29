@@ -2,45 +2,40 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ملف المستخدم
+    // Users can read their own data, and update their own data.
     match /users/{userId} {
       allow read: if true;
       allow create, update: if request.auth != null && request.auth.uid == userId;
     }
 
-    // الإعلانات
+    // Ads can be read by anyone.
+    // Ads can only be created by authenticated users.
+    // Ads can only be deleted or updated by the user who created them.
+    // Any authenticated user can update the 'likes' field.
     match /ads/{adId} {
       allow read: if true;
 
-      // إنشاء إعلان: فقط إذا كان المستخدم مسجل و userId يطابق معرفه
       allow create: if request.auth != null &&
                     request.auth.uid == request.resource.data.userId;
 
-      // التحديث: يمكن للمالك تحديث أي شيء. يمكن للآخرين تحديث الإعجابات فقط.
-      allow update: if request.auth != null && (
-        // المالك يمكنه تحديث كل شيء
-        request.auth.uid == resource.data.userId ||
-        // المستخدمون الآخرون يمكنهم فقط تحديث عدد الإعجابات بزيادة أو نقصان 1
-        (
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']) &&
-          (request.resource.data.likes == resource.data.likes + 1 || request.resource.data.likes == resource.data.likes - 1)
-        )
-      );
+      // Update: Owner can update anything.
+      // Any authenticated user can update ONLY the 'likes' field.
+      allow update: if request.auth != null &&
+                    (request.auth.uid == resource.data.userId ||
+                     request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']));
 
-      // الحذف: فقط إذا كان صاحب الإعلان
       allow delete: if request.auth != null &&
                             request.auth.uid == resource.data.userId;
     }
 
-    // التفاعلات مثل "مهتم"
+    // Interests can be read by anyone.
+    // Interests can only be created or deleted by the user who owns them.
     match /interests/{interestId} {
       allow read: if true;
 
-      // إنشاء تفاعل: المستخدم المسجل فقط
       allow create: if request.auth != null &&
                     request.auth.uid == request.resource.data.userId;
 
-      // حذف التفاعل: فقط إذا كان هو من أنشأه
       allow delete: if request.auth != null &&
                     request.auth.uid == resource.data.userId;
     }
