@@ -3,21 +3,27 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
+    match /users/{userId} {
+      // Authenticated users can create their own user document (on signup)
+      allow create: if request.auth != null && request.auth.uid == userId;
+      // Users can only read and update their own document
+      allow read, update: if request.auth != null && request.auth.uid == userId;
+    }
+
     match /jobs/{jobId} {
+      // Anyone can read job listings
       allow read: if true;
-      allow create: if request.auth != null;
+      // Authenticated users can create listings and can only update/delete their own
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
       allow update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
 
-    match /users/{userId} {
-      allow read, update: if request.auth != null && request.auth.uid == userId;
-      allow create: if request.auth != null;
-    }
-
     match /interests/{interestId} {
-      allow read: if request.auth != null;
-      allow create, delete: if request.auth != null && request.auth.uid == interestId.split('_')[0];
+      // The document ID is a composite of userId_jobId
+      // Users can only create, read, or delete their own "interest" records
+      allow read, delete: if request.auth != null && request.auth.uid == interestId.split('_')[0];
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
     }
   }
 }
