@@ -12,12 +12,14 @@ import { Handshake } from 'lucide-react';
 
 function JobSectionSkeleton() {
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0">
             {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="p-3 border rounded-xl space-y-2">
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                    <Skeleton className="h-4 w-2/3" />
+                <div key={i} className="w-[55vw] sm:w-[45vw] md:w-auto flex-shrink-0">
+                     <Card className="p-3 space-y-2 h-full">
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-4 w-2/3" />
+                    </Card>
                 </div>
             ))}
         </div>
@@ -75,9 +77,11 @@ export default async function HomePage() {
             </Button>
           </div>
           <React.Suspense fallback={<JobSectionSkeleton />}>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0">
               {jobOffers.map((job) => (
-                <JobCard key={job.id} job={job} />
+                <div key={job.id} className="w-[55vw] sm:w-[45vw] md:w-auto flex-shrink-0">
+                    <JobCard job={job} />
+                </div>
               ))}
             </div>
           </React.Suspense>
@@ -93,9 +97,11 @@ export default async function HomePage() {
             </Button>
           </div>
            <React.Suspense fallback={<JobSectionSkeleton />}>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0">
               {jobSeekers.map((job) => (
-                <JobCard key={job.id} job={job} />
+                <div key={job.id} className="w-[55vw] sm:w-[45vw] md:w-auto flex-shrink-0">
+                    <JobCard job={job} />
+                </div>
               ))}
             </div>
           </React.Suspense>
