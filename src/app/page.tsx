@@ -58,9 +58,9 @@ export default async function HomePage() {
       <div className="space-y-8">
         <div className="container">
           <div className="md:pt-6 -mt-16 md:mt-0 relative z-10">
-            <div className="bg-card p-2 rounded-2xl shadow-lg">
-              <JobFilters categories={categories} countries={countries} searchPath="/jobs" showFilterButton={false} />
-            </div>
+            <Card className="p-2 rounded-2xl shadow-lg">
+              <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
+            </Card>
           </div>
         </div>
 

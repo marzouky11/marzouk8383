@@ -27,10 +27,9 @@ interface JobFiltersProps {
   showSort?: boolean;
   className?: string;
   searchPath?: string;
-  showFilterButton?: boolean;
 }
 
-export function JobFilters({ categories, countries, showSort = false, className, searchPath, showFilterButton = true }: JobFiltersProps) {
+export function JobFilters({ categories, countries, showSort = false, className, searchPath }: JobFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -43,6 +42,7 @@ export function JobFilters({ categories, countries, showSort = false, className,
   const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'newest');
   
   const [cities, setCities] = useState<string[]>([]);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   useEffect(() => {
     const countryData = countries.find(c => c.name === selectedCountry);
@@ -71,6 +71,7 @@ export function JobFilters({ categories, countries, showSort = false, className,
     
     const targetPath = searchPath || pathname;
     router.push(`${targetPath}?${params.toString()}`);
+    setIsSheetOpen(false);
   };
   
   const handleSearch = (e: React.FormEvent) => {
@@ -83,6 +84,8 @@ export function JobFilters({ categories, countries, showSort = false, className,
     setSelectedCity('');
   }
   
+  const isHomepage = !searchPath;
+
   return (
     <div className={cn(`flex gap-2 items-center`, className)}>
       <form onSubmit={handleSearch} className="flex gap-2 items-center flex-grow">
@@ -91,28 +94,28 @@ export function JobFilters({ categories, countries, showSort = false, className,
             placeholder="ابحث عن وظيفة، عامل، أو خدمة..."
             className={cn(
               "h-12 text-base rounded-lg",
-              showFilterButton 
-                ? "pl-10 pr-4 shadow-sm"
-                : "pr-4 pl-14 border-0 bg-background focus-visible:ring-0 focus-visible:ring-offset-0"
+               isHomepage 
+                ? "pl-4 pr-12 shadow-sm border" 
+                : "pl-4 pr-14 border-0 bg-background focus-visible:ring-0 focus-visible:ring-offset-0"
             )}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <div className={cn(
+           <div className={cn(
             "absolute top-1/2 -translate-y-1/2",
-            showFilterButton ? "left-3" : "right-3"
+             isHomepage ? "right-3" : "right-3"
             )}>
-            <Button type="submit" size="icon" className={cn(
-              "rounded-full",
-              showFilterButton ? "w-auto h-auto bg-transparent" : "h-9 w-9 bg-primary text-primary-foreground"
-            )}>
-                <Search className={cn("h-5 w-5", showFilterButton ? "text-muted-foreground" : "")} />
-            </Button>
+              <Button type="submit" size="icon" className={cn(
+                "rounded-full",
+                isHomepage ? "h-9 w-9 bg-primary text-primary-foreground" : "w-auto h-auto bg-transparent"
+              )}>
+                  <Search className={cn("h-5 w-5", isHomepage ? "" : "text-muted-foreground")} />
+              </Button>
           </div>
         </div>
       </form>
 
-      {showFilterButton && <Sheet>
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetTrigger asChild>
           <Button variant="outline" className="h-12 w-12 flex-shrink-0 shadow-sm rounded-lg border bg-card p-0">
             <SlidersHorizontal className="h-5 w-5 text-muted-foreground" />
@@ -175,12 +178,10 @@ export function JobFilters({ categories, countries, showSort = false, className,
             </div>
           </div>
           <SheetFooter className="mt-4 pt-4 border-t">
-            <SheetClose asChild>
-              <Button type="button" onClick={handleFilter} size="lg" className="w-full">عرض النتائج</Button>
-            </SheetClose>
+            <Button type="button" onClick={handleFilter} size="lg" className="w-full">عرض النتائج</Button>
           </SheetFooter>
         </SheetContent>
-      </Sheet>}
+      </Sheet>
     </div>
   );
 }
