@@ -6,10 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
 import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Search, Sun, Handshake } from 'lucide-react';
+import { Handshake } from 'lucide-react';
 import { JobFilters } from '@/components/job-filters';
 import { ThemeToggleButton } from '@/components/theme-toggle';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 
 
 function JobSectionSkeleton() {
@@ -31,15 +31,14 @@ function HomeHeaderMobile({ categories, countries }: {
 }) {
   return (
       <div className="md:hidden">
-        <div className="bg-primary text-primary-foreground p-4 pb-12 rounded-b-[2.5rem]">
+        <div className="bg-primary text-primary-foreground p-4 pb-10 rounded-b-[2.5rem]">
           <div className="container mx-auto">
             <div className="flex justify-between items-center mb-2">
-              <ThemeToggleButton className="text-white hover:bg-white/20" />
               <div className="flex items-center gap-2">
-                  <Handshake className="h-7 w-7" />
                   <h1 className="text-xl font-bold">الخدمة الآن</h1>
+                  <Handshake className="h-7 w-7" />
               </div>
-              <div className="w-10"></div> {/* Spacer */}
+              <ThemeToggleButton className="text-white hover:bg-white/20" />
             </div>
             <p className="text-center text-sm font-light text-primary-foreground/90">فرص عمل بانتظارك</p>
           </div>
@@ -50,6 +49,30 @@ function HomeHeaderMobile({ categories, countries }: {
       </div>
   );
 }
+
+const carouselImages = [
+    {
+        src: "https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg",
+        alt: "عامل في موقع بناء",
+        hint: "construction worker",
+        title: "عمال محترفون",
+        description: "خبراء معتمدون في جميع المجالات"
+    },
+    {
+        src: "https://i.postimg.cc/BbSqbdmv/images-2021-09-02-T035936-467.jpg",
+        alt: "فريق عمل يتعاون",
+        hint: "team collaboration",
+        title: "فرص عمل متنوعة",
+        description: "ابحث عن فرصتك في مختلف القطاعات"
+    },
+    {
+        src: "https://i.postimg.cc/4x7XYvQp/image.jpg",
+        alt: "مصافحة بين عاملين",
+        hint: "professional handshake",
+        title: "انضم إلى الأفضل",
+        description: "تواصل مع أصحاب العمل مباشرة"
+    }
+];
 
 export default async function HomePage() {
   const jobOffers = await getJobs({ postType: 'seeking_worker', count: 4 });
@@ -68,22 +91,34 @@ export default async function HomePage() {
       </div>
       
       <div className="container space-y-8 mt-6">
-          <Card className="overflow-hidden rounded-2xl shadow-lg border-none">
-              <div className="relative h-44 md:h-64">
-              <Image
-                  src="https://i.postimg.cc/4x7XYvQp/image.jpg"
-                  alt="عمال محترفون"
-                  fill
-                  priority
-                  className="object-cover"
-                  data-ai-hint="professional workers handshake"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
-                  <h2 className="text-2xl md:text-4xl font-bold text-white">عمال محترفون</h2>
-                  <p className="text-white/90 mt-1 max-w-lg text-sm">خبراء معتمدون في جميع المجالات</p>
-              </div>
-              </div>
-          </Card>
+          <Carousel
+            className="w-full rounded-2xl overflow-hidden shadow-lg"
+            opts={{
+              loop: true,
+              direction: 'rtl',
+            }}
+          >
+            <CarouselContent>
+              {carouselImages.map((image, index) => (
+                <CarouselItem key={index}>
+                  <div className="relative h-44 md:h-64">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      priority={index === 0}
+                      className="object-cover"
+                      data-ai-hint={image.hint}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
+                      <h2 className="text-2xl md:text-4xl font-bold text-white">{image.title}</h2>
+                      <p className="text-white/90 mt-1 max-w-lg text-sm">{image.description}</p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
 
           <section>
               <div className="flex justify-between items-baseline mb-4">
