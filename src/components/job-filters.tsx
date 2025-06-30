@@ -84,32 +84,19 @@ export function JobFilters({ categories, countries, showSort = false, className,
     setSelectedCity('');
   }
   
-  const isHomepage = !searchPath;
-
   return (
     <div className={cn(`flex gap-2 items-center`, className)}>
-      <form onSubmit={handleSearch} className="flex gap-2 items-center flex-grow">
-        <div className="relative flex-grow">
+      <form onSubmit={handleSearch} className="flex-grow">
+        <div className="relative w-full">
           <Input
             placeholder="ابحث عن وظيفة، عامل، أو خدمة..."
-            className={cn(
-              "h-12 text-base rounded-lg",
-               isHomepage 
-                ? "pl-4 pr-12 shadow-sm border" 
-                : "pl-4 pr-14 border-0 bg-background focus-visible:ring-0 focus-visible:ring-offset-0"
-            )}
+            className="h-12 text-base rounded-lg pl-4 pr-12 border bg-card focus-visible:ring-primary/50"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-           <div className={cn(
-            "absolute top-1/2 -translate-y-1/2",
-             isHomepage ? "right-3" : "right-3"
-            )}>
-              <Button type="submit" size="icon" className={cn(
-                "rounded-full",
-                isHomepage ? "h-9 w-9 bg-primary text-primary-foreground" : "w-auto h-auto bg-transparent"
-              )}>
-                  <Search className={cn("h-5 w-5", isHomepage ? "" : "text-muted-foreground")} />
+           <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <Button type="submit" size="icon" variant="ghost" className="rounded-full h-9 w-9">
+                  <Search className="h-5 w-5 text-muted-foreground" />
               </Button>
           </div>
         </div>
@@ -178,7 +165,9 @@ export function JobFilters({ categories, countries, showSort = false, className,
             </div>
           </div>
           <SheetFooter className="mt-4 pt-4 border-t">
-            <Button type="button" onClick={handleFilter} size="lg" className="w-full">عرض النتائج</Button>
+            <SheetClose asChild>
+              <Button type="button" onClick={handleFilter} size="lg" className="w-full">عرض النتائج</Button>
+            </SheetClose>
           </SheetFooter>
         </SheetContent>
       </Sheet>
