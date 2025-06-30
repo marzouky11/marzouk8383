@@ -1,6 +1,6 @@
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, increment, setDoc, deleteDoc, runTransaction } from 'firebase/firestore';
-import type { Job, Category, Country, PostType, User } from './types';
+import type { Job, Category, Country, PostType, User, WorkType } from './types';
 
 const categories: Category[] = [
   { id: '1', name: 'نجارة', iconName: 'Hammer' },
@@ -90,23 +90,61 @@ function formatTimeAgo(timestamp: any) {
 }
 
 
-export async function getJobs(postType?: PostType, count?: number): Promise<Job[]> {
+export async function getJobs(
+  options: {
+    postType?: PostType;
+    count?: number;
+    searchQuery?: string;
+    country?: string;
+    city?: string;
+    categoryId?: string;
+    workType?: WorkType;
+    sortBy?: 'newest';
+  } = {}
+): Promise<Job[]> {
   try {
+    const {
+      postType,
+      count,
+      searchQuery,
+      country,
+      city,
+      categoryId,
+      workType,
+      sortBy = 'newest',
+    } = options;
+
     const adsRef = collection(db, 'ads');
-    let q;
+    const queryConstraints: any[] = [];
 
     if (postType) {
-      q = query(adsRef, where('postType', '==', postType), orderBy('createdAt', 'desc'));
-    } else {
-      q = query(adsRef, orderBy('createdAt', 'desc'));
+      queryConstraints.push(where('postType', '==', postType));
+    }
+    if (country) {
+      queryConstraints.push(where('country', '==', country));
+    }
+    if (city) {
+      queryConstraints.push(where('city', '==', city));
+    }
+    if (categoryId) {
+      queryConstraints.push(where('categoryId', '==', categoryId));
+    }
+    if (workType) {
+      queryConstraints.push(where('workType', '==', workType));
+    }
+    
+    if (sortBy === 'newest') {
+      queryConstraints.push(orderBy('createdAt', 'desc'));
     }
 
     if (count) {
-      q = query(q, limit(count));
+      queryConstraints.push(limit(count));
     }
 
+    const q = query(adsRef, ...queryConstraints);
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => {
+    
+    let jobs = querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
             id: doc.id,
@@ -114,8 +152,18 @@ export async function getJobs(postType?: PostType, count?: number): Promise<Job[
             postedAt: formatTimeAgo(data.createdAt),
         } as Job;
     });
+
+    if (searchQuery) {
+        jobs = jobs.filter(job => 
+            job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (job.description && job.description.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+    }
+
+    return jobs;
   } catch (error) {
     console.error("Error fetching jobs: ", error);
+    // Note: If you see Firestore errors about indexes, you may need to create them in the Firebase console.
     return [];
   }
 }
@@ -192,7 +240,7 @@ export async function toggleLikeJob(jobId: string, userId: string): Promise<'lik
                 throw new Error("Document does not exist!");
             }
             
-            const currentLikes = adDoc.data().likes;
+            const currentLikes = adDoc.data().likes || 0;
 
             if (interestDoc.exists()) {
                 // User is unliking the job

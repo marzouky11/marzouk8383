@@ -2,26 +2,54 @@ import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
 import { JobFilters } from '@/components/job-filters';
+import type { WorkType } from '@/lib/types';
+import { Suspense } from 'react';
 
-export default async function JobsPage() {
-  const jobs = await getJobs('seeking_worker');
+function JobFiltersSkeleton() {
+    return <div className="h-14 bg-muted rounded-lg w-full animate-pulse" />;
+}
+
+function JobList({ jobs }: { jobs: Awaited<ReturnType<typeof getJobs>> }) {
+  if (jobs.length > 0) {
+    return (
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {jobs.map((job) => <JobCard key={job.id} job={job} />)}
+      </div>
+    );
+  }
+  return <p className="col-span-full text-center text-muted-foreground">لا توجد عروض عمل تطابق بحثك.</p>;
+}
+
+export default async function JobsPage({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
   const categories = getCategories();
   const countries = getCountries();
+
+  const jobs = await getJobs({
+      postType: 'seeking_worker',
+      searchQuery: typeof searchParams?.q === 'string' ? searchParams.q : undefined,
+      country: typeof searchParams?.country === 'string' ? searchParams.country : undefined,
+      city: typeof searchParams?.city === 'string' ? searchParams.city : undefined,
+      categoryId: typeof searchParams?.category === 'string' ? searchParams.category : undefined,
+      workType: typeof searchParams?.workType === 'string' ? searchParams.workType as WorkType : undefined,
+      sortBy: typeof searchParams?.sortBy === 'string' ? searchParams.sortBy as 'newest' : 'newest',
+  });
 
   return (
     <AppLayout>
       <div className="container py-6">
         <div className="mb-6">
-          <JobFilters categories={categories} countries={countries} showSort={true} />
+          <Suspense fallback={<JobFiltersSkeleton />}>
+            <JobFilters categories={categories} countries={countries} showSort={true} />
+          </Suspense>
         </div>
         
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {jobs.length > 0 ? (
-            jobs.map((job) => <JobCard key={job.id} job={job} />)
-          ) : (
-            <p className="col-span-full text-center text-muted-foreground">لا توجد عروض عمل حالياً.</p>
-          )}
-        </div>
+        <Suspense fallback={<p>جاري تحميل الإعلانات...</p>}>
+          <JobList jobs={jobs} />
+        </Suspense>
       </div>
     </AppLayout>
   );

@@ -28,15 +28,15 @@ function JobSectionSkeleton() {
 
 
 export default async function HomePage() {
-  const jobOffers = await getJobs('seeking_worker', 4);
-  const jobSeekers = await getJobs('seeking_job', 4);
+  const jobOffers = await getJobs({ postType: 'seeking_worker', count: 4 });
+  const jobSeekers = await getJobs({ postType: 'seeking_job', count: 4 });
   const categories = getCategories();
   const countries = getCountries();
 
   return (
     <AppLayout>
       <div className="container relative z-10 pt-6">
-        <JobFilters categories={categories} countries={countries} />
+        <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
       </div>
       
       <div className="container pt-6 space-y-8 md:space-y-12">
