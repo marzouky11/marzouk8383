@@ -16,11 +16,11 @@ export default async function WorkersPage() {
           <JobFilters categories={categories} countries={countries} showSort={true} />
         </div>
         
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {jobs.length > 0 ? (
             jobs.map((job) => <JobCard key={job.id} job={job} />)
           ) : (
-            <p className="col-span-full text-center text-muted-foreground">لا يوجد باحثون عن عمل حالياً.</p>
+            <p className="col-span-full text-center text-muted-foreground">لا توجد باحثون عن عمل حالياً.</p>
           )}
         </div>
       </div>

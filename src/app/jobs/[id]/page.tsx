@@ -62,17 +62,36 @@ export default function JobDetailPage() {
     }
     if (job) {
       try {
-        const result = await toggleLikeJob(job.id, user.uid);
-        if (result === 'liked') {
-            setIsLiked(true);
-            setJob(prevJob => prevJob ? { ...prevJob, likes: prevJob.likes + 1 } : null);
-            toast({ title: 'شكراً لاهتمامك!' });
-        } else {
-            setIsLiked(false);
-            setJob(prevJob => prevJob ? { ...prevJob, likes: prevJob.likes - 1 } : null);
-            toast({ title: 'تم إلغاء الاهتمام' });
-        }
+        await runTransaction(db, async (transaction) => {
+            const adRef = doc(db, 'ads', job.id);
+            const interestRef = doc(db, 'interests', `${user.uid}_${job.id}`);
+            const interestDoc = await transaction.get(interestRef);
+            const adDoc = await transaction.get(adRef);
+
+            if (!adDoc.exists()) {
+                throw new Error("Document does not exist!");
+            }
+
+            const currentLikes = adDoc.data().likes || 0;
+
+            if (interestDoc.exists()) {
+                // User is unliking the job
+                transaction.delete(interestRef);
+                transaction.update(adRef, { likes: currentLikes - 1 });
+                setIsLiked(false);
+                setJob(prevJob => prevJob ? { ...prevJob, likes: prevJob.likes - 1 } : null);
+                toast({ title: 'تم إلغاء الاهتمام' });
+            } else {
+                // User is liking the job
+                transaction.set(interestRef, { userId: user.uid, jobId: job.id, createdAt: serverTimestamp() });
+                transaction.update(adRef, { likes: currentLikes + 1 });
+                setIsLiked(true);
+                setJob(prevJob => prevJob ? { ...prevJob, likes: prevJob.likes + 1 } : null);
+                toast({ title: 'شكراً لاهتمامك!' });
+            }
+        });
       } catch (error) {
+        console.error("Like transaction failed: ", error);
         toast({ variant: 'destructive', title: 'حدث خطأ' });
       }
     }
@@ -82,7 +101,7 @@ export default function JobDetailPage() {
   if (loading) {
     return (
       <AppLayout>
-        <div className="container mx-auto max-w-2xl px-4 py-6">
+        <div className="container mx-auto max-w-4xl px-4 py-6">
             <Card className="overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl border-muted">
                 <CardContent className="p-6 space-y-6">
                     <Skeleton className="h-8 w-3/4" />
@@ -125,7 +144,7 @@ export default function JobDetailPage() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto max-w-2xl px-4 py-6">
+      <div className="container mx-auto max-w-4xl px-4 py-6">
           <Card className={cn('overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl', themeBorder)}>
             <CardContent className="p-4 sm:p-6 space-y-5">
               <div className="flex justify-between items-start">

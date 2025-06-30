@@ -68,7 +68,7 @@ export default function SettingsPage() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto max-w-2xl px-4 py-8">
+      <div className="container mx-auto max-w-3xl px-4 py-8">
         <div className="space-y-6">
           <Card>
             <CardContent className="p-4 flex items-center gap-4">
