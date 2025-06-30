@@ -115,28 +115,20 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
+    // We construct a simpler query for Firestore to avoid needing complex composite indexes
+    // that must be created manually in the Firebase Console.
     const queryConstraints: any[] = [];
 
     if (postType) {
       queryConstraints.push(where('postType', '==', postType));
     }
-    if (country) {
-      queryConstraints.push(where('country', '==', country));
-    }
-    if (city) {
-      queryConstraints.push(where('city', '==', city));
-    }
-    if (categoryId) {
-      queryConstraints.push(where('categoryId', '==', categoryId));
-    }
-    if (workType) {
-      queryConstraints.push(where('workType', '==', workType));
-    }
     
+    // Sorting by date is a primary requirement.
     if (sortBy === 'newest') {
       queryConstraints.push(orderBy('createdAt', 'desc'));
     }
 
+    // The limit is only used on the homepage, which doesn't have other filters.
     if (count) {
       queryConstraints.push(limit(count));
     }
@@ -153,6 +145,20 @@ export async function getJobs(
         } as Job;
     });
 
+    // We apply the more specific filters here in the code.
+    // This is a common pattern to work around database index limitations during development.
+    if (country) {
+        jobs = jobs.filter(job => job.country === country);
+    }
+    if (city) {
+        jobs = jobs.filter(job => job.city === city);
+    }
+    if (categoryId) {
+        jobs = jobs.filter(job => job.categoryId === categoryId);
+    }
+    if (workType) {
+        jobs = jobs.filter(job => job.workType === workType);
+    }
     if (searchQuery) {
         jobs = jobs.filter(job => 
             job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -163,7 +169,8 @@ export async function getJobs(
     return jobs;
   } catch (error) {
     console.error("Error fetching jobs: ", error);
-    // Note: If you see Firestore errors about indexes, you may need to create them in the Firebase console.
+    // If you see Firestore errors about indexes, you may need to create them in the Firebase console.
+    // This is a common issue when adding complex queries.
     return [];
   }
 }
