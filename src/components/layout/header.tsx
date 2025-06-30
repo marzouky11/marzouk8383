@@ -32,13 +32,15 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
-const pageConfig: { [key: string]: { title: string; icon: React.ElementType } } = {
-  '/login': { title: 'تسجيل الدخول', icon: LogIn },
-  '/signup': { title: 'إنشاء حساب', icon: UserPlus },
-  '/jobs': { title: 'الوظائف', icon: Briefcase },
-  '/workers': { title: 'العمال', icon: Users },
-  '/profile': { title: 'الإعدادات', icon: Settings },
-  '/post-job': { title: 'نشر إعلان جديد', icon: Plus },
+// Simplified config for titles
+const pageTitles: { [key: string]: string } = {
+  '/': 'الخدمة الآن',
+  '/login': 'تسجيل الدخول',
+  '/signup': 'إنشاء حساب',
+  '/jobs': 'الوظائف',
+  '/workers': 'العمال',
+  '/profile': 'الملف الشخصي',
+  '/post-job': 'نشر إعلان',
 };
 
 const navLinks = [
@@ -64,66 +66,44 @@ export function Header() {
   };
 
   const isHomePage = pathname === '/';
-
-  let title = '';
-  let Icon: React.ElementType | null = null;
   
-  // Find the most specific path configuration that matches the current pathname
-  const pageInfo = Object.entries(pageConfig)
-    .filter(([path]) => pathname.startsWith(path))
-    .sort((a, b) => b[0].length - a[0].length)[0]?.[1];
-
-  if (pageInfo) {
-    title = pageInfo.title;
-    Icon = pageInfo.icon;
-  } else if (pathname.startsWith('/jobs/')) {
+  // Determine page title
+  let title = pageTitles[pathname] || '';
+  if (!title && pathname.startsWith('/jobs/')) {
     title = 'تفاصيل الإعلان';
-    Icon = FileText;
+  } else if (!title && pathname.startsWith('/profile')) {
+    title = 'الملف الشخصي';
   }
+
 
   return (
     <>
-      {/* Mobile Header (Unified) */}
-      <header className={cn(
-        "bg-primary text-primary-foreground shadow-lg relative z-20 md:hidden transition-all duration-300",
-        isHomePage ? "rounded-b-[2.5rem]" : "rounded-b-3xl"
-      )}>
-        <div className="container">
-           <div className={cn(
-             "flex items-center justify-center relative",
-             isHomePage ? "h-auto py-4 text-center" : "h-20"
-           )}>
-              {!isHomePage && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-0 text-primary-foreground hover:bg-white/20"
-                  onClick={() => router.back()}
-                >
-                  <ArrowRight className="h-5 w-5" />
-                  <span className="sr-only">رجوع</span>
-                </Button>
-              )}
-
-              {isHomePage ? (
-                <div className="flex flex-col items-center gap-1">
-                  <div className="flex items-center gap-2">
-                    <Handshake className="h-8 w-8" />
-                    <span className="text-2xl font-bold">الخدمة الآن</span>
-                  </div>
-                  <p className="text-sm font-light text-primary-foreground/90">فرص عمل بانتظارك</p>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  {Icon && <Icon className="h-6 w-6" />}
-                  <h1 className="text-xl font-bold">{title}</h1>
-                </div>
-              )}
-            </div>
+      {/* Mobile Header (New Unified Design) */}
+      <header className="sticky top-0 z-40 bg-background border-b md:hidden">
+        <div className="container flex items-center justify-between h-16">
+          <div className="flex items-center gap-2">
+            {!isHomePage ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-foreground -mr-2"
+                onClick={() => router.back()}
+              >
+                <ArrowRight className="h-5 w-5" />
+                <span className="sr-only">رجوع</span>
+              </Button>
+            ) : (
+               <Link href="/" className="flex items-center gap-2">
+                  <Handshake className="h-6 w-6 text-primary" />
+               </Link>
+            )}
+            <h1 className="text-lg font-bold">{title}</h1>
+          </div>
         </div>
       </header>
 
-      {/* Desktop Header */}
+
+      {/* Desktop Header (Kept as is) */}
       <header className="hidden md:block bg-card border-b sticky top-0 z-50">
           <nav className="container flex items-center justify-between h-20">
               <div className="flex items-center gap-8">

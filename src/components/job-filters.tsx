@@ -88,20 +88,19 @@ export function JobFilters({ categories, countries, showSort = false, className,
         <div className="relative flex-grow">
           <Input
             placeholder="ابحث عن وظيفة، عامل، أو خدمة..."
-            className="h-14 pl-12 pr-4 text-base rounded-lg shadow-lg border-none"
+            className="h-12 pl-10 pr-4 text-base rounded-lg shadow-sm"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <div className="absolute left-4 top-1/2 -translate-y-1/2">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2">
             <Search className="h-5 w-5 text-muted-foreground" />
           </div>
         </div>
-        <Button type="submit" className="h-14 shadow-lg rounded-lg flex-shrink-0">بحث</Button>
       </form>
 
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" className="h-14 w-14 flex-shrink-0 shadow-lg rounded-lg border-none bg-card">
+          <Button variant="outline" className="h-12 w-12 flex-shrink-0 shadow-sm rounded-lg border bg-card p-0">
             <SlidersHorizontal className="h-5 w-5 text-muted-foreground" />
           </Button>
         </SheetTrigger>
