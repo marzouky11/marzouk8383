@@ -37,7 +37,8 @@ export default function SignupPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      const randomAvatar = `https://i.postimg.cc/SNf0f4j6/avatar-${Math.ceil(Math.random() * 3)}.png`;
+      const avatarId = Math.floor(Math.random() * 3) + 1;
+      const randomAvatar = `https://i.postimg.cc/SNf0f4j6/avatar-${avatarId}.png`;
 
       await setDoc(doc(db, 'users', user.uid), {
         name,
@@ -96,7 +97,7 @@ export default function SignupPage() {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.targe.value)}
                   required
                 />
               </div>
