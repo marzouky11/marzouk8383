@@ -8,7 +8,6 @@ import { useAuth } from '@/context/auth-context';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 import {
   Sheet,
   SheetContent,
@@ -22,6 +21,7 @@ import { getCountries, getCategories } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
+import { ThemeToggleSwitch } from '@/components/theme-toggle';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -112,7 +112,7 @@ export default function SettingsPage() {
                     <SettingItem
                       icon={Moon}
                       label="الوضع الليلي"
-                      action={<Switch id="dark-mode" />}
+                      action={<ThemeToggleSwitch id="dark-mode" />}
                     />
                     <SettingItem
                       icon={Globe}

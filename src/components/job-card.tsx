@@ -47,6 +47,12 @@ export function JobCard({ job }: JobCardProps) {
   }
 
   const category = getCategoryById(job.categoryId);
+  const isWorkerAd = job?.postType === 'seeking_job';
+  const themeColor = isWorkerAd ? 'text-accent' : 'text-destructive';
+  const themeBg = isWorkerAd ? 'bg-accent/10' : 'bg-destructive/10';
+  const themeButtonClass = isWorkerAd 
+    ? 'bg-accent text-accent-foreground hover:bg-accent/90' 
+    : 'bg-destructive text-destructive-foreground hover:bg-destructive/90';
 
   const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | undefined }) => (
     <div className="flex items-center gap-2">
@@ -61,7 +67,7 @@ export function JobCard({ job }: JobCardProps) {
         <div className="flex justify-between items-start gap-3">
           <div className="flex-grow">
             {category && <Badge variant={'secondary'} className="mb-1 font-normal text-xs">{category.name}</Badge>}
-            <h3 className="font-bold leading-tight text-primary">
+            <h3 className={cn("font-bold leading-tight", themeColor)}>
               <Link href={`/jobs/${job.id}`} className="focus:outline-none">
                 <span className="absolute inset-0 z-10"></span>
                 {job.title}
@@ -69,8 +75,8 @@ export function JobCard({ job }: JobCardProps) {
             </h3>
           </div>
           {category && (
-            <div className="flex-shrink-0 p-3 rounded-xl z-0 bg-primary/10">
-              <CategoryIcon name={category.iconName} className="w-6 h-6 text-primary" />
+            <div className={cn("flex-shrink-0 p-3 rounded-xl z-0", themeBg)}>
+              <CategoryIcon name={category.iconName} className={cn("w-6 h-6", themeColor)} />
             </div>
           )}
         </div>
@@ -95,7 +101,7 @@ export function JobCard({ job }: JobCardProps) {
             <span className="text-xs font-medium">({job.rating})</span>
           </div>
         </div>
-        <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button asChild size="sm" className={cn("h-9 text-sm rounded-lg px-4 z-20 relative", themeButtonClass)}>
           <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
         </Button>
       </div>

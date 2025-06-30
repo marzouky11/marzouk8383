@@ -134,6 +134,9 @@ export default function JobDetailPage() {
   const themeColor = isWorkerAd ? 'text-accent' : 'text-destructive';
   const themeBg = isWorkerAd ? 'bg-accent/10' : 'bg-destructive/10';
   const themeBorder = isWorkerAd ? 'border-accent' : 'border-destructive';
+  const buttonTheme = isWorkerAd 
+      ? 'bg-accent text-accent-foreground hover:bg-accent/90' 
+      : 'bg-destructive text-destructive-foreground hover:bg-destructive/90';
 
   const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | undefined }) => (
     <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -219,13 +222,13 @@ export default function JobDetailPage() {
                   معلومات التواصل
                 </h3>
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <Button asChild className="flex-grow bg-accent text-accent-foreground hover:bg-accent/90">
+                  <Button asChild className={cn('flex-grow', buttonTheme)}>
                     <a href={`https://wa.me/${job.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
                       <MessageSquare className="ml-2 h-4 w-4" />
                       واتساب
                     </a>
                   </Button>
-                  <Button asChild className={cn('flex-grow', isWorkerAd ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-destructive text-destructive-foreground hover:bg-destructive/90')}>
+                  <Button asChild className={cn('flex-grow', buttonTheme)}>
                     <a href={`tel:${job.phone}`}>
                       <Phone className="ml-2 h-4 w-4" />
                       اتصال

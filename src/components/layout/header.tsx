@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { ThemeToggleButton } from '../theme-toggle';
 
 const navLinks = [
     { href: '/', label: 'الرئيسية' },
@@ -53,7 +54,7 @@ export function Header() {
               <div className="flex items-center gap-8">
                   <Link href="/" className="flex items-center gap-2">
                       <Handshake className="h-7 w-7 text-primary" />
-                      <span className="text-xl font-bold text-foreground">Zafay</span>
+                      <span className="text-xl font-bold text-foreground">الخدمة الآن</span>
                   </Link>
                   <div className="flex items-center gap-6">
                       {navLinks.map((link) => {
@@ -75,6 +76,7 @@ export function Header() {
               </div>
 
               <div className="flex items-center gap-2 sm:gap-4">
+                  <ThemeToggleButton />
                   <Button asChild>
                       <Link href="/post-job">
                           <Plus className="ml-2 h-4 w-4" />
