@@ -27,11 +27,13 @@ import {
   UserPlus,
   LogOut,
   User as UserIcon,
+  Home,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 const pageConfig: { [key: string]: { title: string; icon: React.ElementType } } = {
+  '/': { title: 'الرئيسية', icon: Home },
   '/login': { title: 'تسجيل الدخول', icon: LogIn },
   '/signup': { title: 'إنشاء حساب', icon: UserPlus },
   '/jobs': { title: 'الوظائف', icon: Briefcase },
@@ -41,6 +43,7 @@ const pageConfig: { [key: string]: { title: string; icon: React.ElementType } } 
 };
 
 const navLinks = [
+    { href: '/', label: 'الرئيسية' },
     { href: '/jobs', label: 'الوظائف' },
     { href: '/workers', label: 'العمال' },
 ];
@@ -66,47 +69,41 @@ export function Header() {
   let title = '';
   let Icon: React.ElementType | null = null;
   
-  if (!isHomePage) {
-    const config = Object.entries(pageConfig).find(([path]) => pathname.startsWith(path))?.[1];
-    if (config) {
-      title = config.title;
-      Icon = config.icon;
-    } else if (pathname.startsWith('/jobs/')) {
-      title = 'تفاصيل الإعلان';
-      Icon = FileText;
-    }
+  // Find the most specific path configuration that matches the current pathname
+  const pageInfo = Object.entries(pageConfig)
+    .filter(([path]) => pathname.startsWith(path))
+    .sort((a, b) => b[0].length - a[0].length)[0]?.[1];
+
+  if (pageInfo) {
+    title = pageInfo.title;
+    Icon = pageInfo.icon;
+  } else if (pathname.startsWith('/jobs/')) {
+    title = 'تفاصيل الإعلان';
+    Icon = FileText;
   }
 
   return (
     <>
-      {/* Mobile Header */}
+      {/* Mobile Header (Unified) */}
       <header className="bg-primary text-primary-foreground rounded-b-3xl shadow-lg relative z-20 md:hidden">
         <div className="container">
-          {isHomePage ? (
-            <div className="pt-4 pb-8 text-center">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                  <Handshake className="h-8 w-8 text-white" />
-                  <h1 className="text-3xl font-bold">الخدمة الآن</h1>
-              </div>
-              <p className="text-sm opacity-80">بوابتك الأولى للخدمات والوظائف</p>
-            </div>
-          ) : (
-            <div className="flex h-20 items-center justify-center relative">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-0 text-primary-foreground hover:bg-white/20"
-                onClick={() => router.back()}
-              >
-                <ArrowRight className="h-5 w-5" />
-                <span className="sr-only">رجوع</span>
-              </Button>
+           <div className="flex h-20 items-center justify-center relative">
+              {!isHomePage && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 text-primary-foreground hover:bg-white/20"
+                  onClick={() => router.back()}
+                >
+                  <ArrowRight className="h-5 w-5" />
+                  <span className="sr-only">رجوع</span>
+                </Button>
+              )}
               <div className="flex items-center gap-2">
                 {Icon && <Icon className="h-6 w-6" />}
                 <h1 className="text-xl font-bold">{title}</h1>
               </div>
             </div>
-          )}
         </div>
       </header>
 
@@ -119,18 +116,21 @@ export function Header() {
                       <span className="text-xl font-bold text-foreground">الخدمة الآن</span>
                   </Link>
                   <div className="flex items-center gap-6">
-                      {navLinks.map((link) => (
-                           <Link
-                            key={link.href}
-                            href={link.href}
-                            className={cn(
-                                'text-sm font-medium transition-colors hover:text-primary',
-                                pathname.startsWith(link.href) ? 'text-primary' : 'text-muted-foreground'
-                            )}
-                            >
-                                {link.label}
-                            </Link>
-                      ))}
+                      {navLinks.map((link) => {
+                           const isActive = link.href === '/' ? pathname === link.href : pathname.startsWith(link.href);
+                           return (
+                             <Link
+                              key={link.href}
+                              href={link.href}
+                              className={cn(
+                                  'text-sm font-medium transition-colors hover:text-primary',
+                                  isActive ? 'text-primary' : 'text-muted-foreground'
+                              )}
+                              >
+                                  {link.label}
+                              </Link>
+                           );
+                      })}
                   </div>
               </div>
 
