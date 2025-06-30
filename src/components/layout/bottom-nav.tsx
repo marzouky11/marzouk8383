@@ -2,16 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Briefcase, Plus, Users, Bell } from 'lucide-react';
+import { Home, Briefcase, Plus, Users, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
 
 const navItems = [
   { href: '/', label: 'الرئيسية', icon: Home },
   { href: '/jobs', label: 'الوظائف', icon: Briefcase },
   { href: '/post-job', label: 'إضافة', icon: Plus, isFab: true },
   { href: '/workers', label: 'العمال', icon: Users },
-  { href: '/notifications', label: 'الإشعارات', icon: Bell, hasBadge: true },
+  { href: '/profile', label: 'الإعدادات', icon: Settings },
 ];
 
 export function BottomNav() {
@@ -57,9 +56,6 @@ export function BottomNav() {
                 >
                   {item.label}
                 </span>
-                {item.hasBadge && (
-                  <Badge variant="destructive" className="absolute -top-1 right-2.5 p-0 h-4 w-4 flex items-center justify-center text-[10px] rounded-full">N</Badge>
-                )}
               </div>
             </Link>
           );

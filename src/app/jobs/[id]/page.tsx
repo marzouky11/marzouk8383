@@ -16,7 +16,8 @@ import {
   CalendarDays,
   Heart,
   User as UserIcon,
-  Briefcase
+  Briefcase,
+  FileText
 } from 'lucide-react';
 import { getJobById, getCategoryById, hasUserLikedJob } from '@/lib/data';
 import type { Job } from '@/lib/types';
@@ -29,6 +30,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ShareButton } from './share-button';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 
 export default function JobDetailPage() {
   const params = useParams<{ id: string }>();
@@ -100,40 +102,35 @@ export default function JobDetailPage() {
     }
   };
 
+  const JobDetailSkeleton = () => (
+    <div className="container mx-auto max-w-4xl px-4 py-6">
+        <Card className="overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl border-muted">
+            <CardContent className="p-6 space-y-6">
+                <Skeleton className="h-8 w-3/4" />
+                <Skeleton className="h-6 w-1/4" />
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                    <Skeleton className="h-6 w-24" />
+                    <Skeleton className="h-6 w-24" />
+                </div>
+                <Separator />
+                <Skeleton className="h-20 w-full" />
+                <Separator />
+                <div className="flex gap-2">
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" />
+                </div>
+            </CardContent>
+        </Card>
+    </div>
+  );
 
-  if (loading) {
-    return (
-      <AppLayout>
-        <div className="container mx-auto max-w-4xl px-4 py-6">
-            <Card className="overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl border-muted">
-                <CardContent className="p-6 space-y-6">
-                    <Skeleton className="h-8 w-3/4" />
-                    <Skeleton className="h-6 w-1/4" />
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                        <Skeleton className="h-6 w-24" />
-                        <Skeleton className="h-6 w-24" />
-                    </div>
-                    <Separator />
-                    <Skeleton className="h-20 w-full" />
-                    <Separator />
-                    <div className="flex gap-2">
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-      </AppLayout>
-    );
-  }
-
-  if (!job) {
+  if (!job && !loading) {
     notFound();
   }
-
-  const category = getCategoryById(job.categoryId);
-  const isWorkerAd = job.postType === 'seeking_job';
+  
+  const category = job ? getCategoryById(job.categoryId) : null;
+  const isWorkerAd = job?.postType === 'seeking_job';
   const themeColor = isWorkerAd ? 'text-accent' : 'text-destructive';
   const themeBg = isWorkerAd ? 'bg-accent/10' : 'bg-destructive/10';
   const themeBorder = isWorkerAd ? 'border-accent' : 'border-destructive';
@@ -147,7 +144,12 @@ export default function JobDetailPage() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto max-w-4xl px-4 py-6">
+      <MobilePageHeader title="تفاصيل الإعلان">
+        <FileText className="h-5 w-5 text-primary" />
+      </MobilePageHeader>
+
+      {loading || !job ? <JobDetailSkeleton /> : (
+        <div className="container mx-auto max-w-4xl px-4 py-6">
           <Card className={cn('overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl', themeBorder)}>
             <CardContent className="p-4 sm:p-6 space-y-5">
               <div className="flex justify-between items-start">
@@ -234,7 +236,8 @@ export default function JobDetailPage() {
               </div>
             </CardContent>
           </Card>
-      </div>
+        </div>
+      )}
     </AppLayout>
   );
 }

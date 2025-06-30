@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Heart, MapPin, Star, Clock, Wallet } from 'lucide-react';
-import type { Job } from '@/lib/types';
+import type { Job, WorkType } from '@/lib/types';
 import { getCategoryById } from '@/lib/data';
 import { CategoryIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
@@ -78,7 +78,7 @@ export function JobCard({ job }: JobCardProps) {
         <Separator />
 
         <div className="flex flex-col gap-2.5">
-          <InfoItem icon={MapPin} text={`المدينة: ${job.city}`} />
+          <InfoItem icon={MapPin} text={`${job.country}, ${job.city}`} />
           <InfoItem icon={Wallet} text={`الأجر: ${job.salary}`} />
           <InfoItem icon={Clock} text={`طبيعة العمل: ${workTypeTranslations[job.workType]}`} />
         </div>

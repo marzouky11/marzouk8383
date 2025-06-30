@@ -6,6 +6,9 @@ import type { WorkType } from '@/lib/types';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
+import { MobilePageHeader } from '@/components/layout/mobile-page-header';
+import { Users } from 'lucide-react';
+
 
 function JobFiltersSkeleton() {
     return <div className="h-14 bg-muted rounded-lg w-full animate-pulse" />;
@@ -52,6 +55,9 @@ export default async function WorkersPage({
 
   return (
     <AppLayout>
+      <MobilePageHeader title="باحثون عن عمل">
+        <Users className="h-5 w-5 text-primary" />
+      </MobilePageHeader>
       <div className="container py-6">
         <div className="mb-6">
            <Suspense fallback={<JobFiltersSkeleton />}>
