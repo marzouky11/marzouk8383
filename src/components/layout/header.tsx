@@ -16,7 +16,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  ArrowRight,
   Plus,
   LogOut,
   User as UserIcon,
@@ -24,15 +23,6 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-
-const pageTitles: { [key: string]: string } = {
-  '/login': 'تسجيل الدخول',
-  '/signup': 'إنشاء حساب',
-  '/jobs': 'الوظائف',
-  '/workers': 'العمال',
-  '/profile': 'الملف الشخصي',
-  '/post-job': 'نشر إعلان',
-};
 
 const navLinks = [
     { href: '/', label: 'الرئيسية' },
@@ -56,49 +46,15 @@ export function Header() {
     }
   };
 
-  const isHomePage = pathname === '/';
-  
-  let title = pageTitles[pathname] || '';
-  if (!title && pathname.startsWith('/jobs/')) {
-    title = 'تفاصيل الإعلان';
-  } else if (!title && pathname.startsWith('/profile')) {
-    title = 'الملف الشخصي';
-  }
-
-
   return (
-    <>
-      {/* Mobile Header (New Unified Design) */}
-      <header className={cn(
-        "sticky top-0 z-40 bg-background border-b md:hidden",
-        isHomePage && "hidden" // Hide on mobile homepage
-        )}>
-        <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground -mr-2"
-              onClick={() => router.back()}
-            >
-              <ArrowRight className="h-5 w-5" />
-              <span className="sr-only">رجوع</span>
-            </Button>
-            <h1 className="text-lg font-bold">{title}</h1>
-          </div>
-        </div>
-      </header>
-
-
-      {/* Desktop Header (Kept as is) */}
-      <header className="hidden md:block bg-card border-b sticky top-0 z-50">
+      <header className="bg-card border-b sticky top-0 z-50">
           <nav className="container flex items-center justify-between h-20">
               <div className="flex items-center gap-8">
                   <Link href="/" className="flex items-center gap-2">
                       <Handshake className="h-7 w-7 text-primary" />
                       <span className="text-xl font-bold text-foreground">الخدمة الآن</span>
                   </Link>
-                  <div className="flex items-center gap-6">
+                  <div className="hidden md:flex items-center gap-6">
                       {navLinks.map((link) => {
                            const isActive = link.href === '/' ? pathname === link.href : pathname.startsWith(link.href);
                            return (
@@ -121,7 +77,7 @@ export function Header() {
                   <Button asChild>
                       <Link href="/post-job">
                           <Plus className="ml-2 h-4 w-4" />
-                          نشر إعلان
+                          <span className="hidden sm:inline">نشر إعلان</span>
                       </Link>
                   </Button>
                   {user && userData ? (
@@ -158,7 +114,7 @@ export function Header() {
                            <Button variant="outline" asChild>
                                 <Link href="/login">تسجيل الدخول</Link>
                             </Button>
-                            <Button asChild>
+                            <Button asChild className="hidden sm:inline-flex">
                                 <Link href="/signup">إنشاء حساب</Link>
                             </Button>
                       </div>
@@ -166,6 +122,5 @@ export function Header() {
               </div>
           </nav>
       </header>
-    </>
   );
 }

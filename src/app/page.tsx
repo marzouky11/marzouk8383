@@ -8,7 +8,6 @@ import { Card } from '@/components/ui/card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
 import React from 'react';
-import { Handshake, Sun } from 'lucide-react';
 
 function JobSectionSkeleton() {
     return (
@@ -38,26 +37,9 @@ export default async function HomePage() {
 
   return (
     <AppLayout>
-      <div className="md:hidden">
-        <div className="bg-primary text-primary-foreground pt-6 pb-20 rounded-b-[2.5rem]">
-          <div className="container space-y-3">
-            <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                    <Handshake className="h-8 w-8" />
-                    <span className="text-xl font-bold">الخدمة الآن</span>
-                </div>
-                <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20">
-                    <Sun className="h-6 w-6" />
-                </Button>
-            </div>
-            <p>منصة الربط بين العمال وأصحاب العمل</p>
-          </div>
-        </div>
-      </div>
-        
       <div className="space-y-8">
         <div className="container">
-          <div className="md:pt-6 -mt-16 md:mt-0 relative z-10">
+          <div className="pt-6 relative z-10">
             <Card className="p-2 rounded-2xl shadow-lg">
               <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
             </Card>
