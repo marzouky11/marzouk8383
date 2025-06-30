@@ -5,6 +5,7 @@ import { JobFilters } from '@/components/job-filters';
 import type { WorkType } from '@/lib/types';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card } from '@/components/ui/card';
 
 function JobFiltersSkeleton() {
     return <div className="h-14 bg-muted rounded-lg w-full animate-pulse" />;
@@ -12,7 +13,7 @@ function JobFiltersSkeleton() {
 
 function JobListSkeleton() {
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {Array.from({ length: 8 }).map((_, i) => (
          <Card key={i} className="p-4 space-y-3 h-full">
             <Skeleton className="h-5 w-1/4" />
@@ -31,7 +32,7 @@ function JobListSkeleton() {
 function JobList({ jobs }: { jobs: Awaited<ReturnType<typeof getJobs>> }) {
   if (jobs.length > 0) {
     return (
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {jobs.map((job) => <JobCard key={job.id} job={job} />)}
       </div>
     );

@@ -140,7 +140,7 @@ export function Header() {
               <div className="md:hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                  <Link href="/" className="flex items-center gap-2">
                    <Handshake className="h-6 w-6 text-primary" />
-                   <span className="text-lg font-bold text-foreground sr-only sm:not-sr-only">الخدمة الآن</span>
+                   <span className="text-lg font-bold text-foreground">الخدمة الآن</span>
                  </Link>
               </div>
 
