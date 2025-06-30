@@ -62,7 +62,7 @@ export function JobCard({ job }: JobCardProps) {
   );
 
   return (
-    <Card className="flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full">
+    <Card className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full">
       <div className="flex-grow space-y-3">
         <div className="flex justify-between items-start gap-3">
           <div className="flex-grow">

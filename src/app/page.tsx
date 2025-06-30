@@ -31,13 +31,13 @@ function HomeHeaderMobile({ categories, countries }: {
 }) {
   return (
       <div className="md:hidden">
-        <div className="bg-primary text-primary-foreground p-4 pb-16 rounded-b-[2.5rem]">
+        <div className="bg-primary text-primary-foreground p-4 pb-12 rounded-b-[2.5rem]">
           <div className="container mx-auto">
             <div className="flex justify-between items-center mb-2">
               <ThemeToggleButton className="text-white hover:bg-white/20" />
               <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-bold">الخدمة الآن</h1>
                   <Handshake className="h-7 w-7" />
+                  <h1 className="text-xl font-bold">الخدمة الآن</h1>
               </div>
               <div className="w-10"></div> {/* Spacer */}
             </div>
