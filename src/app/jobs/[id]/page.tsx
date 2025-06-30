@@ -18,7 +18,7 @@ import {
   User as UserIcon,
   Briefcase
 } from 'lucide-react';
-import { getJobById, getCategoryById, toggleLikeJob, hasUserLikedJob } from '@/lib/data';
+import { getJobById, getCategoryById, hasUserLikedJob } from '@/lib/data';
 import type { Job } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
 import { CopyButton } from './copy-button';
@@ -26,6 +26,9 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
+import { ShareButton } from './share-button';
+import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function JobDetailPage() {
   const params = useParams<{ id: string }>();
@@ -174,10 +177,13 @@ export default function JobDetailPage() {
                 <InfoItem icon={CalendarDays} text={job.postedAt} />
               </div>
               
-              <Button variant="outline" className="w-fit" onClick={handleLike}>
-                <Heart className={cn("ml-2 h-4 w-4", isLiked && "fill-destructive text-destructive")} />
-                مهتم ({job.likes})
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" className="w-fit" onClick={handleLike}>
+                  <Heart className={cn("ml-2 h-4 w-4", isLiked && "fill-destructive text-destructive")} />
+                  مهتم ({job.likes})
+                </Button>
+                <ShareButton title={job.title} text={job.description || 'تحقق من هذا الإعلان الرائع!'} />
+              </div>
 
               <Separator />
 
