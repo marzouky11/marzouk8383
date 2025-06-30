@@ -33,7 +33,6 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 const pageConfig: { [key: string]: { title: string; icon: React.ElementType } } = {
-  '/': { title: 'الرئيسية', icon: Home },
   '/login': { title: 'تسجيل الدخول', icon: LogIn },
   '/signup': { title: 'إنشاء حساب', icon: UserPlus },
   '/jobs': { title: 'الوظائف', icon: Briefcase },
@@ -85,9 +84,15 @@ export function Header() {
   return (
     <>
       {/* Mobile Header (Unified) */}
-      <header className="bg-primary text-primary-foreground rounded-b-3xl shadow-lg relative z-20 md:hidden">
+      <header className={cn(
+        "bg-primary text-primary-foreground shadow-lg relative z-20 md:hidden transition-all duration-300",
+        isHomePage ? "rounded-b-[2.5rem]" : "rounded-b-3xl"
+      )}>
         <div className="container">
-           <div className="flex h-20 items-center justify-center relative">
+           <div className={cn(
+             "flex items-center justify-center relative",
+             isHomePage ? "h-auto py-4 text-center" : "h-20"
+           )}>
               {!isHomePage && (
                 <Button
                   variant="ghost"
@@ -99,10 +104,21 @@ export function Header() {
                   <span className="sr-only">رجوع</span>
                 </Button>
               )}
-              <div className="flex items-center gap-2">
-                {Icon && <Icon className="h-6 w-6" />}
-                <h1 className="text-xl font-bold">{title}</h1>
-              </div>
+
+              {isHomePage ? (
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-2">
+                    <Handshake className="h-8 w-8" />
+                    <span className="text-2xl font-bold">الخدمة الآن</span>
+                  </div>
+                  <p className="text-sm font-light text-primary-foreground/90">فرص عمل بانتظارك</p>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  {Icon && <Icon className="h-6 w-6" />}
+                  <h1 className="text-xl font-bold">{title}</h1>
+                </div>
+              )}
             </div>
         </div>
       </header>
