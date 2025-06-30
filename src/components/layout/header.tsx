@@ -16,20 +16,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose
-} from '@/components/ui/sheet';
-import {
   Plus,
   LogOut,
   User as UserIcon,
   Handshake,
-  Menu,
-  ArrowLeft,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -46,8 +36,6 @@ export function Header() {
   const { user, userData } = useAuth();
   const { toast } = useToast();
 
-  const mainNavPages = ['/', '/jobs', '/workers'];
-  const isMainPage = mainNavPages.includes(pathname);
 
   const handleLogout = async () => {
     try {
@@ -60,88 +48,30 @@ export function Header() {
   };
 
   return (
-      <header className="bg-card border-b sticky top-0 z-50">
+      <header className="hidden md:block bg-card border-b sticky top-0 z-50">
           <nav className="container relative flex items-center justify-between h-20">
-              <div className="flex items-center gap-6">
-                  {/* Desktop Logo & Nav */}
-                  <div className="hidden md:flex items-center gap-8">
-                      <Link href="/" className="flex items-center gap-2">
-                          <Handshake className="h-7 w-7 text-primary" />
-                          <span className="text-xl font-bold text-foreground">الخدمة الآن</span>
-                      </Link>
-                      <div className="flex items-center gap-6">
-                          {navLinks.map((link) => {
-                               const isActive = link.href === '/' ? pathname === link.href : pathname.startsWith(link.href);
-                               return (
-                                 <Link
-                                  key={link.href}
-                                  href={link.href}
-                                  className={cn(
-                                      'text-sm font-medium transition-colors hover:text-primary',
-                                      isActive ? 'text-primary' : 'text-muted-foreground'
-                                  )}
-                                  >
-                                      {link.label}
-                                  </Link>
-                               );
-                          })}
-                      </div>
+              <div className="flex items-center gap-8">
+                  <Link href="/" className="flex items-center gap-2">
+                      <Handshake className="h-7 w-7 text-primary" />
+                      <span className="text-xl font-bold text-foreground">Zafay</span>
+                  </Link>
+                  <div className="flex items-center gap-6">
+                      {navLinks.map((link) => {
+                           const isActive = link.href === '/' ? pathname === link.href : pathname.startsWith(link.href);
+                           return (
+                             <Link
+                              key={link.href}
+                              href={link.href}
+                              className={cn(
+                                  'text-sm font-medium transition-colors hover:text-primary',
+                                  isActive ? 'text-primary' : 'text-muted-foreground'
+                              )}
+                              >
+                                  {link.label}
+                              </Link>
+                           );
+                      })}
                   </div>
-                  
-                  {/* Mobile Nav Trigger (Back or Menu) */}
-                  <div className="md:hidden">
-                    {!isMainPage ? (
-                      <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                        <ArrowLeft className="h-6 w-6" />
-                      </Button>
-                    ) : (
-                      <Sheet>
-                        <SheetTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <Menu className="h-6 w-6" />
-                          </Button>
-                        </SheetTrigger>
-                        <SheetContent side="right">
-                           <SheetHeader className="border-b pb-4">
-                                <SheetTitle>
-                                  <SheetClose asChild>
-                                    <Link href="/" className="flex items-center gap-2">
-                                        <Handshake className="h-7 w-7 text-primary" />
-                                        <span className="text-xl font-bold text-foreground">الخدمة الآن</span>
-                                    </Link>
-                                  </SheetClose>
-                                </SheetTitle>
-                            </SheetHeader>
-                            <div className="mt-8 flex flex-col gap-1">
-                                {navLinks.map((link) => {
-                                    const isActive = link.href === '/' ? pathname === link.href : pathname.startsWith(link.href);
-                                    return (
-                                    <SheetClose asChild key={link.href}>
-                                     <Link
-                                      href={link.href}
-                                      className={cn(
-                                          'text-lg p-3 rounded-md transition-colors hover:bg-muted',
-                                          isActive ? 'font-bold text-primary bg-muted' : 'text-foreground'
-                                      )}
-                                      >
-                                          {link.label}
-                                      </Link>
-                                    </SheetClose>
-                                   );
-                                })}
-                            </div>
-                        </SheetContent>
-                      </Sheet>
-                    )}
-                  </div>
-              </div>
-
-              {/* Mobile Centered Title/Logo */}
-              <div className="md:hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                 <Link href="/" className="flex items-center gap-2">
-                   <Handshake className="h-6 w-6 text-primary" />
-                   <span className="text-lg font-bold text-foreground">الخدمة الآن</span>
-                 </Link>
               </div>
 
               <div className="flex items-center gap-2 sm:gap-4">
