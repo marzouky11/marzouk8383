@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -33,14 +34,16 @@ function HomeHeaderMobile({ categories, countries }: {
       <div className="md:hidden">
         <div className="bg-primary text-primary-foreground p-4 pb-10 rounded-b-[2.5rem]">
           <div className="container mx-auto">
-            <div className="flex justify-between items-center mb-2">
-              <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-bold">الخدمة الآن</h1>
-                  <Handshake className="h-7 w-7" />
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-3">
+                  <Handshake className="h-10 w-10 flex-shrink-0" />
+                  <div>
+                    <h1 className="text-xl font-bold">الخدمة الآن</h1>
+                    <p className="text-sm font-light text-primary-foreground/90 -mt-1">فرص عمل بانتظارك</p>
+                  </div>
               </div>
               <ThemeToggleButton className="text-white hover:bg-white/20" />
             </div>
-            <p className="text-center text-sm font-light text-primary-foreground/90">فرص عمل بانتظارك</p>
           </div>
         </div>
         <div className="container mx-auto -mt-10 px-4">
