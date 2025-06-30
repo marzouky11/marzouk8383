@@ -25,7 +25,10 @@ function JobSectionSkeleton() {
 }
 
 
-function HomeHeaderMobile() {
+function HomeHeaderMobile({ categories, countries }: {
+  categories: ReturnType<typeof getCategories>;
+  countries: ReturnType<typeof getCountries>;
+}) {
   return (
       <div className="md:hidden">
         <div className="bg-primary text-primary-foreground p-4 pb-16 rounded-b-[2.5rem]">
@@ -42,18 +45,7 @@ function HomeHeaderMobile() {
           </div>
         </div>
         <div className="container mx-auto -mt-10 px-4">
-          <form action="/jobs" className="relative">
-            <Input
-              name="q"
-              placeholder="ابحث عن وظيفة، عامل، أو خدمة..."
-              className="h-14 text-base rounded-2xl pl-14 pr-4 border-0 bg-card shadow-lg text-right"
-            />
-            <div className="absolute left-3 top-1/2 -translate-y-1/2">
-              <Button type="submit" size="icon" className="bg-primary text-primary-foreground rounded-xl h-10 w-10 hover:bg-primary/90">
-                <Search className="h-5 w-5" />
-              </Button>
-            </div>
-          </form>
+          <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
         </div>
       </div>
   );
@@ -67,7 +59,7 @@ export default async function HomePage() {
 
   return (
     <AppLayout>
-      <HomeHeaderMobile />
+      <HomeHeaderMobile categories={categories} countries={countries} />
       
       <div className="container hidden md:block pt-6">
         <Card className="p-2 rounded-2xl shadow-lg">
