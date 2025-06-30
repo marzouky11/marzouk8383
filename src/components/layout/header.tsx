@@ -17,24 +17,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   ArrowRight,
-  Briefcase,
-  Users,
-  Settings,
   Plus,
-  FileText,
-  Handshake,
-  LogIn,
-  UserPlus,
   LogOut,
   User as UserIcon,
-  Home,
+  Handshake,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
-// Simplified config for titles
 const pageTitles: { [key: string]: string } = {
-  '/': 'الخدمة الآن',
   '/login': 'تسجيل الدخول',
   '/signup': 'إنشاء حساب',
   '/jobs': 'الوظائف',
@@ -67,7 +58,6 @@ export function Header() {
 
   const isHomePage = pathname === '/';
   
-  // Determine page title
   let title = pageTitles[pathname] || '';
   if (!title && pathname.startsWith('/jobs/')) {
     title = 'تفاصيل الإعلان';
@@ -79,24 +69,21 @@ export function Header() {
   return (
     <>
       {/* Mobile Header (New Unified Design) */}
-      <header className="sticky top-0 z-40 bg-background border-b md:hidden">
+      <header className={cn(
+        "sticky top-0 z-40 bg-background border-b md:hidden",
+        isHomePage && "hidden" // Hide on mobile homepage
+        )}>
         <div className="container flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
-            {!isHomePage ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-foreground -mr-2"
-                onClick={() => router.back()}
-              >
-                <ArrowRight className="h-5 w-5" />
-                <span className="sr-only">رجوع</span>
-              </Button>
-            ) : (
-               <Link href="/" className="flex items-center gap-2">
-                  <Handshake className="h-6 w-6 text-primary" />
-               </Link>
-            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-foreground -mr-2"
+              onClick={() => router.back()}
+            >
+              <ArrowRight className="h-5 w-5" />
+              <span className="sr-only">رجوع</span>
+            </Button>
             <h1 className="text-lg font-bold">{title}</h1>
           </div>
         </div>

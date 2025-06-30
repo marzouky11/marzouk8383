@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Search, SlidersHorizontal } from 'lucide-react';
 import type { Category, Country } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 interface JobFiltersProps {
   categories: Category[];
@@ -26,9 +27,10 @@ interface JobFiltersProps {
   showSort?: boolean;
   className?: string;
   searchPath?: string;
+  showFilterButton?: boolean;
 }
 
-export function JobFilters({ categories, countries, showSort = false, className, searchPath }: JobFiltersProps) {
+export function JobFilters({ categories, countries, showSort = false, className, searchPath, showFilterButton = true }: JobFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -47,7 +49,6 @@ export function JobFilters({ categories, countries, showSort = false, className,
     setCities(countryData ? countryData.cities : []);
   }, [selectedCountry, countries]);
   
-  // Effect to populate cities on initial load if country is in URL
   useEffect(() => {
     const initialCountry = searchParams.get('country');
     if (initialCountry) {
@@ -83,22 +84,35 @@ export function JobFilters({ categories, countries, showSort = false, className,
   }
   
   return (
-    <div className={`flex gap-2 items-center ${className}`}>
+    <div className={cn(`flex gap-2 items-center`, className)}>
       <form onSubmit={handleSearch} className="flex gap-2 items-center flex-grow">
         <div className="relative flex-grow">
           <Input
             placeholder="ابحث عن وظيفة، عامل، أو خدمة..."
-            className="h-12 pl-10 pr-4 text-base rounded-lg shadow-sm"
+            className={cn(
+              "h-12 text-base rounded-lg",
+              showFilterButton 
+                ? "pl-10 pr-4 shadow-sm"
+                : "pr-4 pl-14 border-0 bg-background focus-visible:ring-0 focus-visible:ring-offset-0"
+            )}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <div className="absolute left-3 top-1/2 -translate-y-1/2">
-            <Search className="h-5 w-5 text-muted-foreground" />
+          <div className={cn(
+            "absolute top-1/2 -translate-y-1/2",
+            showFilterButton ? "left-3" : "right-3"
+            )}>
+            <Button type="submit" size="icon" className={cn(
+              "rounded-full",
+              showFilterButton ? "w-auto h-auto bg-transparent" : "h-9 w-9 bg-primary text-primary-foreground"
+            )}>
+                <Search className={cn("h-5 w-5", showFilterButton ? "text-muted-foreground" : "")} />
+            </Button>
           </div>
         </div>
       </form>
 
-      <Sheet>
+      {showFilterButton && <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" className="h-12 w-12 flex-shrink-0 shadow-sm rounded-lg border bg-card p-0">
             <SlidersHorizontal className="h-5 w-5 text-muted-foreground" />
@@ -166,7 +180,7 @@ export function JobFilters({ categories, countries, showSort = false, className,
             </SheetClose>
           </SheetFooter>
         </SheetContent>
-      </Sheet>
+      </Sheet>}
     </div>
   );
 }
