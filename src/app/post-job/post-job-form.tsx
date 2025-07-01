@@ -250,7 +250,12 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
             )} />
             {postType === 'seeking_worker' && (
                 <FormField control={form.control} name="openPositions" render={({ field }) => (
-                    <FormItem><FormLabelIcon icon={Users2} label="الوظائف المتاحة (اختياري)" /><FormControl><Input type="number" placeholder="مثال: 3" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabelIcon icon={Users2} label="الوظائف المتاحة (اختياري)" /><FormControl><Input
+                      type="number"
+                      placeholder="مثال: 3"
+                      {...field}
+                      value={field.value ?? ''}
+                      onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} /></FormControl><FormMessage /></FormItem>
                 )} />
             )}
           </div>
