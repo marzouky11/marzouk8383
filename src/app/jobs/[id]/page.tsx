@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, notFound, useRouter } from 'next/navigation';
+import { useParams, notFound } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,6 @@ import {
   Wallet,
   Star,
   CalendarDays,
-  Heart,
   User as UserIcon,
   Briefcase,
   FileText,
@@ -24,17 +23,14 @@ import {
   Users2,
   Clock
 } from 'lucide-react';
-import { getJobById, getCategoryById, hasUserLikedJob } from '@/lib/data';
+import { getJobById, getCategoryById } from '@/lib/data';
 import type { Job, WorkType } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
 import { CopyButton } from './copy-button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
-import { useToast } from '@/hooks/use-toast';
 import { ShareButton } from './share-button';
-import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 
 const workTypeTranslations: { [key in WorkType]: string } = {
@@ -47,12 +43,9 @@ const workTypeTranslations: { [key in WorkType]: string } = {
 
 export default function JobDetailPage() {
   const params = useParams<{ id: string }>();
-  const router = useRouter();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isLiked, setIsLiked] = useState(false);
   const { user } = useAuth();
-  const { toast } = useToast();
 
   useEffect(() => {
     if (params?.id) {
@@ -61,59 +54,12 @@ export default function JobDetailPage() {
         const jobData = await getJobById(params.id as string);
         if (jobData) {
             setJob(jobData);
-            if(user) {
-                const liked = await hasUserLikedJob(jobData.id, user.uid);
-                setIsLiked(liked);
-            }
         }
         setLoading(false);
       };
       fetchJob();
     }
   }, [params?.id, user]);
-
-  const handleLike = async () => {
-    if (!user) {
-      toast({ variant: 'destructive', title: 'الرجاء تسجيل الدخول أولاً' });
-      router.push('/login');
-      return;
-    }
-    if (job) {
-      try {
-        await runTransaction(db, async (transaction) => {
-            const adRef = doc(db, 'ads', job.id);
-            const interestRef = doc(db, 'interests', `${user.uid}_${job.id}`);
-            const interestDoc = await transaction.get(interestRef);
-            const adDoc = await transaction.get(adRef);
-
-            if (!adDoc.exists()) {
-                throw new Error("Document does not exist!");
-            }
-
-            const currentLikes = adDoc.data().likes || 0;
-
-            if (interestDoc.exists()) {
-                // User is unliking the job
-                transaction.delete(interestRef);
-                transaction.update(adRef, { likes: currentLikes - 1 });
-                setIsLiked(false);
-                setJob(prevJob => prevJob ? { ...prevJob, likes: prevJob.likes - 1 } : null);
-                toast({ title: 'تم إلغاء الاهتمام' });
-            } else {
-                // User is liking the job
-                transaction.set(interestRef, { userId: user.uid, jobId: job.id, createdAt: serverTimestamp() });
-                transaction.update(adRef, { likes: currentLikes + 1 });
-                setIsLiked(true);
-                setJob(prevJob => prevJob ? { ...prevJob, likes: prevJob.likes + 1 } : null);
-                toast({ title: 'شكراً لاهتمامك!' });
-            }
-        });
-      } catch (error) {
-        console.error("Like transaction failed: ", error);
-        toast({ variant: 'destructive', title: 'حدث خطأ' });
-      }
-    }
-  };
 
   const JobDetailSkeleton = () => (
     <div className="container mx-auto max-w-4xl px-4 py-6">
@@ -203,10 +149,6 @@ export default function JobDetailPage() {
               </div>
               
               <div className="flex items-center gap-2">
-                <Button variant="outline" className="w-fit" onClick={handleLike}>
-                  <Heart className={cn("ml-2 h-4 w-4", isLiked && "fill-destructive text-destructive")} />
-                  مهتم ({job.likes})
-                </Button>
                 <ShareButton title={job.title} text={job.description || 'تحقق من هذا الإعلان الرائع!'} />
               </div>
 

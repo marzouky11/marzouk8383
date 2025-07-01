@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, increment, setDoc, deleteDoc, runTransaction } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc } from 'firebase/firestore';
 import type { Job, Category, Country, PostType, User, WorkType } from './types';
 
 const categories: Category[] = [
@@ -175,6 +175,23 @@ export async function getJobs(
   }
 }
 
+export async function getJobsByUserId(userId: string): Promise<Job[]> {
+    try {
+        const adsRef = collection(db, 'ads');
+        const q = query(adsRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            postedAt: formatTimeAgo(doc.data().createdAt),
+        } as Job));
+    } catch (error) {
+        console.error("Error fetching jobs by user ID: ", error);
+        return [];
+    }
+}
+
+
 export async function getJobById(id: string): Promise<Job | null> {
   try {
     const docRef = doc(db, 'ads', id);
@@ -205,7 +222,7 @@ export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 
             ...jobData,
             createdAt: serverTimestamp(),
             likes: 0,
-            rating: 0,
+            rating: parseFloat((Math.random() * (5.0 - 3.5) + 3.5).toFixed(1)), // Generate random rating
         };
         const docRef = await addDoc(adsCollection, newJob);
         return docRef.id;
@@ -214,6 +231,30 @@ export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 
         throw new Error("Failed to post job");
     }
 }
+
+export async function updateAd(adId: string, adData: Partial<Job>) {
+    try {
+        const adRef = doc(db, 'ads', adId);
+        await updateDoc(adRef, {
+            ...adData,
+            updatedAt: serverTimestamp()
+        });
+    } catch (e) {
+        console.error("Error updating ad: ", e);
+        throw new Error("Failed to update ad");
+    }
+}
+
+export async function deleteAd(adId: string) {
+    try {
+        const adRef = doc(db, 'ads', adId);
+        await deleteDoc(adRef);
+    } catch (e) {
+        console.error("Error deleting ad: ", e);
+        throw new Error("Failed to delete ad");
+    }
+}
+
 
 export async function updateUserProfile(uid: string, profileData: Partial<User>) {
     try {
@@ -233,41 +274,6 @@ export async function hasUserLikedJob(jobId: string, userId: string): Promise<bo
     const interestDoc = await getDoc(interestRef);
     return interestDoc.exists();
 }
-
-export async function toggleLikeJob(jobId: string, userId: string): Promise<'liked' | 'unliked'> {
-    const adRef = doc(db, 'ads', jobId);
-    const interestRef = doc(db, 'interests', `${userId}_${jobId}`);
-
-    try {
-        const result = await runTransaction(db, async (transaction) => {
-            const interestDoc = await transaction.get(interestRef);
-            const adDoc = await transaction.get(adRef);
-
-            if (!adDoc.exists()) {
-                throw new Error("Document does not exist!");
-            }
-            
-            const currentLikes = adDoc.data().likes || 0;
-
-            if (interestDoc.exists()) {
-                // User is unliking the job
-                transaction.delete(interestRef);
-                transaction.update(adRef, { likes: currentLikes - 1 });
-                return 'unliked';
-            } else {
-                // User is liking the job
-                transaction.set(interestRef, { userId, jobId, createdAt: serverTimestamp() });
-                transaction.update(adRef, { likes: currentLikes + 1 });
-                return 'liked';
-            }
-        });
-        return result;
-    } catch (e) {
-        console.error("Like/Unlike Transaction failed: ", e);
-        throw new Error("Failed to update like status due to a database error.");
-    }
-}
-
 
 export function getCategories() {
   return categories;

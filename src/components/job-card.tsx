@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Heart, MapPin, Star, Clock, Wallet } from 'lucide-react';
+import { MapPin, Star, Clock, Wallet } from 'lucide-react';
 import type { Job, WorkType } from '@/lib/types';
 import { getCategoryById } from '@/lib/data';
 import { CategoryIcon } from '@/components/icons';
@@ -93,10 +93,6 @@ export function JobCard({ job }: JobCardProps) {
       
       <div className="flex items-center justify-between pt-4 mt-auto">
         <div className="flex items-center gap-3 z-20">
-          <div className="flex items-center gap-1 text-red-500">
-            <Heart className="h-4 w-4" />
-            <span className="text-xs font-medium">{job.likes}</span>
-          </div>
           <div className="flex items-center gap-1 text-muted-foreground">
             <Star className="h-4 w-4 text-yellow-400 fill-current" />
             <span className="text-xs font-medium">({job.rating})</span>

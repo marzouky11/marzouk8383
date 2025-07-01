@@ -11,9 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/hooks/use-toast"
-import type { Category, Country } from '@/lib/types';
+import type { Category, Country, Job } from '@/lib/types';
 import { suggestJobCategories } from '@/ai/flows/suggest-job-categories';
-import { postJob } from '@/lib/data';
+import { postJob, updateAd } from '@/lib/data';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { 
@@ -47,30 +47,32 @@ const formSchema = z.object({
 interface PostJobFormProps {
   categories: Category[];
   countries: Country[];
+  job?: Job | null;
 }
 
-export function PostJobForm({ categories, countries }: PostJobFormProps) {
+export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
   const { toast } = useToast();
   const { user, userData } = useAuth();
   const router = useRouter();
+  const isEditing = !!job;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      postType: undefined,
-      title: '',
-      categoryId: '',
-      country: '',
-      city: '',
-      workType: undefined,
-      salary: '',
-      experience: '',
-      companyName: '',
-      openPositions: undefined,
-      description: '',
-      phone: '',
-      whatsapp: '',
-      email: '',
+      postType: job?.postType || undefined,
+      title: job?.title || '',
+      categoryId: job?.categoryId || '',
+      country: job?.country || '',
+      city: job?.city || '',
+      workType: job?.workType || undefined,
+      salary: job?.salary || '',
+      experience: job?.experience || '',
+      companyName: job?.companyName || '',
+      openPositions: job?.openPositions || undefined,
+      description: job?.description || '',
+      phone: job?.phone || '',
+      whatsapp: job?.whatsapp || '',
+      email: job?.email || '',
     },
   });
 
@@ -86,14 +88,21 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
   const themeColor = postType === 'seeking_job' ? 'text-accent' : postType === 'seeking_worker' ? 'text-destructive' : 'text-muted-foreground';
 
   useEffect(() => {
-    if (selectedCountry) {
-      const countryData = countries.find(c => c.name === selectedCountry);
-      setCities(countryData ? countryData.cities : []);
-      form.setValue('city', '');
+    const countryData = countries.find(c => c.name === selectedCountry);
+    setCities(countryData ? countryData.cities : []);
+    if (form.getValues('country') === selectedCountry) {
+        // country hasn't changed, don't reset city
     } else {
-      setCities([]);
+        form.setValue('city', '');
     }
   }, [selectedCountry, countries, form]);
+
+  useEffect(() => {
+    if (job?.country) {
+        const countryData = countries.find(c => c.name === job.country);
+        if(countryData) setCities(countryData.cities);
+    }
+  }, [job, countries]);
 
   const handleSuggestCategories = async () => {
     if (!jobDescription) {
@@ -129,7 +138,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
       toast({
         variant: "destructive",
         title: "خطأ",
-        description: "يجب عليك تسجيل الدخول أولاً لنشر إعلان.",
+        description: "يجب عليك تسجيل الدخول أولاً.",
       });
       router.push('/login');
       return;
@@ -137,26 +146,34 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
 
     setIsSubmitting(true);
     try {
-      const newJobData = {
-        ...values,
-        userId: user.uid,
-        ownerName: userData.name,
-        ownerAvatar: userData.avatarUrl || '',
-      };
-      
-      const newJobId = await postJob(newJobData);
-      toast({
-        title: "تم النشر بنجاح!",
-        description: "تم نشر إعلانك وسيظهر في القسم المناسب.",
-      });
-      form.reset();
-      setSuggestedCategories([]);
-      router.push(`/jobs/${newJobId}`);
+      if (isEditing && job) {
+        await updateAd(job.id, values);
+        toast({
+          title: "تم تحديث الإعلان بنجاح!",
+          description: "تم حفظ التغييرات على إعلانك.",
+        });
+        router.push(`/jobs/${job.id}`);
+      } else {
+        const newJobData = {
+          ...values,
+          userId: user.uid,
+          ownerName: userData.name,
+          ownerAvatar: userData.avatarUrl || '',
+        };
+        const newJobId = await postJob(newJobData);
+        toast({
+          title: "تم النشر بنجاح!",
+          description: "تم نشر إعلانك وسيظهر في القسم المناسب.",
+        });
+        form.reset();
+        setSuggestedCategories([]);
+        router.push(`/jobs/${newJobId}`);
+      }
     } catch (error) {
        toast({
         variant: "destructive",
         title: "خطأ",
-        description: "حدث خطأ أثناء نشر الإعلان.",
+        description: isEditing ? "فشل تحديث الإعلان." : "حدث خطأ أثناء نشر الإعلان.",
       });
     } finally {
         setIsSubmitting(false);
@@ -227,7 +244,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
 
           {postType === 'seeking_worker' && (
             <FormField control={form.control} name="companyName" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={Building2} label="اسم الشركة (اختياري)" /><FormControl><Input placeholder="اسم الشركة أو الجهة" {...field} /></FormControl><FormMessage /></FormItem>
+              <FormItem><FormLabelIcon icon={Building2} label="اسم الشركة (اختياري)" /><FormControl><Input placeholder="اسم الشركة أو الجهة" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
             )} />
           )}
 
@@ -241,12 +258,12 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
           </div>
 
            <FormField control={form.control} name="experience" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={Award} label={postType === 'seeking_job' ? 'الخبرة' : 'الخبرة المطلوبة'} /><FormControl><Input placeholder="مثال: 5 سنوات، بدون خبرة..." {...field} /></FormControl><FormMessage /></FormItem>
+              <FormItem><FormLabelIcon icon={Award} label={postType === 'seeking_job' ? 'الخبرة' : 'الخبرة المطلوبة'} /><FormControl><Input placeholder="مثال: 5 سنوات، بدون خبرة..." {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
            )} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField control={form.control} name="salary" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={Wallet} label="الأجر (اختياري)" /><FormControl><Input placeholder="مثال: 5000 درهم / شهري" {...field} /></FormControl><FormMessage /></FormItem>
+              <FormItem><FormLabelIcon icon={Wallet} label="الأجر (اختياري)" /><FormControl><Input placeholder="مثال: 5000 درهم / شهري" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
             )} />
             {postType === 'seeking_worker' && (
                 <FormField control={form.control} name="openPositions" render={({ field }) => (
@@ -261,7 +278,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
           </div>
           
           <FormField control={form.control} name="description" render={({ field }) => (
-            <FormItem><FormLabelIcon icon={FileSignature} label={postType === 'seeking_job' ? "وصف المهارات والخبرة" : "معلومات إضافية (اختياري)"}/><FormControl><Textarea placeholder={postType === 'seeking_job' ? "اكتب تفاصيل عن مهاراتك وخبراتك..." : "اكتب تفاصيل إضافية عن الوظيفة، المتطلبات، إلخ."} {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabelIcon icon={FileSignature} label={postType === 'seeking_job' ? "وصف المهارات والخبرة" : "معلومات إضافية (اختياري)"}/><FormControl><Textarea placeholder={postType === 'seeking_job' ? "اكتب تفاصيل عن مهاراتك وخبراتك..." : "اكتب تفاصيل إضافية عن الوظيفة، المتطلبات، إلخ."} {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
           )} />
           
           <div className="flex items-center gap-4">
@@ -284,13 +301,13 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
           <div className="border p-4 rounded-lg space-y-4">
             <h3 className="font-semibold flex items-center gap-2"><Info className="h-5 w-5 text-primary"/>طرق التواصل</h3>
             <FormField control={form.control} name="phone" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={Phone} label="رقم الهاتف (اختياري)" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
+              <FormItem><FormLabelIcon icon={Phone} label="رقم الهاتف (اختياري)" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="whatsapp" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={MessageSquare} label="رقم واتساب (اختياري)" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
+              <FormItem><FormLabelIcon icon={MessageSquare} label="رقم واتساب (اختياري)" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="email" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={Mail} label="البريد الإلكتروني (اختياري)" /><FormControl><Input type="email" placeholder="example@mail.com" {...field} /></FormControl><FormMessage /></FormItem>
+              <FormItem><FormLabelIcon icon={Mail} label="البريد الإلكتروني (اختياري)" /><FormControl><Input type="email" placeholder="example@mail.com" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
             )} />
           </div>
 
@@ -308,7 +325,7 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
             )}
           >
             {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            نشر الإعلان
+            {isEditing ? 'تحديث الإعلان' : 'نشر الإعلان'}
           </Button>
         </fieldset>
       </form>
