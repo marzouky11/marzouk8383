@@ -15,9 +15,10 @@ interface JobCardProps {
 }
 
 const workTypeTranslations: { [key in WorkType]: string } = {
-  daily: 'يومي',
-  monthly: 'شهري',
-  project: 'مشروع',
+  full_time: 'دوام كامل',
+  part_time: 'دوام جزئي',
+  freelance: 'عمل حر',
+  remote: 'عن بعد',
 };
 
 export function JobCard({ job }: JobCardProps) {
@@ -63,15 +64,15 @@ export function JobCard({ job }: JobCardProps) {
 
   return (
     <Card className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full">
+       <Link href={`/jobs/${job.id}`} className="focus:outline-none absolute inset-0 z-10">
+         <span className="sr-only">View Job</span>
+      </Link>
       <div className="flex-grow space-y-3">
         <div className="flex justify-between items-start gap-3">
           <div className="flex-grow">
             {category && <Badge variant={'secondary'} className="mb-1 font-normal text-xs">{category.name}</Badge>}
             <h3 className={cn("font-bold leading-tight", themeColor)}>
-              <Link href={`/jobs/${job.id}`} className="focus:outline-none">
-                <span className="absolute inset-0 z-10"></span>
                 {job.title}
-              </Link>
             </h3>
           </div>
           {category && (
@@ -85,7 +86,7 @@ export function JobCard({ job }: JobCardProps) {
 
         <div className="flex flex-col gap-2.5">
           <InfoItem icon={MapPin} text={`${job.country}, ${job.city}`} />
-          <InfoItem icon={Wallet} text={`الأجر: ${job.salary}`} />
+          <InfoItem icon={Wallet} text={`الأجر: ${job.salary || 'عند الطلب'}`} />
           <InfoItem icon={Clock} text={`طبيعة العمل: ${workTypeTranslations[job.workType]}`} />
         </div>
       </div>

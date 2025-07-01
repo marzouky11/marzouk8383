@@ -6,7 +6,7 @@ export interface Category {
   iconName: string;
 }
 
-export type WorkType = 'daily' | 'monthly' | 'project';
+export type WorkType = 'full_time' | 'part_time' | 'freelance' | 'remote';
 export type PostType = 'seeking_worker' | 'seeking_job';
 
 export interface Job {
@@ -17,11 +17,15 @@ export interface Job {
   categoryId: string;
   country: string;
   city: string;
-  salary: string;
   workType: WorkType;
   description?: string;
-  phone: string;
-  whatsapp: string;
+  experience?: string;
+  salary?: string;
+  companyName?: string;
+  openPositions?: number;
+  phone?: string;
+  whatsapp?: string;
+  email?: string;
   rating: number;
   likes: number;
   postedAt: string; // This is a derived string like "2 days ago"

@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   Phone,
   MessageSquare,
+  Mail,
   MapPin,
   Wallet,
   Star,
@@ -17,10 +18,14 @@ import {
   Heart,
   User as UserIcon,
   Briefcase,
-  FileText
+  FileText,
+  Building2,
+  Award,
+  Users2,
+  Clock
 } from 'lucide-react';
 import { getJobById, getCategoryById, hasUserLikedJob } from '@/lib/data';
-import type { Job } from '@/lib/types';
+import type { Job, WorkType } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
 import { CopyButton } from './copy-button';
 import { Separator } from '@/components/ui/separator';
@@ -31,6 +36,14 @@ import { ShareButton } from './share-button';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
+
+const workTypeTranslations: { [key in WorkType]: string } = {
+  full_time: 'دوام كامل',
+  part_time: 'دوام جزئي',
+  freelance: 'عمل حر',
+  remote: 'عن بعد',
+};
+
 
 export default function JobDetailPage() {
   const params = useParams<{ id: string }>();
@@ -138,12 +151,15 @@ export default function JobDetailPage() {
       ? 'bg-accent text-accent-foreground hover:bg-accent/90' 
       : 'bg-destructive text-destructive-foreground hover:bg-destructive/90';
 
-  const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | undefined }) => (
-    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-      <Icon className={cn('h-4 w-4', themeColor)} />
-      <span>{text || 'غير محدد'}</span>
-    </div>
-  );
+  const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | number | undefined }) => {
+    if (!text) return null;
+    return (
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Icon className={cn('h-4 w-4', themeColor)} />
+        <span>{text}</span>
+      </div>
+    );
+  }
 
   return (
     <AppLayout>
@@ -172,14 +188,18 @@ export default function JobDetailPage() {
                 )}
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                <InfoItem icon={Wallet} text={job.salary} />
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                <InfoItem icon={Wallet} text={job.salary ? `الأجر: ${job.salary}` : 'الأجر: عند الطلب'} />
+                <InfoItem icon={Clock} text={`النوع: ${workTypeTranslations[job.workType]}`} />
+                <InfoItem icon={Award} text={`الخبرة: ${job.experience || 'غير محدد'}`} />
+                {job.companyName && <InfoItem icon={Building2} text={`الشركة: ${job.companyName}`} />}
+                {job.openPositions && <InfoItem icon={Users2} text={`شواغر: ${job.openPositions}`} />}
                 <div className="flex items-center gap-1 text-muted-foreground">
                   <Star className="h-4 w-4 text-yellow-400 fill-current" />
                   <span className="font-semibold">{job.rating}</span>
                   <span className="text-xs">(تقييم)</span>
                 </div>
-                <InfoItem icon={CalendarDays} text={job.postedAt} />
+                <InfoItem icon={CalendarDays} text={`نشر في: ${job.postedAt}`} />
               </div>
               
               <div className="flex items-center gap-2">
@@ -195,7 +215,7 @@ export default function JobDetailPage() {
               <div>
                 <h3 className={cn('text-lg font-bold flex items-center gap-2 mb-2', themeColor)}>
                     {isWorkerAd ? <UserIcon className="h-5 w-5" /> : <Briefcase className="h-5 w-5" />}
-                    {isWorkerAd ? 'معلومات الباحث عن عمل' : 'وصف الوظيفة'}
+                    {isWorkerAd ? 'وصف المهارات والخبرة' : 'وصف الوظيفة'}
                 </h3>
                 <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
                   {job.description || 'لا يوجد وصف متاح.'}
@@ -222,19 +242,31 @@ export default function JobDetailPage() {
                   معلومات التواصل
                 </h3>
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <Button asChild className={cn('flex-grow', buttonTheme)}>
-                    <a href={`https://wa.me/${job.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
-                      <MessageSquare className="ml-2 h-4 w-4" />
-                      واتساب
-                    </a>
-                  </Button>
-                  <Button asChild className={cn('flex-grow', buttonTheme)}>
-                    <a href={`tel:${job.phone}`}>
-                      <Phone className="ml-2 h-4 w-4" />
-                      اتصال
-                    </a>
-                  </Button>
-                  <CopyButton textToCopy={job.phone} />
+                  {job.whatsapp && (
+                    <Button asChild className={cn('flex-grow', buttonTheme)}>
+                      <a href={`https://wa.me/${job.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
+                        <MessageSquare className="ml-2 h-4 w-4" />
+                        واتساب
+                      </a>
+                    </Button>
+                  )}
+                  {job.phone && (
+                    <Button asChild className={cn('flex-grow', buttonTheme)}>
+                      <a href={`tel:${job.phone}`}>
+                        <Phone className="ml-2 h-4 w-4" />
+                        اتصال
+                      </a>
+                    </Button>
+                  )}
+                   {job.email && (
+                    <Button asChild className={cn('flex-grow', buttonTheme)}>
+                      <a href={`mailto:${job.email}`}>
+                        <Mail className="ml-2 h-4 w-4" />
+                        بريد إلكتروني
+                      </a>
+                    </Button>
+                  )}
+                  {job.phone && <CopyButton textToCopy={job.phone} />}
                 </div>
               </div>
             </CardContent>

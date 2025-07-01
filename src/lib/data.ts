@@ -198,7 +198,7 @@ export async function getJobById(id: string): Promise<Job | null> {
 }
 
 // Post a new job to Firestore
-export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 'rating' | 'isFavorite' | 'postedAt'>) {
+export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 'rating' | 'postedAt'>) {
     try {
         const adsCollection = collection(db, 'ads');
         const newJob = {

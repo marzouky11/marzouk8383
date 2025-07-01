@@ -18,7 +18,8 @@ import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { 
   Sparkles, Loader2, Briefcase, Users, FileText, FileSignature, 
-  LayoutGrid, Globe, MapPin, Wallet, Phone, MessageSquare
+  LayoutGrid, Globe, MapPin, Wallet, Phone, MessageSquare, Mail,
+  Building2, Award, Users2, Info
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -27,13 +28,20 @@ const formSchema = z.object({
   postType: z.enum(['seeking_worker', 'seeking_job'], { required_error: 'الرجاء تحديد نوع الإعلان.' }),
   title: z.string().min(1, { message: 'اسم الإعلان مطلوب.' }),
   categoryId: z.string().min(1, { message: 'الفئة مطلوبة.' }),
+  workType: z.enum(['full_time', 'part_time', 'freelance', 'remote'], { required_error: 'نوع العمل مطلوب.' }),
+  companyName: z.string().optional(),
   country: z.string().min(1, { message: 'الدولة مطلوبة.' }),
   city: z.string().min(1, { message: 'المدينة مطلوبة.' }),
-  salary: z.string().min(1, { message: 'الأجر مطلوب.' }),
-  workType: z.enum(['daily', 'monthly', 'project'], { required_error: 'طبيعة العمل مطلوبة.' }),
+  salary: z.string().optional(),
+  experience: z.string().optional(),
+  openPositions: z.coerce.number().int().positive().optional(),
   description: z.string().optional(),
-  phone: z.string().min(1, { message: 'رقم الهاتف مطلوب.' }),
-  whatsapp: z.string().min(1, { message: 'رقم واتساب مطلوب.' }),
+  phone: z.string().optional(),
+  whatsapp: z.string().optional(),
+  email: z.string().email({ message: "الرجاء إدخال بريد إلكتروني صحيح." }).optional(),
+}).refine(data => !!data.phone || !!data.whatsapp || !!data.email, {
+  message: 'يجب توفير وسيلة تواصل واحدة على الأقل (هاتف، واتساب، أو بريد إلكتروني).',
+  path: ['phone'], // Show error under the first contact field
 });
 
 interface PostJobFormProps {
@@ -54,10 +62,15 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
       categoryId: '',
       country: '',
       city: '',
+      workType: undefined,
       salary: '',
+      experience: '',
+      companyName: '',
+      openPositions: undefined,
       description: '',
       phone: '',
       whatsapp: '',
+      email: '',
     },
   });
 
@@ -201,11 +214,49 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
         
         <fieldset disabled={!postType} className="space-y-6 disabled:opacity-50">
           <FormField control={form.control} name="title" render={({ field }) => (
-            <FormItem><FormLabelIcon icon={FileText} label="اسم الإعلان" /><FormControl><Input placeholder={postType === 'seeking_job' ? "مثال: كهربائي محترف..." : "مثال: مطلوب كهربائي..."} {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabelIcon icon={FileText} label="عنوان الإعلان" /><FormControl><Input placeholder={postType === 'seeking_job' ? "مثال: مصمم جرافيك يبحث عن فرصة..." : "مثال: مطلوب مهندس مدني..."} {...field} /></FormControl><FormMessage /></FormItem>
+          )} />
+          
+          <FormField control={form.control} name="categoryId" render={({ field }) => (
+            <FormItem><FormLabelIcon icon={LayoutGrid} label="الفئة"/><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر فئة العمل" /></SelectTrigger></FormControl><SelectContent>{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
           )} />
 
+          <FormField control={form.control} name="workType" render={({ field }) => (
+            <FormItem><FormLabelIcon icon={Briefcase} label="نوع العمل" /><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر نوع العمل" /></SelectTrigger></FormControl><SelectContent><SelectItem value="full_time">دوام كامل</SelectItem><SelectItem value="part_time">دوام جزئي</SelectItem><SelectItem value="freelance">عمل حر</SelectItem><SelectItem value="remote">عن بعد</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+          )} />
+
+          {postType === 'seeking_worker' && (
+            <FormField control={form.control} name="companyName" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={Building2} label="اسم الشركة (اختياري)" /><FormControl><Input placeholder="اسم الشركة أو الجهة" {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField control={form.control} name="country" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={Globe} label="الدولة" /><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر الدولة" /></SelectTrigger></FormControl><SelectContent>{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="city" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={MapPin} label="المدينة"/><Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountry}><FormControl><SelectTrigger><SelectValue placeholder="اختر المدينة" /></SelectTrigger></FormControl><SelectContent>{cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+            )} />
+          </div>
+
+           <FormField control={form.control} name="experience" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={Award} label={postType === 'seeking_job' ? 'الخبرة' : 'الخبرة المطلوبة'} /><FormControl><Input placeholder="مثال: 5 سنوات، بدون خبرة..." {...field} /></FormControl><FormMessage /></FormItem>
+           )} />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField control={form.control} name="salary" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={Wallet} label="الأجر (اختياري)" /><FormControl><Input placeholder="مثال: 5000 درهم / شهري" {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+            {postType === 'seeking_worker' && (
+                <FormField control={form.control} name="openPositions" render={({ field }) => (
+                    <FormItem><FormLabelIcon icon={Users2} label="الوظائف المتاحة (اختياري)" /><FormControl><Input type="number" placeholder="مثال: 3" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} /></FormControl><FormMessage /></FormItem>
+                )} />
+            )}
+          </div>
+          
           <FormField control={form.control} name="description" render={({ field }) => (
-            <FormItem><FormLabelIcon icon={FileSignature} label="وصف الإعلان (اختياري)"/><FormControl><Textarea placeholder="اكتب تفاصيل عن العمل، المتطلبات، إلخ." {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabelIcon icon={FileSignature} label={postType === 'seeking_job' ? "وصف المهارات والخبرة" : "معلومات إضافية (اختياري)"}/><FormControl><Textarea placeholder={postType === 'seeking_job' ? "اكتب تفاصيل عن مهاراتك وخبراتك..." : "اكتب تفاصيل إضافية عن الوظيفة، المتطلبات، إلخ."} {...field} /></FormControl><FormMessage /></FormItem>
           )} />
           
           <div className="flex items-center gap-4">
@@ -225,33 +276,19 @@ export function PostJobForm({ categories, countries }: PostJobFormProps) {
             </div>
           )}
 
-          <FormField control={form.control} name="categoryId" render={({ field }) => (
-            <FormItem><FormLabelIcon icon={LayoutGrid} label="الفئة"/><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر فئة العمل" /></SelectTrigger></FormControl><SelectContent>{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
-          )} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField control={form.control} name="country" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={Globe} label="الدولة" /><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر الدولة" /></SelectTrigger></FormControl><SelectContent>{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="city" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={MapPin} label="المدينة"/><Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountry}><FormControl><SelectTrigger><SelectValue placeholder="اختر المدينة" /></SelectTrigger></FormControl><SelectContent>{cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
-            )} />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField control={form.control} name="salary" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={Wallet} label="الأجر" /><FormControl><Input placeholder="مثال: 200 درهم / يوم" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="workType" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={Briefcase} label="طبيعة العمل" /><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر طبيعة العمل" /></SelectTrigger></FormControl><SelectContent><SelectItem value="daily">يومي</SelectItem><SelectItem value="monthly">شهري</SelectItem><SelectItem value="project">مشروع</SelectItem></SelectContent></Select><FormMessage /></FormItem>
-            )} />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="border p-4 rounded-lg space-y-4">
+            <h3 className="font-semibold flex items-center gap-2"><Info className="h-5 w-5 text-primary"/>طرق التواصل</h3>
             <FormField control={form.control} name="phone" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={Phone} label="رقم الهاتف" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
+              <FormItem><FormLabelIcon icon={Phone} label="رقم الهاتف (اختياري)" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="whatsapp" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={MessageSquare} label="رقم واتساب" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
+              <FormItem><FormLabelIcon icon={MessageSquare} label="رقم واتساب (اختياري)" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="email" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={Mail} label="البريد الإلكتروني (اختياري)" /><FormControl><Input type="email" placeholder="example@mail.com" {...field} /></FormControl><FormMessage /></FormItem>
             )} />
           </div>
+
           <Button
             type="submit"
             size="lg"
