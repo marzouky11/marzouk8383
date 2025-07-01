@@ -46,6 +46,7 @@ export interface User {
   categoryId?: string;
   description?: string;
   createdAt?: Timestamp;
+  gender?: 'male' | 'female';
 }
 
 export interface Country {

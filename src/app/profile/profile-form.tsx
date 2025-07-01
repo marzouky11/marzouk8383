@@ -14,9 +14,11 @@ import type { Country, User, Category } from '@/lib/types';
 import { updateUserProfile } from '@/lib/data';
 import { useAuth } from '@/context/auth-context';
 import { Loader2 } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'الاسم مطلوب.' }),
+  gender: z.enum(['male', 'female']).optional(),
   categoryId: z.string().optional(),
   description: z.string().optional(),
   country: z.string().optional(),
@@ -40,6 +42,7 @@ export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: user?.name || '',
+      gender: user?.gender,
       categoryId: user?.categoryId || '',
       description: user?.description || '',
       country: user?.country || '',
@@ -102,6 +105,41 @@ export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
             </FormItem>
         )} />
 
+        <FormField
+          control={form.control}
+          name="gender"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>الجنس</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex gap-4"
+                >
+                  <FormItem className="flex items-center space-x-2 space-x-reverse">
+                    <FormControl>
+                      <RadioGroupItem value="male" id="male" />
+                    </FormControl>
+                    <FormLabel htmlFor="male" className="font-normal">
+                      ذكر
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2 space-x-reverse">
+                    <FormControl>
+                      <RadioGroupItem value="female" id="female" />
+                    </FormControl>
+                    <FormLabel htmlFor="female" className="font-normal">
+                      أنثى
+                    </FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField control={form.control} name="categoryId" render={({ field }) => (
           <FormItem>
             <FormLabel>فئة العمل</FormLabel>
@@ -122,7 +160,7 @@ export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
         <FormField control={form.control} name="description" render={({ field }) => (
             <FormItem>
                 <FormLabel>نبذة تعريفية</FormLabel>
-                <FormControl><Textarea placeholder="اكتب وصفاً قصيراً عنك أو عن مهاراتك..." {...field} /></FormControl>
+                <FormControl><Textarea placeholder="اكتب وصفاً قصيراً عنك أو عن مهاراتك..." {...field} value={field.value ?? ''} /></FormControl>
                 <FormMessage />
             </FormItem>
         )} />
@@ -137,10 +175,10 @@ export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField control={form.control} name="phone" render={({ field }) => (
-            <FormItem><FormLabel>رقم الهاتف</FormLabel><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>رقم الهاتف</FormLabel><FormControl><Input placeholder="+xxxxxxxxxx" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="whatsapp" render={({ field }) => (
-            <FormItem><FormLabel>رقم واتساب</FormLabel><FormControl><Input placeholder="+xxxxxxxxxx" {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>رقم واتساب</FormLabel><FormControl><Input placeholder="+xxxxxxxxxx" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
           )} />
         </div>
         <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
