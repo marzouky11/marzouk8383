@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Search, SlidersHorizontal } from 'lucide-react';
-import type { Category, Country } from '@/lib/types';
+import type { Category, Country, WorkType } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 interface JobFiltersProps {
@@ -28,6 +28,13 @@ interface JobFiltersProps {
   className?: string;
   searchPath?: string;
 }
+
+const workTypeTranslations: { [key in WorkType]: string } = {
+  full_time: 'دوام كامل',
+  part_time: 'دوام جزئي',
+  freelance: 'عمل حر',
+  remote: 'عن بعد',
+};
 
 export function JobFilters({ categories, countries, showSort = false, className, searchPath }: JobFiltersProps) {
   const router = useRouter();
@@ -142,12 +149,12 @@ export function JobFilters({ categories, countries, showSort = false, className,
                </div>
                <div>
                   <Label className="mb-2 block">طبيعة العمل</Label>
-                  <Select value={selectedWorkType} onValueChange={setSelectedWorkType}>
+                  <Select value={selectedWorkType} onValueChange={(value) => setSelectedWorkType(value as WorkType)}>
                     <SelectTrigger><SelectValue placeholder="اختر طبيعة العمل" /></SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="daily">يومي</SelectItem>
-                        <SelectItem value="monthly">شهري</SelectItem>
-                        <SelectItem value="project">مشروع</SelectItem>
+                      {Object.entries(workTypeTranslations).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>{label}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                </div>

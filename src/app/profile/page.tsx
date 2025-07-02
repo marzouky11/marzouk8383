@@ -26,7 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Info, Shield, FileText, Phone, Edit, Trash2 } from 'lucide-react';
+import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Info, Shield, FileText, Phone, Edit, Trash2, Newspaper } from 'lucide-react';
 import { ProfileForm } from './profile-form';
 import { getCountries, getCategories, getJobsByUserId, deleteAd } from '@/lib/data';
 import type { Job } from '@/lib/types';
@@ -153,6 +153,11 @@ export default function SettingsPage() {
                       </SheetContent>
                     </Sheet>
 
+                    <SettingItem
+                        icon={Newspaper}
+                        label="مقالات"
+                        href="/articles"
+                    />
                     <SettingItem
                       icon={Info}
                       label="من نحن"

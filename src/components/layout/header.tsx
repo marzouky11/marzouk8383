@@ -20,6 +20,7 @@ import {
   LogOut,
   User as UserIcon,
   Handshake,
+  Newspaper,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -29,6 +30,7 @@ const navLinks = [
     { href: '/', label: 'الرئيسية' },
     { href: '/jobs', label: 'الوظائف' },
     { href: '/workers', label: 'العمال' },
+    { href: '/articles', label: 'مقالات' },
 ];
 
 export function Header() {
