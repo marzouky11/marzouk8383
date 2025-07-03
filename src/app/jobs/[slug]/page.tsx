@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
-import { notFound } from 'next/navigation';
-import { getJobBySlug } from '@/lib/data';
+import { notFound, redirect } from 'next/navigation';
+import { getJobBySlug, getJobById } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';
 import type { Metadata } from 'next';
-import { JobDetailView } from '../[id]/job-detail-view';
+import { JobDetailView } from './job-detail-view';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { FileText } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -15,7 +15,11 @@ interface JobDetailPageProps {
 }
 
 export async function generateMetadata({ params }: JobDetailPageProps): Promise<Metadata> {
-  const job = await getJobBySlug(params.slug);
+  const isLegacyId = !params.slug.includes('-');
+  
+  const job = isLegacyId 
+    ? await getJobById(params.slug)
+    : await getJobBySlug(params.slug);
 
   if (!job) {
     return {
@@ -110,7 +114,22 @@ async function JobData({ slug }: { slug: string }) {
     return <JobDetailView job={job} />;
 }
 
-export default function JobDetailPage({ params }: JobDetailPageProps) {
+export default async function JobDetailPage({ params }: JobDetailPageProps) {
+    // Check if the parameter is a legacy ID (lacks a hyphen)
+    const isLegacyId = !params.slug.includes('-');
+
+    if (isLegacyId) {
+        const job = await getJobById(params.slug);
+        if (job && job.slug) {
+            // Permanent redirect to the new slug-based URL
+            redirect(`/jobs/${job.slug}`);
+        } else {
+            // If job not found by ID, it's a 404
+            notFound();
+        }
+    }
+
+    // If it's a valid slug, render the page
     return (
         <AppLayout>
             <MobilePageHeader title="تفاصيل الإعلان">
