@@ -6,17 +6,18 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { AppLayout } from '@/components/layout/app-layout';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { Loader2 } from 'lucide-react';
+import { Loader2, UserPlus } from 'lucide-react';
 import { getCountries } from '@/lib/data';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { Country } from '@/lib/types';
+import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 
 
 export default function SignupPage() {
@@ -114,8 +115,17 @@ export default function SignupPage() {
 
   return (
     <AppLayout>
+      <MobilePageHeader title="إنشاء حساب جديد">
+        <UserPlus className="h-5 w-5 text-primary" />
+      </MobilePageHeader>
       <div className="container mx-auto max-w-md py-8">
         <Card>
+          <CardHeader className="hidden md:block">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <UserPlus className="h-6 w-6 text-primary" />
+              إنشاء حساب جديد
+            </CardTitle>
+          </CardHeader>
           <CardContent className="pt-6">
             <p className="text-center text-sm text-muted-foreground mb-6">املأ النموذج أدناه للانضمام إلى المنصة.</p>
             <form onSubmit={handleSignup} className="space-y-4">

@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { AppLayout } from '@/components/layout/app-layout';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { Loader2 } from 'lucide-react';
+import { Loader2, LogIn } from 'lucide-react';
+import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -44,8 +45,17 @@ export default function LoginPage() {
 
   return (
     <AppLayout>
+      <MobilePageHeader title="تسجيل الدخول">
+        <LogIn className="h-5 w-5 text-primary" />
+      </MobilePageHeader>
       <div className="container mx-auto max-w-md py-8">
         <Card>
+          <CardHeader className="hidden md:block">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <LogIn className="h-6 w-6 text-primary" />
+              تسجيل الدخول
+            </CardTitle>
+          </CardHeader>
           <CardContent className="pt-6">
             <p className="text-center text-sm text-muted-foreground mb-6">أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى حسابك.</p>
             <form onSubmit={handleLogin} className="space-y-4">
