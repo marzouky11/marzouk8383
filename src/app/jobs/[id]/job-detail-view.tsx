@@ -39,6 +39,14 @@ interface JobDetailViewProps {
 }
 
 export function JobDetailView({ job }: JobDetailViewProps) {
+  if (!job) {
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-6 text-center">
+        <p>عذرًا, لم نتمكن من تحميل تفاصيل الإعلان.</p>
+      </div>
+    );
+  }
+
   const category = getCategoryById(job.categoryId);
   const isWorkerAd = job?.postType === 'seeking_job';
   const themeColor = isWorkerAd ? 'text-accent' : 'text-destructive';
@@ -47,6 +55,8 @@ export function JobDetailView({ job }: JobDetailViewProps) {
   const buttonTheme = isWorkerAd 
       ? 'bg-accent text-accent-foreground hover:bg-accent/90' 
       : 'bg-destructive text-destructive-foreground hover:bg-destructive/90';
+  
+  const translatedWorkType = workTypeTranslations[job.workType] || job.workType || 'غير محدد';
 
   const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | number | undefined }) => {
     if (!text) return null;
@@ -65,11 +75,11 @@ export function JobDetailView({ job }: JobDetailViewProps) {
           <div className="flex justify-between items-start">
             <div>
               <h1 className={cn('text-2xl font-bold', themeColor)}>
-                {job.title}
+                {job.title || 'عنوان غير متوفر'}
               </h1>
               <div className="flex items-center gap-2 text-muted-foreground mt-1">
                 <MapPin className="h-4 w-4" />
-                <span className="text-md">{job.country}, {job.city}</span>
+                <span className="text-md">{job.country || 'دولة غير محددة'}, {job.city || 'مدينة غير محددة'}</span>
               </div>
             </div>
             {category && (
@@ -81,16 +91,16 @@ export function JobDetailView({ job }: JobDetailViewProps) {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
             <InfoItem icon={Wallet} text={job.salary ? `الأجر: ${job.salary}` : 'الأجر: عند الطلب'} />
-            <InfoItem icon={Clock} text={`النوع: ${workTypeTranslations[job.workType]}`} />
+            <InfoItem icon={Clock} text={`النوع: ${translatedWorkType}`} />
             <InfoItem icon={Award} text={`الخبرة: ${job.experience || 'غير محدد'}`} />
             {job.companyName && <InfoItem icon={Building2} text={`الشركة: ${job.companyName}`} />}
             {job.openPositions && <InfoItem icon={Users2} text={`شواغر: ${job.openPositions}`} />}
             <div className="flex items-center gap-1 text-muted-foreground">
               <Star className="h-4 w-4 text-yellow-400 fill-current" />
-              <span className="font-semibold">{job.rating}</span>
+              <span className="font-semibold">{job.rating || 'N/A'}</span>
               <span className="text-xs">(تقييم)</span>
             </div>
-            <InfoItem icon={CalendarDays} text={`نشر في: ${job.postedAt}`} />
+            <InfoItem icon={CalendarDays} text={`نشر في: ${job.postedAt || 'غير معروف'}`} />
           </div>
           
           <div className="flex items-center gap-2">
