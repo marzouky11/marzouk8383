@@ -2,7 +2,7 @@
 
 import { AppLayout } from '@/components/layout/app-layout';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Mail } from 'lucide-react';
 
@@ -17,10 +17,10 @@ export default function ContactUsPage() {
       <div className="container mx-auto max-w-3xl px-4 py-8">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2">
               <Mail className="h-6 w-6 text-primary" />
               اتصل بنا
-            </CardTitle>
+            </h1>
           </CardHeader>
           <CardContent className="space-y-4 text-muted-foreground">
             <p>

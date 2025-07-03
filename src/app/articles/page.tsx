@@ -16,10 +16,10 @@ export default function ArticlesPage() {
       <div className="container mx-auto max-w-5xl px-4 py-8">
         <Card className="hidden md:block mb-8">
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2">
                     <Newspaper className="h-6 w-6 text-primary" />
                     مقالات لنموك المهني
-                </CardTitle>
+                </h1>
             </CardHeader>
             <CardContent>
                 <p className="text-muted-foreground">

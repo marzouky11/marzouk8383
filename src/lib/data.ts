@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
 import type { Job, Category, Country, PostType, User, WorkType } from './types';
 
 const categories: Category[] = [
@@ -57,6 +57,29 @@ const countries: Country[] = [
     { name: 'السودان', cities: ['الخرطوم', 'أم درمان', 'بورتسودان', 'كسلا', 'الأبيض', 'كوستي', 'ود مدني', 'القضارف'] },
     { name: 'ليبيا', cities: ['طرابلس', 'بنغازي', 'مصراتة', 'البيضاء', 'سبها', 'طبرق', 'سرت'] },
 ];
+
+function slugify(text: string) {
+  const a = 'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;'
+  const b = 'aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz------'
+  const p = new RegExp(a.split('').join('|'), 'g')
+
+  return text.toString().toLowerCase()
+    .replace(/\s+/g, '-') // Replace spaces with -
+    .replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
+    .replace(/&/g, '-and-') // Replace & with 'and'
+    .replace(/[^\u0600-\u06FF\w\-]+/g, '') // Remove all non-word chars except Arabic
+    .replace(/\-\-+/g, '-') // Replace multiple - with single -
+    .replace(/^-+/, '') // Trim - from start of text
+    .replace(/-+$/, '') // Trim - from end of text
+}
+
+function generateSlug(title: string, id: string) {
+    const slugBase = slugify(title);
+    // use first 8 chars of id to ensure uniqueness
+    const uniqueSuffix = id.substring(0, 8);
+    return `${slugBase}-${uniqueSuffix}`;
+}
+
 
 function formatTimeAgo(timestamp: any) {
   if (!timestamp || !timestamp.toDate) {
@@ -214,18 +237,48 @@ export async function getJobById(id: string): Promise<Job | null> {
   }
 }
 
+export async function getJobBySlug(slug: string): Promise<Job | null> {
+  try {
+    const adsRef = collection(db, 'ads');
+    const q = query(adsRef, where('slug', '==', slug), limit(1));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const docSnap = querySnapshot.docs[0];
+      const data = docSnap.data();
+      return { 
+          id: docSnap.id, 
+          ...data,
+          postedAt: formatTimeAgo(data.createdAt),
+     } as Job;
+    } else {
+      console.log("No such document with slug!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching job by slug: ", error);
+    return null;
+  }
+}
+
 // Post a new job to Firestore
-export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 'rating' | 'postedAt'>) {
+export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 'rating' | 'postedAt' | 'slug'>): Promise<{ id: string; slug: string }> {
     try {
         const adsCollection = collection(db, 'ads');
+        const newDocRef = doc(adsCollection); // Create a new doc reference with a unique ID
+        const id = newDocRef.id;
+        const slug = generateSlug(jobData.title, id);
+
         const newJob = {
             ...jobData,
+            slug,
             createdAt: serverTimestamp(),
             likes: 0,
-            rating: parseFloat((Math.random() * (5.0 - 3.5) + 3.5).toFixed(1)), // Generate random rating
+            rating: parseFloat((Math.random() * (5.0 - 3.5) + 3.5).toFixed(1)),
         };
-        const docRef = await addDoc(adsCollection, newJob);
-        return docRef.id;
+
+        await setDoc(newDocRef, newJob);
+        return { id, slug };
     } catch (e) {
         console.error("Error adding document: ", e);
         throw new Error("Failed to post job");
@@ -235,10 +288,17 @@ export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 
 export async function updateAd(adId: string, adData: Partial<Job>) {
     try {
         const adRef = doc(db, 'ads', adId);
-        await updateDoc(adRef, {
+        
+        const dataToUpdate: any = {
             ...adData,
             updatedAt: serverTimestamp()
-        });
+        };
+
+        if (adData.title) {
+            dataToUpdate.slug = generateSlug(adData.title, adId);
+        }
+
+        await updateDoc(adRef, dataToUpdate);
     } catch (e) {
         console.error("Error updating ad: ", e);
         throw new Error("Failed to update ad");

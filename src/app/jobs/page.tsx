@@ -58,6 +58,7 @@ export default async function JobsPage({
         <Briefcase className="h-5 w-5 text-primary" />
       </MobilePageHeader>
       <div className="container py-6">
+        <h1 className="sr-only">عروض العمل المتاحة</h1>
         <div className="mb-6">
           <Suspense fallback={<JobFiltersSkeleton />}>
             <JobFilters categories={categories} countries={countries} showSort={true} />

@@ -152,7 +152,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
           title: "تم تحديث الإعلان بنجاح!",
           description: "تم حفظ التغييرات على إعلانك.",
         });
-        router.push(`/jobs/${job.id}`);
+        router.push(`/profile`);
       } else {
         const newJobData = {
           ...values,
@@ -160,14 +160,14 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
           ownerName: userData.name,
           ownerAvatar: userData.avatarUrl || '',
         };
-        const newJobId = await postJob(newJobData);
+        const { slug } = await postJob(newJobData);
         toast({
           title: "تم النشر بنجاح!",
           description: "تم نشر إعلانك وسيظهر في القسم المناسب.",
         });
         form.reset();
         setSuggestedCategories([]);
-        router.push(`/jobs/${newJobId}`);
+        router.push(`/jobs/${slug}`);
       }
     } catch (error) {
        toast({

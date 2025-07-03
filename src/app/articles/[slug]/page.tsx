@@ -6,12 +6,30 @@ import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, User, Newspaper } from 'lucide-react';
+import type { Metadata } from 'next';
 
 interface ArticlePageProps {
   params: {
     slug: string;
   };
 }
+
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const article = getArticleBySlug(params.slug);
+
+  if (!article) {
+    return {
+      title: 'المقال غير موجود',
+      description: 'لم نتمكن من العثور على المقال الذي تبحث عنه.',
+    };
+  }
+
+  return {
+    title: article.title,
+    description: article.summary,
+  };
+}
+
 
 export default function ArticlePage({ params }: ArticlePageProps) {
   const article = getArticleBySlug(params.slug);
