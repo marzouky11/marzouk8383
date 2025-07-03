@@ -71,11 +71,15 @@ export default function SignupPage() {
         'https://i.postimg.cc/T1G5NfVw/male-avatar-1.png',
         'https://i.postimg.cc/3JvB4AdB/male-avatar-2.png',
         'https://i.postimg.cc/7hM5xZ7f/male-avatar-3.png',
+        'https://i.postimg.cc/NfWJc2gD/male-avatar-4.png',
+        'https://i.postimg.cc/C1P8XmY9/male-avatar-5.png'
       ];
       const femaleAvatars = [
         'https://i.postimg.cc/qR8fW9dG/female-avatar-1.png',
         'https://i.postimg.cc/zX8ZgG6b/female-avatar-2.png',
         'https://i.postimg.cc/1zY12B4P/female-avatar-3.png',
+        'https://i.postimg.cc/L5k6tS3J/female-avatar-4.png',
+        'https://i.postimg.cc/j2yYvQ0G/female-avatar-5.png'
       ];
       const avatars = gender === 'male' ? maleAvatars : femaleAvatars;
       const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];

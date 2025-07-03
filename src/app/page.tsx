@@ -31,29 +31,25 @@ function HomeHeaderMobile({ categories, countries }: {
   countries: ReturnType<typeof getCountries>;
 }) {
   return (
-      <div className="md:hidden">
-        <div className="bg-primary text-primary-foreground p-4 pb-12 rounded-b-[2.5rem]">
-          <div className="container mx-auto">
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center gap-3">
-                  <Handshake className="h-10 w-10 flex-shrink-0" />
-                  <div>
-                    <h1 className="text-xl font-bold">توظيفك</h1>
-                    <p className="text-sm font-light text-primary-foreground/90 -mt-1">بوابتك نحو فرص أفضل</p>
-                  </div>
-              </div>
-              <div className="flex items-center gap-1">
-                <Button asChild variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                    <Link href="/articles">
-                        <Newspaper className="h-5 w-5" />
-                    </Link>
-                </Button>
-                <ThemeToggleButton className="text-white hover:bg-white/20" />
-              </div>
+      <div className="md:hidden bg-primary text-primary-foreground p-4 pb-6 rounded-b-[2.5rem]">
+        <div className="container mx-auto space-y-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+                <Handshake className="h-10 w-10 flex-shrink-0" />
+                <div>
+                  <h1 className="text-xl font-bold">توظيفك</h1>
+                  <p className="text-sm font-light text-primary-foreground/90 -mt-1">بوابتك نحو فرص أفضل</p>
+                </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <Button asChild variant="ghost" size="icon" className="text-white hover:bg-white/20">
+                  <Link href="/articles">
+                      <Newspaper className="h-5 w-5" />
+                  </Link>
+              </Button>
+              <ThemeToggleButton className="text-white hover:bg-white/20" />
             </div>
           </div>
-        </div>
-        <div className="container mx-auto -mt-8 px-4">
           <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
         </div>
       </div>
