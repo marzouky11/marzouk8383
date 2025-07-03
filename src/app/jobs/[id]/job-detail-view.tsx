@@ -117,9 +117,9 @@ export function JobDetailView({ job }: JobDetailViewProps) {
               <div className="flex items-center gap-3">
                 <Avatar>
                     <AvatarImage src={job.ownerAvatar} data-ai-hint="user avatar" />
-                    <AvatarFallback>{job.ownerName.charAt(0)}</AvatarFallback>
+                    <AvatarFallback>{job.ownerName ? job.ownerName.charAt(0) : 'ص'}</AvatarFallback>
                 </Avatar>
-                <p className="font-semibold">{job.ownerName}</p>
+                <p className="font-semibold">{job.ownerName || 'صاحب الإعلان'}</p>
               </div>
           </div>
 

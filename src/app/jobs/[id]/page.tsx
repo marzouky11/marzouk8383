@@ -33,11 +33,16 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
     'remote': 'OTHER',
   };
 
+  const jobTitle = job.title || 'إعلان وظيفة';
+  const jobDescription = job.description || jobTitle;
+  const jobCity = job.city || 'مدينة غير محددة';
+  const jobCountry = job.country || 'دولة غير محددة';
+
   const jobPostingJsonLd = {
       '@context': 'https://schema.org',
       '@type': 'JobPosting',
-      title: job.title,
-      description: job.description || job.title,
+      title: jobTitle,
+      description: jobDescription,
       datePosted: (job.createdAt && typeof job.createdAt.toDate === 'function') ? job.createdAt.toDate().toISOString() : new Date().toISOString(),
       employmentType: employmentTypeMapping[job.workType] || 'OTHER',
       hiringOrganization: {
@@ -49,8 +54,8 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
         '@type': 'Place',
         address: {
           '@type': 'PostalAddress',
-          addressLocality: job.city,
-          addressCountry: job.country,
+          addressLocality: jobCity,
+          addressCountry: jobCountry,
         },
       },
       ...(job.workType === 'remote' && { jobLocationType: 'TELECOMMUTE' }),
@@ -59,14 +64,14 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
   const canonicalUrl = `${baseUrl}/jobs/${job.id}`;
 
   return {
-    title: job.title,
-    description: job.description?.substring(0, 160) || `إعلان عن ${job.title} في ${job.city}, ${job.country}.`,
+    title: jobTitle,
+    description: jobDescription.substring(0, 160) || `إعلان عن ${jobTitle} في ${jobCity}, ${jobCountry}.`,
     alternates: {
         canonical: canonicalUrl,
     },
     openGraph: {
-        title: job.title,
-        description: job.description?.substring(0, 160) || `إعلان عن ${job.title} في ${job.city}, ${job.country}.`,
+        title: jobTitle,
+        description: jobDescription.substring(0, 160) || `إعلان عن ${jobTitle} في ${jobCity}, ${jobCountry}.`,
         url: canonicalUrl,
         siteName: 'توظيفك',
         type: 'article',

@@ -117,11 +117,11 @@ export default function SettingsPage() {
               <Card>
                 <CardContent className="p-4 flex items-center gap-4">
                    <Avatar className="h-16 w-16">
-                      <AvatarImage src={userData.avatarUrl} data-ai-hint="user avatar" alt={userData.name} />
-                      <AvatarFallback className="text-2xl">{userData.name.charAt(0)}</AvatarFallback>
+                      <AvatarImage src={userData.avatarUrl} data-ai-hint="user avatar" alt={userData.name || 'User Avatar'} />
+                      <AvatarFallback className="text-2xl">{userData.name ? userData.name.charAt(0) : 'م'}</AvatarFallback>
                    </Avatar>
                    <div>
-                      <h2 className="text-xl font-bold">{userData.name}</h2>
+                      <h2 className="text-xl font-bold">{userData.name || 'مستخدم'}</h2>
                       <p className="text-sm text-muted-foreground">{categories.find(c => c.id === userData.categoryId)?.name || 'لم تحدد الفئة'}</p>
                    </div>
                 </CardContent>
