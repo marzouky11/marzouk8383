@@ -7,6 +7,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, User, Newspaper } from 'lucide-react';
 import type { Metadata } from 'next';
+import { format } from 'date-fns';
+import { ar } from 'date-fns/locale';
 
 interface ArticlePageProps {
   params: {
@@ -24,9 +26,66 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     };
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://khidmanow.com';
+  
+  const articleJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': `${baseUrl}/articles/${article.slug}`,
+      },
+      headline: article.title,
+      description: article.summary,
+      image: article.imageUrl,
+      author: {
+          '@type': 'Person',
+          name: article.author,
+      },
+      publisher: {
+          '@type': 'Organization',
+          name: 'توظيفك',
+          logo: {
+              '@type': 'ImageObject',
+              url: 'https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg',
+          },
+      },
+      datePublished: new Date(article.date).toISOString(),
+      dateModified: new Date(article.date).toISOString(),
+  };
+
   return {
     title: article.title,
     description: article.summary,
+    alternates: {
+        canonical: `${baseUrl}/articles/${article.slug}`,
+    },
+    openGraph: {
+        title: article.title,
+        description: article.summary,
+        images: [
+            {
+                url: article.imageUrl,
+                width: 1200,
+                height: 630,
+                alt: article.title,
+            },
+        ],
+        url: `${baseUrl}/articles/${article.slug}`,
+        siteName: 'توظيفك',
+        type: 'article',
+        publishedTime: new Date(article.date).toISOString(),
+        authors: [article.author],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: article.title,
+        description: article.summary,
+        images: [article.imageUrl],
+    },
+    other: {
+        'application/ld+json': JSON.stringify(articleJsonLd, null, 2)
+    }
   };
 }
 
@@ -58,7 +117,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
-                    <span>{article.date}</span>
+                    <span>{format(new Date(article.date), 'd MMMM yyyy', { locale: ar })}</span>
                   </div>
                 </div>
               </header>

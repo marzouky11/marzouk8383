@@ -5,6 +5,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import { Calendar, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { format } from 'date-fns';
+import { ar } from 'date-fns/locale';
 
 interface ArticleCardProps {
   article: Article;
@@ -39,7 +41,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
       <CardFooter className="flex justify-between items-center text-xs text-muted-foreground pt-4 border-t mt-auto">
         <div className="flex items-center gap-2">
             <Calendar className="h-3.5 w-3.5" />
-            <span>{article.date}</span>
+            <span>{format(new Date(article.date), 'd MMMM yyyy', { locale: ar })}</span>
         </div>
         <Button asChild variant="link" size="sm" className="p-0 h-auto">
             <Link href={`/articles/${article.slug}`}>

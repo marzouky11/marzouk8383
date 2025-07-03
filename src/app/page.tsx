@@ -38,8 +38,8 @@ function HomeHeaderMobile({ categories, countries }: {
               <div className="flex items-center gap-3">
                   <Handshake className="h-10 w-10 flex-shrink-0" />
                   <div>
-                    <h1 className="text-xl font-bold">الخدمة الآن</h1>
-                    <p className="text-sm font-light text-primary-foreground/90 -mt-1">فرص عمل بانتظارك</p>
+                    <h1 className="text-xl font-bold">توظيفك</h1>
+                    <p className="text-sm font-light text-primary-foreground/90 -mt-1">بوابتك نحو فرص أفضل</p>
                   </div>
               </div>
               <div className="flex items-center gap-1">
