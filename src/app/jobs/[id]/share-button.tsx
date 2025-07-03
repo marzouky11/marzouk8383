@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Share2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface ShareButtonProps {
   title: string;
@@ -11,20 +12,27 @@ interface ShareButtonProps {
 
 export function ShareButton({ title, text }: ShareButtonProps) {
   const { toast } = useToast();
+  const [canShare, setCanShare] = useState(false);
+
+  useEffect(() => {
+    // This effect runs only on the client, after the component has mounted
+    // Check if sharing or clipboard is possible and update state
+    if (navigator.share || navigator.clipboard) {
+      setCanShare(true);
+    }
+  }, []);
 
   const handleShare = async () => {
-    // Check if Web Share API is supported
     if (navigator.share) {
       try {
         await navigator.share({
           title: title,
           text: text,
-          url: window.location.href, // Share the current page URL
+          url: window.location.href,
         });
       } catch (error) {
-        // Handle user cancellation of the share sheet
         if (error instanceof DOMException && error.name === 'AbortError') {
-          return;
+          return; // User cancelled the share
         }
         console.error('Error sharing:', error);
         toast({
@@ -33,9 +41,8 @@ export function ShareButton({ title, text }: ShareButtonProps) {
           description: 'حدث خطأ أثناء محاولة مشاركة الإعلان.',
         });
       }
-    } else {
+    } else if (navigator.clipboard) {
       // Fallback for browsers that don't support Web Share API
-      // Copy the URL to the clipboard instead
       navigator.clipboard.writeText(window.location.href).then(() => {
         toast({
           title: 'تم نسخ الرابط!',
@@ -45,9 +52,9 @@ export function ShareButton({ title, text }: ShareButtonProps) {
     }
   };
 
-  // Only render the button in a browser environment where sharing or clipboard is possible
-  if (typeof navigator === 'undefined' || (!navigator.share && !navigator.clipboard)) {
-      return null;
+  // Only render the button if the functionality is available on the client
+  if (!canShare) {
+    return null;
   }
 
   return (
