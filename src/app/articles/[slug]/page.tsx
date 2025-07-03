@@ -134,9 +134,13 @@ export default function ArticlePage({ params }: ArticlePageProps) {
               </div>
 
               <div className="prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-foreground prose-a:text-primary">
-                {article.content.split('\\n').map((paragraph, index) => {
+                {article.content.split('\n').filter(p => p.trim() !== '').map((paragraph, index) => {
                     if (paragraph.startsWith('### ')) {
                         return <h3 key={index} className="text-xl font-semibold mt-6 mb-3 text-foreground">{paragraph.replace('### ', '')}</h3>
+                    }
+                     // Handle bold text like **المميزات:**
+                    if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
+                        return <p key={index} className="mb-4 font-bold">{paragraph.slice(2, -2)}</p>;
                     }
                     return <p key={index} className="mb-4">{paragraph}</p>;
                 })}
