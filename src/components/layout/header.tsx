@@ -30,7 +30,6 @@ const navLinks = [
     { href: '/', label: 'الرئيسية' },
     { href: '/jobs', label: 'الوظائف' },
     { href: '/workers', label: 'العمال' },
-    { href: '/articles', label: 'مقالات' },
 ];
 
 export function Header() {
@@ -78,6 +77,12 @@ export function Header() {
               </div>
 
               <div className="flex items-center gap-2 sm:gap-4">
+                  <Button variant="ghost" asChild>
+                      <Link href="/articles" className="flex items-center gap-2 text-muted-foreground hover:text-primary">
+                          <Newspaper className="h-5 w-5" />
+                          <span className="hidden sm:inline">مقالات</span>
+                      </Link>
+                  </Button>
                   <ThemeToggleButton />
                   <Button asChild>
                       <Link href="/post-job">

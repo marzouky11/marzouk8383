@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
 import React from 'react';
-import { Handshake } from 'lucide-react';
+import { Handshake, Newspaper } from 'lucide-react';
 import { JobFilters } from '@/components/job-filters';
 import { ThemeToggleButton } from '@/components/theme-toggle';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -42,7 +42,14 @@ function HomeHeaderMobile({ categories, countries }: {
                     <p className="text-sm font-light text-primary-foreground/90 -mt-1">فرص عمل بانتظارك</p>
                   </div>
               </div>
-              <ThemeToggleButton className="text-white hover:bg-white/20" />
+              <div className="flex items-center gap-1">
+                <Button asChild variant="ghost" size="icon" className="text-white hover:bg-white/20">
+                    <Link href="/articles">
+                        <Newspaper className="h-5 w-5" />
+                    </Link>
+                </Button>
+                <ThemeToggleButton className="text-white hover:bg-white/20" />
+              </div>
             </div>
           </div>
         </div>
