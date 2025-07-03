@@ -26,19 +26,16 @@ function JobSectionSkeleton() {
 }
 
 
-function HomeHeaderMobile({ categories, countries }: {
-  categories: ReturnType<typeof getCategories>;
-  countries: ReturnType<typeof getCountries>;
-}) {
+function HomeHeaderMobile() {
   return (
-      <div className="md:hidden bg-primary text-primary-foreground p-4 pb-6 rounded-b-[2.5rem]">
-        <div className="container mx-auto space-y-4">
+      <div className="md:hidden bg-primary text-primary-foreground p-4 rounded-b-2xl shadow-md">
+        <div className="container mx-auto">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-                <Handshake className="h-10 w-10 flex-shrink-0" />
+                <Handshake className="h-8 w-8 flex-shrink-0" />
                 <div>
-                  <h1 className="text-xl font-bold">توظيفك</h1>
-                  <p className="text-sm font-light text-primary-foreground/90 -mt-1">بوابتك نحو فرص أفضل</p>
+                  <h1 className="text-lg font-bold">توظيفك</h1>
+                  <p className="text-xs font-light text-primary-foreground/90 -mt-0.5">بوابتك نحو فرص أفضل</p>
                 </div>
             </div>
             <div className="flex items-center gap-1">
@@ -50,7 +47,6 @@ function HomeHeaderMobile({ categories, countries }: {
               <ThemeToggleButton className="text-white hover:bg-white/20" />
             </div>
           </div>
-          <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
         </div>
       </div>
   );
@@ -88,7 +84,12 @@ export default async function HomePage() {
 
   return (
     <AppLayout>
-      <HomeHeaderMobile categories={categories} countries={countries} />
+      <HomeHeaderMobile />
+      
+      {/* Search filters for mobile, outside the header */}
+      <div className="md:hidden container mt-4">
+        <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
+      </div>
       
       <div className="container hidden md:block pt-6">
         <Card className="p-2 rounded-2xl shadow-lg">
@@ -96,7 +97,7 @@ export default async function HomePage() {
         </Card>
       </div>
       
-      <div className="container space-y-8 mt-6">
+      <div className="container space-y-8 mt-4 md:mt-6">
           <Carousel
             className="w-full rounded-2xl overflow-hidden shadow-lg"
             opts={{
