@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Mail } from 'lucide-react';
 
 export default function ContactUsPage() {
-  const email = 'ynssmarzouk@gmail.com';
+  const email = 'tawzifakweb@gmail.com';
 
   return (
     <AppLayout>
