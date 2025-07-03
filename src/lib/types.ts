@@ -11,7 +11,6 @@ export type PostType = 'seeking_worker' | 'seeking_job';
 
 export interface Job {
   id: string;
-  slug: string;
   userId: string;
   postType: PostType;
   title: string;

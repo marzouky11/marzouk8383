@@ -64,7 +64,7 @@ export function JobCard({ job }: JobCardProps) {
 
   return (
     <Card className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full">
-       <Link href={`/jobs/${job.slug}`} className="focus:outline-none absolute inset-0 z-10">
+       <Link href={`/jobs/${job.id}`} className="focus:outline-none absolute inset-0 z-10">
          <span className="sr-only">View Job</span>
       </Link>
       <div className="flex-grow space-y-3">
@@ -99,7 +99,7 @@ export function JobCard({ job }: JobCardProps) {
           </div>
         </div>
         <Button asChild size="sm" className={cn("h-9 text-sm rounded-lg px-4 z-20 relative", themeButtonClass)}>
-          <Link href={`/jobs/${job.slug}`}>عرض التفاصيل</Link>
+          <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
         </Button>
       </div>
     </Card>

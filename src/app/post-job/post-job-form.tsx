@@ -160,14 +160,14 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
           ownerName: userData.name,
           ownerAvatar: userData.avatarUrl || '',
         };
-        const { slug } = await postJob(newJobData);
+        const { id } = await postJob(newJobData);
         toast({
           title: "تم النشر بنجاح!",
           description: "تم نشر إعلانك وسيظهر في القسم المناسب.",
         });
         form.reset();
         setSuggestedCategories([]);
-        router.push(`/jobs/${slug}`);
+        router.push(`/jobs/${id}`);
       }
     } catch (error) {
        toast({
