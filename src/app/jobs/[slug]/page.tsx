@@ -14,12 +14,28 @@ interface JobDetailPageProps {
   params: { slug: string };
 }
 
-export async function generateMetadata({ params }: JobDetailPageProps): Promise<Metadata> {
-  const isLegacyId = !params.slug.includes('-');
+// Helper function to fetch a job by trying slug first, then falling back to ID.
+async function getJob(param: string) {
+    // Try fetching by slug first, as this is the most common case.
+    const jobBySlug = await getJobBySlug(param);
+    if (jobBySlug) {
+      return jobBySlug;
+    }
   
-  const job = isLegacyId 
-    ? await getJobById(params.slug)
-    : await getJobBySlug(params.slug);
+    // If not found, and the param does NOT look like a slug (i.e., no hyphens),
+    // it might be a legacy ID. Let's try fetching by ID.
+    if (!param.includes('-')) {
+      const jobById = await getJobById(param);
+      return jobById;
+    }
+  
+    // If it looks like a slug but wasn't found, or it's not a valid ID, return null.
+    return null;
+}
+
+
+export async function generateMetadata({ params }: JobDetailPageProps): Promise<Metadata> {
+  const job = await getJob(params.slug);
 
   if (!job) {
     return {
@@ -60,16 +76,18 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
       ...(job.workType === 'remote' && { jobLocationType: 'TELECOMMUTE' }),
   };
 
-  const metadata: Metadata = {
+  const canonicalUrl = `${baseUrl}/jobs/${job.slug || job.id}`;
+
+  return {
     title: job.title,
     description: job.description?.substring(0, 160) || `إعلان عن ${job.title} في ${job.city}, ${job.country}.`,
     alternates: {
-        canonical: `${baseUrl}/jobs/${job.slug}`,
+        canonical: canonicalUrl,
     },
     openGraph: {
         title: job.title,
         description: job.description?.substring(0, 160) || `إعلان عن ${job.title} في ${job.city}, ${job.country}.`,
-        url: `${baseUrl}/jobs/${job.slug}`,
+        url: canonicalUrl,
         siteName: 'توظيفك',
         type: 'article',
     },
@@ -77,8 +95,6 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
         'application/ld+json': JSON.stringify(jobPostingJsonLd, null, 2)
     }
   };
-
-  return metadata;
 }
 
 const JobDetailSkeleton = () => (
@@ -104,39 +120,30 @@ const JobDetailSkeleton = () => (
     </div>
   );
 
-async function JobData({ slug }: { slug: string }) {
-    const job = await getJobBySlug(slug);
+async function JobDataComponent({ slug }: { slug: string }) {
+    const job = await getJob(slug);
 
     if (!job) {
         notFound();
+    }
+    
+    // If a job was found BUT the current URL slug doesn't match the job's actual slug
+    // (e.g., we found it via a legacy ID), we redirect to the correct, canonical URL.
+    if (job.slug && slug !== job.slug) {
+        redirect(`/jobs/${job.slug}`);
     }
     
     return <JobDetailView job={job} />;
 }
 
 export default async function JobDetailPage({ params }: JobDetailPageProps) {
-    // Check if the parameter is a legacy ID (lacks a hyphen)
-    const isLegacyId = !params.slug.includes('-');
-
-    if (isLegacyId) {
-        const job = await getJobById(params.slug);
-        if (job && job.slug) {
-            // Permanent redirect to the new slug-based URL
-            redirect(`/jobs/${job.slug}`);
-        } else {
-            // If job not found by ID, it's a 404
-            notFound();
-        }
-    }
-
-    // If it's a valid slug, render the page
     return (
         <AppLayout>
             <MobilePageHeader title="تفاصيل الإعلان">
                 <FileText className="h-5 w-5 text-primary" />
             </MobilePageHeader>
             <Suspense fallback={<JobDetailSkeleton />}>
-                <JobData slug={params.slug} />
+                <JobDataComponent slug={params.slug} />
             </Suspense>
         </AppLayout>
     );
