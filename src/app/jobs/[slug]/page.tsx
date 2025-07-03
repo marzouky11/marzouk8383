@@ -1,7 +1,4 @@
-
-import { notFound } from 'next/navigation';
-
+// This route has been disabled to prevent routing conflicts.
 export default function DeprecatedSlugPage() {
-  notFound();
   return null;
 }
