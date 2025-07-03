@@ -69,18 +69,18 @@ export default function SignupPage() {
       const user = userCredential.user;
 
       const maleAvatars = [
-        'https://i.postimg.cc/yN6TsnYJ/male-avatar-1.png',
-        'https://i.postimg.cc/sXW6tYh0/male-avatar-2.png',
-        'https://i.postimg.cc/G3x7pDjg/male-avatar-3.png',
-        'https://i.postimg.cc/k4Gqc6rV/male-avatar-4.png',
-        'https://i.postimg.cc/pXdG0M2C/male-avatar-5.png'
+        'https://i.ibb.co/C0TPc5m/male-avatar-1.png',
+        'https://i.ibb.co/yY1pWpY/male-avatar-2.png',
+        'https://i.ibb.co/yfgCq5b/male-avatar-3.png',
+        'https://i.ibb.co/3s0sBfD/male-avatar-4.png',
+        'https://i.ibb.co/D8yVzB2/male-avatar-5.png'
       ];
       const femaleAvatars = [
-        'https://i.postimg.cc/L8WkS4tM/female-avatar-1.png',
-        'https://i.postimg.cc/FKk0q6qY/female-avatar-2.png',
-        'https://i.postimg.cc/zvcX3wDT/female-avatar-3.png',
-        'https://i.postimg.cc/VvY1Y6q4/female-avatar-4.png',
-        'https://i.postimg.cc/8cMdtplk/female-avatar-5.png'
+        'https://i.ibb.co/pwnLzjh/female-avatar-1.png',
+        'https://i.ibb.co/T41fPz7/female-avatar-2.png',
+        'https://i.ibb.co/c1nQ1qD/female-avatar-3.png',
+        'https://i.ibb.co/JqgNfcz/female-avatar-4.png',
+        'https://i.ibb.co/LQrMjw5/female-avatar-5.png'
       ];
       const avatars = gender === 'male' ? maleAvatars : femaleAvatars;
       const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];

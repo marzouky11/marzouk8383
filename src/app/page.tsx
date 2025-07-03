@@ -1,6 +1,5 @@
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,7 @@ import React from 'react';
 import { Handshake, Newspaper } from 'lucide-react';
 import { JobFilters } from '@/components/job-filters';
 import { ThemeToggleButton } from '@/components/theme-toggle';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { HomeCarousel } from './home-carousel';
 
 
 function JobSectionSkeleton() {
@@ -52,30 +51,6 @@ function HomeHeaderMobile() {
   );
 }
 
-const carouselImages = [
-    {
-        src: "https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg",
-        alt: "عامل في موقع بناء",
-        hint: "construction worker",
-        title: "عمال محترفون",
-        description: "خبراء معتمدون في جميع المجالات"
-    },
-    {
-        src: "https://i.postimg.cc/BbSqbdmv/images-2021-09-02-T035936-467.jpg",
-        alt: "فريق عمل يتعاون",
-        hint: "team collaboration",
-        title: "فرص عمل متنوعة",
-        description: "ابحث عن فرصتك في مختلف القطاعات"
-    },
-    {
-        src: "https://i.postimg.cc/4x7XYvQp/image.jpg",
-        alt: "مصافحة بين عاملين",
-        hint: "professional handshake",
-        title: "انضم إلى الأفضل",
-        description: "تواصل مع أصحاب العمل مباشرة"
-    }
-];
-
 export default async function HomePage() {
   const jobOffers = await getJobs({ postType: 'seeking_worker', count: 4 });
   const jobSeekers = await getJobs({ postType: 'seeking_job', count: 4 });
@@ -98,34 +73,7 @@ export default async function HomePage() {
       </div>
       
       <div className="container space-y-8 mt-4 md:mt-6">
-          <Carousel
-            className="w-full rounded-2xl overflow-hidden shadow-lg"
-            opts={{
-              loop: true,
-              direction: 'rtl',
-            }}
-          >
-            <CarouselContent>
-              {carouselImages.map((image, index) => (
-                <CarouselItem key={index}>
-                  <div className="relative h-44 md:h-64">
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      priority={index === 0}
-                      className="object-cover"
-                      data-ai-hint={image.hint}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
-                      <h2 className="text-2xl md:text-4xl font-bold text-white">{image.title}</h2>
-                      <p className="text-white/90 mt-1 max-w-lg text-sm">{image.description}</p>
-                    </div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          <HomeCarousel />
 
           <section>
               <div className="flex justify-between items-baseline mb-4">
