@@ -37,13 +37,16 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
   const jobDescription = job.description || jobTitle;
   const jobCity = job.city || 'مدينة غير محددة';
   const jobCountry = job.country || 'دولة غير محددة';
+  const createdAtDate = (job.createdAt && typeof job.createdAt.toDate === 'function') 
+    ? job.createdAt.toDate() 
+    : new Date();
 
   const jobPostingJsonLd = {
       '@context': 'https://schema.org',
       '@type': 'JobPosting',
       title: jobTitle,
       description: jobDescription,
-      datePosted: (job.createdAt && typeof job.createdAt.toDate === 'function') ? job.createdAt.toDate().toISOString() : new Date().toISOString(),
+      datePosted: createdAtDate.toISOString(),
       employmentType: employmentTypeMapping[job.workType] || 'OTHER',
       hiringOrganization: {
         '@type': 'Organization',
