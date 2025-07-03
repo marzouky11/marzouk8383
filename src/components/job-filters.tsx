@@ -97,13 +97,13 @@ export function JobFilters({ categories, countries, showSort = false, className,
         <div className="relative w-full">
           <Input
             placeholder="ابحث عن وظيفة، عامل، أو خدمة..."
-            className="h-12 text-base rounded-lg pl-4 pr-12 border bg-card focus-visible:ring-primary/50"
+            className="h-14 text-base rounded-xl pl-4 pr-14 border bg-background shadow-lg focus-visible:ring-primary/50"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <Button type="submit" size="icon" variant="ghost" className="rounded-full h-9 w-9">
-                  <Search className="h-5 w-5 text-muted-foreground" />
+              <Button type="submit" size="icon" variant="ghost" className="rounded-full h-10 w-10">
+                  <Search className="h-5 w-5 text-primary" />
               </Button>
           </div>
         </div>
@@ -111,8 +111,8 @@ export function JobFilters({ categories, countries, showSort = false, className,
 
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetTrigger asChild>
-          <Button variant="outline" className="h-12 w-12 flex-shrink-0 shadow-sm rounded-lg border bg-card p-0">
-            <SlidersHorizontal className="h-5 w-5 text-muted-foreground" />
+          <Button variant="outline" className="h-14 w-14 flex-shrink-0 shadow-lg rounded-xl border bg-background p-0">
+            <SlidersHorizontal className="h-6 w-6 text-primary" />
           </Button>
         </SheetTrigger>
         <SheetContent side="bottom" className="rounded-t-2xl max-h-[80svh] flex flex-col">
@@ -129,14 +129,14 @@ export function JobFilters({ categories, countries, showSort = false, className,
                    <Label htmlFor="country" className="mb-2 block">الدولة</Label>
                    <Select value={selectedCountry} onValueChange={handleCountryChange}>
                      <SelectTrigger id="country"><SelectValue placeholder="اختر الدولة" /></SelectTrigger>
-                     <SelectContent>{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent>
+                     <SelectContent position="item-aligned">{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent>
                    </Select>
                  </div>
                  <div>
                    <Label htmlFor="city" className="mb-2 block">المدينة</Label>
                    <Select value={selectedCity} onValueChange={setSelectedCity} disabled={!selectedCountry}>
                      <SelectTrigger id="city"><SelectValue placeholder="اختر المدينة" /></SelectTrigger>
-                     <SelectContent>{cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent>
+                     <SelectContent position="item-aligned">{cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent>
                    </Select>
                  </div>
               </div>
@@ -144,14 +144,14 @@ export function JobFilters({ categories, countries, showSort = false, className,
                  <Label htmlFor="category" className="mb-2 block">الفئة</Label>
                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                    <SelectTrigger id="category"><SelectValue placeholder="اختر الفئة" /></SelectTrigger>
-                   <SelectContent>{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
+                   <SelectContent position="item-aligned">{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
                  </Select>
                </div>
                <div>
                   <Label className="mb-2 block">طبيعة العمل</Label>
                   <Select value={selectedWorkType} onValueChange={(value) => setSelectedWorkType(value as WorkType)}>
                     <SelectTrigger><SelectValue placeholder="اختر طبيعة العمل" /></SelectTrigger>
-                    <SelectContent>
+                    <SelectContent position="item-aligned">
                       {Object.entries(workTypeTranslations).map(([value, label]) => (
                         <SelectItem key={value} value={value}>{label}</SelectItem>
                       ))}

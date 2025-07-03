@@ -129,13 +129,11 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     }
 
     const category = getCategoryById(job.categoryId || '');
-    const isWorkerAd = job?.postType === 'seeking_job';
-    const themeColor = isWorkerAd ? 'text-accent' : 'text-destructive';
-    const themeBg = isWorkerAd ? 'bg-accent/10' : 'bg-destructive/10';
-    const themeBorder = isWorkerAd ? 'border-accent' : 'border-destructive';
-    const buttonTheme = isWorkerAd 
-        ? 'bg-accent text-accent-foreground hover:bg-accent/90' 
-        : 'bg-destructive text-destructive-foreground hover:bg-destructive/90';
+    // Job Seeker (seeking_job) is Red (destructive). Job Offer (seeking_worker) is Green (accent).
+    const isSeekingJob = job?.postType === 'seeking_job';
+    const themeColor = isSeekingJob ? 'text-destructive' : 'text-accent';
+    const themeBg = isSeekingJob ? 'bg-destructive/10' : 'bg-accent/10';
+    const themeBorder = isSeekingJob ? 'border-destructive' : 'border-accent';
     
     const translatedWorkType = workTypeTranslations[job.workType] || job.workType || 'غير محدد';
     
@@ -186,8 +184,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
                   <div>
                     <h3 className={cn('text-lg font-bold flex items-center gap-2 mb-2', themeColor)}>
-                        {isWorkerAd ? <UserIcon className="h-5 w-5" /> : <Briefcase className="h-5 w-5" />}
-                        {isWorkerAd ? 'وصف المهارات والخبرة' : 'وصف الوظيفة'}
+                        {isSeekingJob ? <UserIcon className="h-5 w-5" /> : <Briefcase className="h-5 w-5" />}
+                        {isSeekingJob ? 'وصف المهارات والخبرة' : 'وصف الوظيفة'}
                     </h3>
                     <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
                       {job.description || 'لا يوجد وصف متاح.'}
@@ -215,7 +213,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                     </h3>
                     <div className="flex flex-col sm:flex-row gap-2">
                       {job.whatsapp && (
-                        <Button asChild className={cn('flex-grow', buttonTheme)}>
+                        <Button asChild className="flex-grow">
                           <a href={`https://wa.me/${job.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
                             <MessageSquare className="ml-2 h-4 w-4" />
                             واتساب
@@ -223,15 +221,15 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                         </Button>
                       )}
                       {job.phone && (
-                        <Button asChild className={cn('flex-grow', buttonTheme)}>
+                        <Button asChild className="flex-grow">
                           <a href={`tel:${job.phone}`}>
                             <Phone className="ml-2 h-4 w-4" />
                             اتصال
                           </a>
                         </Button>
                       )}
-                        {job.email && (
-                        <Button asChild className={cn('flex-grow', buttonTheme)}>
+                      {job.email && (
+                        <Button asChild className="flex-grow">
                           <a href={`mailto:${job.email}`}>
                             <Mail className="ml-2 h-4 w-4" />
                             بريد إلكتروني

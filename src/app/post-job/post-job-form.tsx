@@ -38,7 +38,7 @@ const formSchema = z.object({
   description: z.string().optional(),
   phone: z.string().optional(),
   whatsapp: z.string().optional(),
-  email: z.string().email({ message: "الرجاء إدخال بريد إلكتروني صحيح." }).optional(),
+  email: z.string().email({ message: "الرجاء إدخال بريد إلكتروني صحيح." }).optional().or(z.literal('')),
 }).refine(data => !!data.phone || !!data.whatsapp || !!data.email, {
   message: 'يجب توفير وسيلة تواصل واحدة على الأقل (هاتف، واتساب، أو بريد إلكتروني).',
   path: ['phone'], // Show error under the first contact field
@@ -85,7 +85,8 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
   const jobDescription = form.watch('description');
   const postType = form.watch('postType');
   
-  const themeColor = postType === 'seeking_job' ? 'text-accent' : postType === 'seeking_worker' ? 'text-destructive' : 'text-muted-foreground';
+  // Job Seeker (seeking_job) is Red (destructive). Job Offer (seeking_worker) is Green (accent).
+  const themeColor = postType === 'seeking_job' ? 'text-destructive' : postType === 'seeking_worker' ? 'text-accent' : 'text-muted-foreground';
 
   useEffect(() => {
     const countryData = countries.find(c => c.name === selectedCountry);
@@ -203,7 +204,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
                       className={cn(
                         'p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2',
                         field.value === 'seeking_worker'
-                          ? 'border-destructive bg-destructive/10 text-destructive'
+                          ? 'border-accent bg-accent/10 text-accent'
                           : 'hover:bg-muted'
                       )}
                     >
@@ -215,7 +216,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
                       className={cn(
                         'p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2',
                         field.value === 'seeking_job'
-                          ? 'border-accent bg-accent/10 text-accent'
+                          ? 'border-destructive bg-destructive/10 text-destructive'
                           : 'hover:bg-muted'
                       )}
                     >
@@ -292,7 +293,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
               {suggestedCategories.map((catName) => {
                 const categoryObj = categories.find(c => c.name === catName);
                 return categoryObj ? (
-                  <Badge key={categoryObj.id} variant={postType === 'seeking_job' ? 'accent' : 'destructive'} className="cursor-pointer" onClick={() => form.setValue('categoryId', categoryObj.id)}>{categoryObj.name}</Badge>
+                  <Badge key={categoryObj.id} variant={postType === 'seeking_job' ? 'destructive' : 'accent'} className="cursor-pointer" onClick={() => form.setValue('categoryId', categoryObj.id)}>{categoryObj.name}</Badge>
                 ) : null;
               })}
             </div>
@@ -318,9 +319,9 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
             className={cn(
               'w-full',
               postType === 'seeking_job'
-                ? 'bg-accent text-accent-foreground hover:bg-accent/90'
-                : postType === 'seeking_worker'
                 ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                : postType === 'seeking_worker'
+                ? 'bg-accent text-accent-foreground hover:bg-accent/90'
                 : ''
             )}
           >

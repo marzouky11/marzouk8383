@@ -32,7 +32,7 @@ function HomeHeaderMobile({ categories, countries }: {
 }) {
   return (
       <div className="md:hidden">
-        <div className="bg-primary text-primary-foreground p-4 pb-10 rounded-b-[2.5rem]">
+        <div className="bg-primary text-primary-foreground p-4 pb-12 rounded-b-[2.5rem]">
           <div className="container mx-auto">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-3">
@@ -53,7 +53,7 @@ function HomeHeaderMobile({ categories, countries }: {
             </div>
           </div>
         </div>
-        <div className="container mx-auto -mt-10 px-4">
+        <div className="container mx-auto -mt-8 px-4">
           <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
         </div>
       </div>
