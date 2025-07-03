@@ -69,18 +69,18 @@ export default function SignupPage() {
       const user = userCredential.user;
 
       const maleAvatars = [
-        'https://i.postimg.cc/T1G5NfVw/male-avatar-1.png',
-        'https://i.postimg.cc/3JvB4AdB/male-avatar-2.png',
-        'https://i.postimg.cc/7hM5xZ7f/male-avatar-3.png',
-        'https://i.postimg.cc/NfWJc2gD/male-avatar-4.png',
-        'https://i.postimg.cc/C1P8XmY9/male-avatar-5.png'
+        'https://i.postimg.cc/yN6TsnYJ/male-avatar-1.png',
+        'https://i.postimg.cc/sXW6tYh0/male-avatar-2.png',
+        'https://i.postimg.cc/G3x7pDjg/male-avatar-3.png',
+        'https://i.postimg.cc/k4Gqc6rV/male-avatar-4.png',
+        'https://i.postimg.cc/pXdG0M2C/male-avatar-5.png'
       ];
       const femaleAvatars = [
-        'https://i.postimg.cc/qR8fW9dG/female-avatar-1.png',
-        'https://i.postimg.cc/zX8ZgG6b/female-avatar-2.png',
-        'https://i.postimg.cc/1zY12B4P/female-avatar-3.png',
-        'https://i.postimg.cc/L5k6tS3J/female-avatar-4.png',
-        'https://i.postimg.cc/j2yYvQ0G/female-avatar-5.png'
+        'https://i.postimg.cc/L8WkS4tM/female-avatar-1.png',
+        'https://i.postimg.cc/FKk0q6qY/female-avatar-2.png',
+        'https://i.postimg.cc/zvcX3wDT/female-avatar-3.png',
+        'https://i.postimg.cc/VvY1Y6q4/female-avatar-4.png',
+        'https://i.postimg.cc/8cMdtplk/female-avatar-5.png'
       ];
       const avatars = gender === 'male' ? maleAvatars : femaleAvatars;
       const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
