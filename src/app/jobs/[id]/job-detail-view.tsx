@@ -104,7 +104,7 @@ export function JobDetailView({ job }: JobDetailViewProps) {
           </div>
           
           <div className="flex items-center gap-2">
-            <ShareButton title={job.title} text={job.description || 'تحقق من هذا الإعلان الرائع!'} />
+            <ShareButton title={job.title || 'إعلان وظيفة'} text={job.description || 'تحقق من هذا الإعلان الرائع!'} />
           </div>
 
           <Separator />
