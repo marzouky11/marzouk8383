@@ -68,23 +68,11 @@ export default function SignupPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      const maleAvatars = [
-        'https://i.ibb.co/C0TPc5m/male-avatar-1.png',
-        'https://i.ibb.co/yY1pWpY/male-avatar-2.png',
-        'https://i.ibb.co/yfgCq5b/male-avatar-3.png',
-        'https://i.ibb.co/3s0sBfD/male-avatar-4.png',
-        'https://i.ibb.co/D8yVzB2/male-avatar-5.png'
+      const colors = [
+        '#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#10b981', '#14b8a6', 
+        '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899'
       ];
-      const femaleAvatars = [
-        'https://i.ibb.co/pwnLzjh/female-avatar-1.png',
-        'https://i.ibb.co/T41fPz7/female-avatar-2.png',
-        'https://i.ibb.co/c1nQ1qD/female-avatar-3.png',
-        'https://i.ibb.co/JqgNfcz/female-avatar-4.png',
-        'https://i.ibb.co/LQrMjw5/female-avatar-5.png'
-      ];
-      const avatars = gender === 'male' ? maleAvatars : femaleAvatars;
-      const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
-
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
       await setDoc(doc(db, 'users', user.uid), {
         name,
@@ -92,7 +80,7 @@ export default function SignupPage() {
         gender,
         country,
         city,
-        avatarUrl: randomAvatar,
+        avatarColor: randomColor,
         createdAt: serverTimestamp(),
       });
 

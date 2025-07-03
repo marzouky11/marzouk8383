@@ -31,7 +31,7 @@ import { ProfileForm } from './profile-form';
 import { getCountries, getCategories, getJobsByUserId, deleteAd } from '@/lib/data';
 import type { Job } from '@/lib/types';
 import { JobCard } from '@/components/job-card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserAvatar } from '@/components/user-avatar';
 import { useToast } from '@/hooks/use-toast';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { ThemeToggleSwitch } from '@/components/theme-toggle';
@@ -116,10 +116,7 @@ export default function SettingsPage() {
             <div className="space-y-6">
               <Card>
                 <CardContent className="p-4 flex items-center gap-4">
-                   <Avatar className="h-16 w-16">
-                      <AvatarImage src={userData.avatarUrl} data-ai-hint="user avatar" alt={userData.name || 'User Avatar'} />
-                      <AvatarFallback className="text-2xl">{userData.name ? userData.name.charAt(0) : 'م'}</AvatarFallback>
-                   </Avatar>
+                   <UserAvatar name={userData.name} color={userData.avatarColor} className="h-16 w-16 text-2xl" />
                    <div>
                       <h2 className="text-xl font-bold">{userData.name || 'مستخدم'}</h2>
                       <p className="text-sm text-muted-foreground">{categories.find(c => c.id === userData.categoryId)?.name || 'لم تحدد الفئة'}</p>

@@ -159,7 +159,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
           ...values,
           userId: user.uid,
           ownerName: userData.name,
-          ownerAvatar: userData.avatarUrl || '',
+          ownerAvatarColor: userData.avatarColor,
         };
         const { id } = await postJob(newJobData);
         toast({

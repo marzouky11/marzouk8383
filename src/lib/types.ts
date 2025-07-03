@@ -31,7 +31,7 @@ export interface Job {
   postedAt: string; // This is a derived string like "2 days ago"
   createdAt: Timestamp;
   ownerName: string;
-  ownerAvatar?: string;
+  ownerAvatarColor?: string;
 }
 
 export interface User {
@@ -42,7 +42,7 @@ export interface User {
   city?: string;
   phone?: string;
   whatsapp?: string;
-  avatarUrl?: string;
+  avatarColor?: string;
   categoryId?: string;
   description?: string;
   createdAt?: Timestamp;

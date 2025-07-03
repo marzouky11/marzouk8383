@@ -6,7 +6,7 @@ import { useAuth } from '@/context/auth-context';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserAvatar } from '@/components/user-avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -111,10 +111,7 @@ export function Header() {
                          <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="secondary" size="icon" className="rounded-full">
-                                    <Avatar className="h-8 w-8">
-                                        <AvatarImage src={userData.avatarUrl} alt={userData.name || 'User'} />
-                                        <AvatarFallback>{userData.name ? userData.name.charAt(0) : 'U'}</AvatarFallback>
-                                    </Avatar>
+                                    <UserAvatar name={userData.name} color={userData.avatarColor} className="h-8 w-8" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">

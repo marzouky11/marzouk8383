@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserAvatar } from '@/components/user-avatar';
 import {
   Phone,
   MessageSquare,
@@ -198,10 +198,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                         صاحب الإعلان
                       </h3>
                       <div className="flex items-center gap-3">
-                        <Avatar>
-                            <AvatarImage src={job.ownerAvatar} data-ai-hint="user avatar" />
-                            <AvatarFallback>{job.ownerName ? job.ownerName.charAt(0) : 'ص'}</AvatarFallback>
-                        </Avatar>
+                        <UserAvatar name={job.ownerName} color={job.ownerAvatarColor} />
                         <p className="font-semibold">{job.ownerName || 'صاحب الإعلان'}</p>
                       </div>
                   </div>
