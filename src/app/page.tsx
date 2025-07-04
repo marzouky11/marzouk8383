@@ -5,12 +5,21 @@ import { JobCard } from '@/components/job-card';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Handshake, Newspaper } from 'lucide-react';
 import { JobFilters } from '@/components/job-filters';
 import { ThemeToggleButton } from '@/components/theme-toggle';
 import { HomeCarousel } from './home-carousel';
 
+
+function JobFiltersSkeleton() {
+    return (
+        <div className="flex gap-2 items-center">
+            <div className="h-14 bg-muted rounded-xl w-full animate-pulse flex-grow" />
+            <div className="h-14 w-14 bg-muted rounded-xl animate-pulse flex-shrink-0" />
+        </div>
+    );
+}
 
 function JobSectionSkeleton() {
     return (
@@ -63,12 +72,16 @@ export default async function HomePage() {
       
       {/* Search filters for mobile, outside the header */}
       <div className="md:hidden container mt-4">
-        <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
+        <Suspense fallback={<JobFiltersSkeleton />}>
+          <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
+        </Suspense>
       </div>
       
       <div className="container hidden md:block pt-6">
         <Card className="p-2 rounded-2xl shadow-lg">
-          <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
+          <Suspense fallback={<JobFiltersSkeleton />}>
+            <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
+          </Suspense>
         </Card>
       </div>
       
@@ -84,7 +97,7 @@ export default async function HomePage() {
                   </Link>
               </Button>
               </div>
-              <React.Suspense fallback={<JobSectionSkeleton />}>
+              <Suspense fallback={<JobSectionSkeleton />}>
               <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0">
                   {jobOffers.map((job) => (
                   <div key={job.id} className="w-[75vw] sm:w-[45vw] md:w-auto flex-shrink-0">
@@ -92,7 +105,7 @@ export default async function HomePage() {
                   </div>
                   ))}
               </div>
-              </React.Suspense>
+              </Suspense>
           </section>
 
           <section>
@@ -104,7 +117,7 @@ export default async function HomePage() {
                   </Link>
               </Button>
               </div>
-              <React.Suspense fallback={<JobSectionSkeleton />}>
+              <Suspense fallback={<JobSectionSkeleton />}>
               <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0">
                   {jobSeekers.map((job) => (
                   <div key={job.id} className="w-[75vw] sm:w-[45vw] md:w-auto flex-shrink-0">
@@ -112,7 +125,7 @@ export default async function HomePage() {
                   </div>
                   ))}
               </div>
-              </React.Suspense>
+              </Suspense>
           </section>
       </div>
     </AppLayout>
