@@ -1,4 +1,4 @@
-export const metadata =
+
 import Link from 'next/link';
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
