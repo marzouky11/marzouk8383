@@ -133,22 +133,30 @@ export default function SettingsPage() {
                  </CardHeader>
                 <CardContent className="p-0">
                   <ul className="divide-y divide-border">
-                    <Sheet>
-                      <SheetTrigger asChild>
-                         <SettingItem icon={User} label="تعديل الملف الشخصي" />
-                      </SheetTrigger>
-                      <SheetContent>
-                        <SheetHeader>
-                          <SheetTitle className="flex items-center gap-3">
-                             <User className="h-5 w-5 text-primary" />
-                             تعديل الملف الشخصي
-                          </SheetTitle>
-                        </SheetHeader>
-                        <div className="py-4">
-                           <ProfileForm countries={countries} categories={categories} user={userData} />
-                        </div>
-                      </SheetContent>
-                    </Sheet>
+                    <li>
+                      <Sheet>
+                        <SheetTrigger asChild>
+                          <div className="flex w-full items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
+                            <div className="flex items-center gap-4">
+                              <User className="h-5 w-5 text-primary" />
+                              <span className="font-medium">تعديل الملف الشخصي</span>
+                            </div>
+                            <ChevronLeft className="h-5 w-5 text-muted-foreground" />
+                          </div>
+                        </SheetTrigger>
+                        <SheetContent>
+                          <SheetHeader>
+                            <SheetTitle className="flex items-center gap-3">
+                               <User className="h-5 w-5 text-primary" />
+                               تعديل الملف الشخصي
+                            </SheetTitle>
+                          </SheetHeader>
+                          <div className="py-4">
+                             <ProfileForm countries={countries} categories={categories} user={userData} />
+                          </div>
+                        </SheetContent>
+                      </Sheet>
+                    </li>
 
                     <SettingItem
                         icon={Newspaper}

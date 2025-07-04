@@ -36,13 +36,13 @@ function JobSectionSkeleton() {
 
 function HomeHeaderMobile() {
   return (
-      <div className="md:hidden bg-primary text-primary-foreground p-4 rounded-b-2xl shadow-md">
+      <div className="md:hidden bg-primary text-primary-foreground p-4 rounded-b-3xl shadow-md">
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-                <Handshake className="h-8 w-8 flex-shrink-0" />
+                <Handshake className="h-10 w-10 flex-shrink-0" />
                 <div>
-                  <h1 className="text-lg font-bold">توظيفك</h1>
+                  <h1 className="text-2xl font-bold">توظيفك</h1>
                   <p className="text-xs font-light text-primary-foreground/90 -mt-0.5">بوابتك نحو فرص أفضل</p>
                 </div>
             </div>
