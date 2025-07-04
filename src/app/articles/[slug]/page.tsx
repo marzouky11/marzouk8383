@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
           name: 'توظيفك',
           logo: {
               '@type': 'ImageObject',
-              url: 'https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg',
+              url: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
           },
       },
       datePublished: new Date(article.date).toISOString(),
