@@ -1,4 +1,14 @@
-
+export const metadata = {
+  openGraph: {
+    images: [
+      {
+        url: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+};
 import Link from 'next/link';
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
