@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   },
   description: 'منصتك الأولى لإيجاد فرص العمل والعمالة الماهرة في العالم العربي.',
   metadataBase: new URL(baseUrl),
+  icons: {
+    icon: 'https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg',
+    shortcut: 'https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg',
+    apple: 'https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg',
+  },
   openGraph: {
     title: appName,
     description: 'منصتك الأولى لإيجاد فرص العمل والعمالة الماهرة في العالم العربي.',

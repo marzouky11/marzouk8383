@@ -6,6 +6,7 @@ import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import { cn } from "@/lib/utils"
 
 export function ThemeToggleButton({ className, ...props }: Omit<React.ComponentProps<typeof Button>, 'onClick'>) {
   const { setTheme, theme } = useTheme()
@@ -14,7 +15,7 @@ export function ThemeToggleButton({ className, ...props }: Omit<React.ComponentP
     <Button
       variant="ghost"
       size="icon"
-      className={className}
+      className={cn("h-11 w-11", className)}
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
       {...props}
     >
