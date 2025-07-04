@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
@@ -39,6 +40,7 @@ import { cn } from '@/lib/utils';
 import { ThemeToggleButton } from '../theme-toggle';
 import { ProfileForm } from '../../app/profile/profile-form';
 import { getCountries, getCategories } from '@/lib/data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const navLinks = [
     { href: '/', label: 'الرئيسية' },
@@ -49,8 +51,13 @@ const navLinks = [
 export function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, userData } = useAuth();
+  const { user, userData, loading } = useAuth();
   const { toast } = useToast();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const countries = getCountries();
   const categories = getCategories();
@@ -65,125 +72,81 @@ export function Header() {
     }
   };
 
-  return (
-      <Sheet>
-        <header className="hidden md:block bg-card border-b sticky top-0 z-50">
-            <nav className="container relative flex items-center justify-between h-20">
-                <div className="flex items-center gap-8">
-                    <Link href="/" className="flex items-center gap-2">
-                        <Handshake className="h-8 w-8 text-primary" />
-                        <span className="text-2xl font-bold text-foreground">توظيفك</span>
-                    </Link>
-                    <div className="flex items-center gap-6">
-                        {navLinks.map((link) => {
-                             const isActive = link.href === '/' ? pathname === link.href : pathname.startsWith(link.href);
-                             return (
-                               <Link
-                                key={link.href}
-                                href={link.href}
-                                className={cn(
-                                    'text-sm font-medium transition-colors hover:text-primary',
-                                    isActive ? 'text-primary' : 'text-muted-foreground'
-                                )}
-                                >
-                                    {link.label}
-                                </Link>
-                             );
-                        })}
-                    </div>
-                </div>
+  const renderAuthSection = () => {
+    if (!isMounted || loading) {
+      return (
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Skeleton className="h-10 w-24 rounded-md" />
+          <Skeleton className="h-10 w-10 rounded-full" />
+        </div>
+      );
+    }
 
-                <div className="flex items-center gap-2 sm:gap-4">
-                    <Button variant="ghost" asChild>
-                        <Link href="/articles" className="flex items-center gap-2 text-muted-foreground hover:text-primary">
-                            <Newspaper className="h-5 w-5" />
-                            <span className="hidden sm:inline">مقالات</span>
-                        </Link>
-                    </Button>
-                    <ThemeToggleButton />
-                    <Button asChild>
-                        <Link href="/post-job">
-                            <Plus className="ml-2 h-4 w-4" />
-                            <span className="hidden sm:inline">نشر إعلان</span>
-                        </Link>
-                    </Button>
-                    {user && userData ? (
-                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="secondary" size="icon" className="rounded-full">
-                                    <UserAvatar name={userData.name} color={userData.avatarColor} className="h-8 w-8" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>
-                                    <p>{userData.name}</p>
-                                    <p className="text-xs font-normal text-muted-foreground">{userData.email}</p>
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <SheetTrigger asChild>
-                                    <DropdownMenuItem className="cursor-pointer">
-                                        <Settings className="mr-2 h-4 w-4" />
-                                        <span>تعديل الملف الشخصي</span>
-                                    </DropdownMenuItem>
-                                </SheetTrigger>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/profile">
-                                        <UserIcon className="mr-2 h-4 w-4" />
-                                        <span>إعدادات الحساب</span>
-                                    </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem asChild>
-                                      <Link href="/articles">
-                                          <Newspaper className="mr-2 h-4 w-4" />
-                                          <span>مقالات</span>
-                                      </Link>
-                                </DropdownMenuItem>
-                                  <DropdownMenuItem asChild>
-                                      <Link href="/about">
-                                          <Info className="mr-2 h-4 w-4" />
-                                          <span>من نحن</span>
-                                      </Link>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem asChild>
-                                      <Link href="/privacy">
-                                          <Shield className="mr-2 h-4 w-4" />
-                                          <span>سياسة الخصوصية</span>
-                                      </Link>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem asChild>
-                                      <Link href="/terms">
-                                          <FileText className="mr-2 h-4 w-4" />
-                                          <span>شروط الاستخدام</span>
-                                      </Link>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem asChild>
-                                      <Link href="/contact">
-                                          <Phone className="mr-2 h-4 w-4" />
-                                          <span>اتصل بنا</span>
-                                      </Link>
-                                  </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer focus:bg-destructive/10 focus:text-destructive">
-                                    <LogOut className="mr-2 h-4 w-4" />
-                                    <span>تسجيل الخروج</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    ) : (
-                        <div className="flex items-center gap-2">
-                             <Button variant="outline" asChild>
-                                  <Link href="/login">تسجيل الدخول</Link>
-                            </Button>
-                            <Button asChild className="hidden sm:inline-flex">
-                                <Link href="/signup">إنشاء حساب</Link>
-                            </Button>
-                        </div>
-                    )}
-                </div>
-            </nav>
-        </header>
-        {userData && (
+    if (user && userData) {
+      return (
+        <Sheet>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="icon" className="rounded-full">
+                <UserAvatar name={userData.name} color={userData.avatarColor} className="h-8 w-8" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>
+                <p>{userData.name}</p>
+                <p className="text-xs font-normal text-muted-foreground">{userData.email}</p>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <SheetTrigger asChild>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>تعديل الملف الشخصي</span>
+                </DropdownMenuItem>
+              </SheetTrigger>
+              <DropdownMenuItem asChild>
+                <Link href="/profile">
+                  <UserIcon className="mr-2 h-4 w-4" />
+                  <span>إعدادات الحساب</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/articles">
+                  <Newspaper className="mr-2 h-4 w-4" />
+                  <span>مقالات</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/about">
+                  <Info className="mr-2 h-4 w-4" />
+                  <span>من نحن</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/privacy">
+                  <Shield className="mr-2 h-4 w-4" />
+                  <span>سياسة الخصوصية</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/terms">
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>شروط الاستخدام</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/contact">
+                  <Phone className="mr-2 h-4 w-4" />
+                  <span>اتصل بنا</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer focus:bg-destructive/10 focus:text-destructive">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>تسجيل الخروج</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <SheetContent>
             <SheetHeader>
               <SheetTitle className="flex items-center gap-3">
@@ -195,7 +158,66 @@ export function Header() {
                <ProfileForm countries={countries} categories={categories} user={userData} />
             </div>
           </SheetContent>
-        )}
-      </Sheet>
+        </Sheet>
+      );
+    }
+
+    return (
+      <div className="flex items-center gap-2">
+        <Button variant="outline" asChild>
+          <Link href="/login">تسجيل الدخول</Link>
+        </Button>
+        <Button asChild className="hidden sm:inline-flex">
+          <Link href="/signup">إنشاء حساب</Link>
+        </Button>
+      </div>
+    );
+  };
+
+  return (
+    <header className="hidden md:block bg-card border-b sticky top-0 z-50">
+      <nav className="container relative flex items-center justify-between h-20">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center gap-2">
+            <Handshake className="h-8 w-8 text-primary" />
+            <span className="text-2xl font-bold text-foreground">توظيفك</span>
+          </Link>
+          <div className="flex items-center gap-6">
+            {navLinks.map((link) => {
+              const isActive = link.href === '/' ? pathname === link.href : pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    'text-sm font-medium transition-colors hover:text-primary',
+                    isActive ? 'text-primary' : 'text-muted-foreground'
+                  )}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Button variant="ghost" asChild>
+            <Link href="/articles" className="flex items-center gap-2 text-muted-foreground hover:text-primary">
+              <Newspaper className="h-5 w-5" />
+              <span className="hidden sm:inline">مقالات</span>
+            </Link>
+          </Button>
+          <ThemeToggleButton />
+          <Button asChild>
+            <Link href="/post-job">
+              <Plus className="ml-2 h-4 w-4" />
+              <span className="hidden sm:inline">نشر إعلان</span>
+            </Link>
+          </Button>
+          {renderAuthSection()}
+        </div>
+      </nav>
+    </header>
   );
 }
