@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     siteName: appName,
     images: [
       {
-        url: 'https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg',
+        url: 'https://i.postimg.cc/4Nknp5pF/Screenshot-20250704-173231.jpg',
         width: 1200,
         height: 630,
         alt: appName,
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: appName,
     description: 'منصتك الأولى لإيجاد فرص العمل والعمالة الماهرة في العالم العربي.',
-    images: ['https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg'],
+    images: ['https://i.postimg.cc/4Nknp5pF/Screenshot-20250704-173231.jpg'],
   },
 };
 
@@ -47,7 +47,7 @@ export default function RootLayout({
     '@type': 'Organization',
     name: appName,
     url: baseUrl,
-    logo: 'https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg',
+    logo: 'https://i.postimg.cc/4Nknp5pF/Screenshot-20250704-173231.jpg',
   };
 
   const webSiteSchema = {
