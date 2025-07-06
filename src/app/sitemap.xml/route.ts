@@ -2,7 +2,7 @@
 import { getJobs } from '@/lib/data';
 import { getArticles } from '@/lib/articles';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+const baseUrl = 'https://www.tawzifak.com';
 
 function generateSiteMap(allUrls: any[]) {
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -12,7 +12,7 @@ function generateSiteMap(allUrls: any[]) {
          return `
        <url>
            <loc>${url}</loc>
-           <lastmod>${lastModified.toISOString()}</lastmod>
+           <lastmod>${lastModified.toISOString().split('T')[0]}</lastmod>
            <changefreq>${changeFrequency}</changefreq>
            <priority>${priority}</priority>
        </url>
