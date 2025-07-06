@@ -96,17 +96,6 @@ export function JobFilters({ categories, countries, showSort = false, className,
   return (
     <div className={cn(`flex gap-2 items-center`, className)}>
       <form onSubmit={handleSearch} className="flex-grow flex gap-2">
-        {showPostTypeSelect && (
-            <Select value={postTypePath} onValueChange={setPostTypePath}>
-                <SelectTrigger className="h-14 text-base rounded-xl border bg-background shadow-lg focus-visible:ring-primary/50 w-[160px]">
-                    <SelectValue placeholder="أبحث عن..." />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="/jobs">وظائف</SelectItem>
-                    <SelectItem value="/workers">عمّال</SelectItem>
-                </SelectContent>
-            </Select>
-        )}
         <div className="relative w-full flex-grow">
           <Input
             placeholder="ابحث عن وظيفة، عامل، أو خدمة..."
@@ -137,6 +126,21 @@ export function JobFilters({ categories, countries, showSort = false, className,
           </SheetHeader>
           <div className="flex-grow overflow-y-auto pr-6 space-y-6">
             <div className="grid gap-4 py-4">
+              {showPostTypeSelect && (
+                <div>
+                  <Label className="mb-2 block">ماذا تبحث عنه؟</Label>
+                  <RadioGroup value={postTypePath} onValueChange={setPostTypePath} dir="rtl" className="flex gap-4">
+                    <div className="flex items-center space-x-2 space-x-reverse">
+                      <RadioGroupItem value="/jobs" id="r_jobs" />
+                      <Label htmlFor="r_jobs" className="font-normal cursor-pointer">وظائف</Label>
+                    </div>
+                    <div className="flex items-center space-x-2 space-x-reverse">
+                      <RadioGroupItem value="/workers" id="r_workers" />
+                      <Label htmlFor="r_workers" className="font-normal cursor-pointer">عمّال</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                  <div>
                    <Label htmlFor="country" className="mb-2 block">الدولة</Label>
