@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { getCategories, getCountries } from '@/lib/data';
 import PostJobClientPage from './post-job-client-page';
