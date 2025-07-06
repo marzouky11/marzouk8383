@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
       employmentType: employmentTypeMapping[job.workType] || 'OTHER',
       hiringOrganization: {
         '@type': 'Organization',
-        name: job.companyName || 'Foras',
+        name: job.companyName || 'وظيفتك',
         sameAs: baseUrl,
       },
       jobLocation: {
@@ -96,7 +96,7 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
         title: jobTitle,
         description: jobDescription.substring(0, 160) || `إعلان عن ${jobTitle} في ${jobCity}, ${jobCountry}.`,
         url: canonicalUrl,
-        siteName: 'Foras',
+        siteName: 'وظيفتك',
         type: 'article',
     },
     other: {

@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       publisher: {
           '@type': 'Organization',
-          name: 'Foras',
+          name: 'وظيفتك',
           logo: {
               '@type': 'ImageObject',
               url: 'https://i.postimg.cc/4Nknp5pF/Screenshot-20250704-173231.jpg',
@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             },
         ],
         url: `${baseUrl}/articles/${article.slug}`,
-        siteName: 'Foras',
+        siteName: 'وظيفتك',
         type: 'article',
         publishedTime: new Date(article.date).toISOString(),
         authors: [article.author],

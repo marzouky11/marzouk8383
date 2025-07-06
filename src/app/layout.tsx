@@ -5,7 +5,7 @@ import { AuthProvider } from '@/context/auth-context';
 import { ThemeProvider } from '@/components/theme-provider';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
-const appName = 'Foras';
+const appName = 'وظيفتك';
 
 export const metadata: Metadata = {
   title: {

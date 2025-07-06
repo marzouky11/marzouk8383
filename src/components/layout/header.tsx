@@ -180,7 +180,7 @@ export function Header() {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
             <Handshake className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold text-foreground">Foras</span>
+            <span className="text-2xl font-bold text-foreground">وظيفتك</span>
           </Link>
           <div className="flex items-center gap-6">
             {navLinks.map((link) => {
