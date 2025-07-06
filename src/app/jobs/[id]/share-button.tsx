@@ -16,13 +16,14 @@ export function ShareButton({ title, text }: ShareButtonProps) {
 
   useEffect(() => {
     // This effect runs only on the client, after the component has mounted
-    // Check if sharing or clipboard is possible and update state
+    // Check if the Web Share API or Clipboard API is available
     if (typeof navigator !== 'undefined' && ('share' in navigator || 'clipboard' in navigator)) {
       setCanShare(true);
     }
   }, []);
 
   const handleShare = async () => {
+    // Use 'share' in navigator to check for the Web Share API's existence
     if ('share' in navigator && navigator.share) {
       try {
         await navigator.share({

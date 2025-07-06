@@ -1,30 +1,46 @@
-import { MetadataRoute } from 'next'
-import { getJobs } from '@/lib/data'
-import { getArticles } from '@/lib/articles'
- 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Replace with your actual domain
-  const baseUrl = 'https://khidmanow.com';
 
-  // Get all jobs and articles for dynamic routes
+import { getJobs } from '@/lib/data';
+import { getArticles } from '@/lib/articles';
+
+const baseUrl = 'https://khidmanow.com';
+
+function generateSiteMap(allUrls: any[]) {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+     ${allUrls
+       .map(({ url, lastModified, changeFrequency, priority }) => {
+         return `
+       <url>
+           <loc>${url}</loc>
+           <lastmod>${lastModified.toISOString()}</lastmod>
+           <changefreq>${changeFrequency}</changefreq>
+           <priority>${priority}</priority>
+       </url>
+     `;
+       })
+       .join('')}
+   </urlset>
+ `;
+}
+
+export async function GET() {
   const jobs = await getJobs();
   const articles = getArticles();
 
   const jobUrls = jobs.map((job) => ({
     url: `${baseUrl}/jobs/${job.id}`,
-    lastModified: new Date(), // Using current date as lastModified for simplicity
+    lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));
 
   const articleUrls = articles.map((article) => ({
     url: `${baseUrl}/articles/${article.slug}`,
-    lastModified: new Date(article.date), 
+    lastModified: new Date(article.date),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }));
 
-  // Static routes
   const staticUrls = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 1.0 },
     { url: `${baseUrl}/jobs`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.9 },
@@ -35,6 +51,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: 'yearly' as const, priority: 0.3 },
     { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'yearly' as const, priority: 0.3 },
   ];
+  
+  const allUrls = [...staticUrls, ...jobUrls, ...articleUrls];
+  const sitemap = generateSiteMap(allUrls);
 
-  return [...staticUrls, ...jobUrls, ...articleUrls];
+  return new Response(sitemap, {
+    headers: {
+      'Content-Type': 'application/xml',
+    },
+  });
 }
