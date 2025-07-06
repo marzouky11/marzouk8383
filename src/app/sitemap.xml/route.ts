@@ -2,7 +2,7 @@
 import { getJobs } from '@/lib/data';
 import { getArticles } from '@/lib/articles';
 
-const baseUrl = 'https://khidmanow.com';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
 
 function generateSiteMap(allUrls: any[]) {
   return `<?xml version="1.0" encoding="UTF-8"?>
