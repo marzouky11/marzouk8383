@@ -19,7 +19,7 @@ import { useRouter } from 'next/navigation';
 import { 
   Sparkles, Loader2, Briefcase, Users, FileText, FileSignature, 
   LayoutGrid, Globe, MapPin, Wallet, Phone, MessageSquare, Mail,
-  Building2, Award, Users2, Info
+  Building2, Award, Users2, Info, Instagram
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -39,8 +39,9 @@ const formSchema = z.object({
   phone: z.string().optional(),
   whatsapp: z.string().optional(),
   email: z.string().email({ message: "الرجاء إدخال بريد إلكتروني صحيح." }).optional().or(z.literal('')),
-}).refine(data => !!data.phone || !!data.whatsapp || !!data.email, {
-  message: 'يجب توفير وسيلة تواصل واحدة على الأقل (هاتف، واتساب، أو بريد إلكتروني).',
+  instagram: z.string().optional(),
+}).refine(data => !!data.phone || !!data.whatsapp || !!data.email || !!data.instagram, {
+  message: 'يجب توفير وسيلة تواصل واحدة على الأقل.',
   path: ['phone'], // Show error under the first contact field
 });
 
@@ -73,6 +74,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
       phone: job?.phone || '',
       whatsapp: job?.whatsapp || '',
       email: job?.email || '',
+      instagram: job?.instagram || '',
     },
   });
 
@@ -309,6 +311,9 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
             )} />
             <FormField control={form.control} name="email" render={({ field }) => (
               <FormItem><FormLabelIcon icon={Mail} label="البريد الإلكتروني (اختياري)" /><FormControl><Input type="email" placeholder="example@mail.com" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
+            )} />
+             <FormField control={form.control} name="instagram" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={Instagram} label="حساب إنستغرام (اختياري)" /><FormControl><Input placeholder="username" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
             )} />
           </div>
 

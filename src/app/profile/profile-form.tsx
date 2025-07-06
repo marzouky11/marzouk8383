@@ -25,6 +25,7 @@ const formSchema = z.object({
   city: z.string().optional(),
   phone: z.string().optional(),
   whatsapp: z.string().optional(),
+  instagram: z.string().optional(),
 });
 
 interface ProfileFormProps {
@@ -49,6 +50,7 @@ export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
       city: user?.city || '',
       phone: user?.phone || '',
       whatsapp: user?.whatsapp || '',
+      instagram: user?.instagram || '',
     },
   });
 
@@ -181,6 +183,13 @@ export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
             <FormItem><FormLabel>رقم واتساب</FormLabel><FormControl><Input placeholder="+xxxxxxxxxx" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
           )} />
         </div>
+        <FormField control={form.control} name="instagram" render={({ field }) => (
+            <FormItem>
+                <FormLabel>حساب إنستغرام (اختياري)</FormLabel>
+                <FormControl><Input placeholder="username" {...field} value={field.value ?? ''} /></FormControl>
+                <FormMessage />
+            </FormItem>
+        )} />
         <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
             حفظ التغييرات

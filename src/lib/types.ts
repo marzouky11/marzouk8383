@@ -26,6 +26,7 @@ export interface Job {
   phone?: string;
   whatsapp?: string;
   email?: string;
+  instagram?: string;
   rating: number;
   likes: number;
   postedAt: string; // This is a derived string like "2 days ago"
@@ -42,6 +43,7 @@ export interface User {
   city?: string;
   phone?: string;
   whatsapp?: string;
+  instagram?: string;
   avatarColor?: string;
   categoryId?: string;
   description?: string;

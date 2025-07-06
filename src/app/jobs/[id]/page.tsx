@@ -20,7 +20,8 @@ import {
   Building2,
   Award,
   Users2,
-  Clock
+  Clock,
+  Instagram,
 } from 'lucide-react';
 import type { WorkType } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
@@ -230,6 +231,14 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                           <a href={`mailto:${job.email}`}>
                             <Mail className="ml-2 h-4 w-4" />
                             بريد إلكتروني
+                          </a>
+                        </Button>
+                      )}
+                      {job.instagram && (
+                        <Button asChild className="flex-grow">
+                          <a href={`https://instagram.com/${job.instagram.replace(/@/g, '')}`} target="_blank" rel="noopener noreferrer">
+                            <Instagram className="ml-2 h-4 w-4" />
+                            إنستغرام
                           </a>
                         </Button>
                       )}
