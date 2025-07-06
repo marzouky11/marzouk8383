@@ -9,7 +9,6 @@ import { UserAvatar } from '@/components/user-avatar';
 import {
   Phone,
   MessageSquare,
-  Mail,
   MapPin,
   Wallet,
   Star,
@@ -25,7 +24,6 @@ import {
 } from 'lucide-react';
 import type { WorkType } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
-import { CopyButton } from './copy-button';
 import { ShareButton } from './share-button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
@@ -70,7 +68,7 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
       employmentType: employmentTypeMapping[job.workType] || 'OTHER',
       hiringOrganization: {
         '@type': 'Organization',
-        name: job.companyName || 'وظيفتك',
+        name: job.companyName || 'توظيفك',
         sameAs: baseUrl,
       },
       jobLocation: {
@@ -96,7 +94,7 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
         title: jobTitle,
         description: jobDescription.substring(0, 160) || `إعلان عن ${jobTitle} في ${jobCity}, ${jobCountry}.`,
         url: canonicalUrl,
-        siteName: 'وظيفتك',
+        siteName: 'توظيفك',
         type: 'article',
     },
     other: {
@@ -210,14 +208,6 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                       معلومات التواصل
                     </h3>
                     <div className="flex flex-col sm:flex-row gap-2">
-                      {job.whatsapp && (
-                        <Button asChild className="flex-grow">
-                          <a href={`https://wa.me/${job.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
-                            <MessageSquare className="ml-2 h-4 w-4" />
-                            واتساب
-                          </a>
-                        </Button>
-                      )}
                       {job.phone && (
                         <Button asChild className="flex-grow">
                           <a href={`tel:${job.phone}`}>
@@ -226,23 +216,22 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                           </a>
                         </Button>
                       )}
-                      {job.email && (
-                        <Button asChild className="flex-grow">
-                          <a href={`mailto:${job.email}`}>
-                            <Mail className="ml-2 h-4 w-4" />
-                            بريد إلكتروني
+                      {job.whatsapp && (
+                        <Button asChild className="flex-grow bg-green-600 hover:bg-green-700 text-primary-foreground">
+                          <a href={`https://wa.me/${job.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
+                            <MessageSquare className="ml-2 h-4 w-4" />
+                            واتساب
                           </a>
                         </Button>
                       )}
                       {job.instagram && (
-                        <Button asChild className="flex-grow">
+                        <Button asChild className="flex-grow text-primary-foreground bg-gradient-to-r from-pink-500 to-orange-500 hover:opacity-90">
                           <a href={`https://instagram.com/${job.instagram.replace(/@/g, '')}`} target="_blank" rel="noopener noreferrer">
                             <Instagram className="ml-2 h-4 w-4" />
                             إنستغرام
                           </a>
                         </Button>
                       )}
-                      {job.phone && <CopyButton textToCopy={job.phone} />}
                     </div>
                   </div>
                 </CardContent>

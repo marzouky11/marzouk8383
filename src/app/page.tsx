@@ -42,7 +42,7 @@ function HomeHeaderMobile() {
             <div className="flex items-center gap-3">
                 <Handshake className="h-10 w-10 flex-shrink-0" />
                 <div>
-                  <h1 className="text-2xl font-bold">وظيفتك</h1>
+                  <h1 className="text-2xl font-bold">توظيفك</h1>
                   <p className="text-xs font-light text-primary-foreground/90 -mt-0.5">بوابتك نحو فرص أفضل</p>
                 </div>
             </div>
