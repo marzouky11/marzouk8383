@@ -4,19 +4,18 @@ import { getArticleBySlug } from '@/lib/articles';
 import { AppLayout } from '@/components/layout/app-layout';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Calendar, User, Newspaper } from 'lucide-react';
 import type { Metadata } from 'next';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
-interface ArticlePageProps {
+type Props = {
   params: {
     slug: string;
   };
-}
+};
 
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = getArticleBySlug(params.slug);
 
   if (!article) {
@@ -47,7 +46,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
           name: 'توظيفك',
           logo: {
               '@type': 'ImageObject',
-              url: 'https://i.postimg.cc/zBNdnpC6/people-ar-work-company-12112019-1.jpg',
+              url: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
           },
       },
       datePublished: new Date(article.date).toISOString(),
@@ -90,7 +89,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 }
 
 
-export default function ArticlePage({ params }: ArticlePageProps) {
+export default function ArticlePage({ params }: Props) {
   const article = getArticleBySlug(params.slug);
 
   if (!article) {
