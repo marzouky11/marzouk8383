@@ -77,14 +77,14 @@ export default async function HomePage() {
       {/* Search filters for mobile, outside the header */}
       <div className="md:hidden container mt-4">
         <Suspense fallback={<JobFiltersSkeleton />}>
-          <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
+          <JobFilters categories={categories} countries={countries} showPostTypeSelect={true} />
         </Suspense>
       </div>
       
       <div className="container hidden md:block pt-6">
         <Card className="p-2 rounded-2xl shadow-lg">
           <Suspense fallback={<JobFiltersSkeleton />}>
-            <JobFilters categories={categories} countries={countries} searchPath="/jobs" />
+            <JobFilters categories={categories} countries={countries} showPostTypeSelect={true} />
           </Suspense>
         </Card>
       </div>

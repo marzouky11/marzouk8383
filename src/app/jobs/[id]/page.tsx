@@ -128,11 +128,12 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     }
 
     const category = getCategoryById(job.categoryId || '');
-    // Job Seeker (seeking_job) is Red (destructive). Job Offer (seeking_worker) is Green (accent).
     const isSeekingJob = job?.postType === 'seeking_job';
-    const themeColor = isSeekingJob ? 'text-destructive' : 'text-accent';
-    const themeBg = isSeekingJob ? 'bg-destructive/10' : 'bg-accent/10';
-    const themeBorder = isSeekingJob ? 'border-destructive' : 'border-accent';
+    
+    // Theme colors based on category
+    const themeColor = category?.colorClasses.text || 'text-primary';
+    const themeBg = category?.colorClasses.bg || 'bg-primary/10';
+    const themeBorder = category?.colorClasses.border || 'border-primary';
     
     const translatedWorkType = workTypeTranslations[job.workType] || job.workType || 'غير محدد';
     

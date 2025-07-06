@@ -27,6 +27,7 @@ interface JobFiltersProps {
   showSort?: boolean;
   className?: string;
   searchPath?: string;
+  showPostTypeSelect?: boolean;
 }
 
 const workTypeTranslations: { [key in WorkType]: string } = {
@@ -36,7 +37,7 @@ const workTypeTranslations: { [key in WorkType]: string } = {
   remote: 'عن بعد',
 };
 
-export function JobFilters({ categories, countries, showSort = false, className, searchPath }: JobFiltersProps) {
+export function JobFilters({ categories, countries, showSort = false, className, searchPath, showPostTypeSelect = false }: JobFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -47,7 +48,8 @@ export function JobFilters({ categories, countries, showSort = false, className,
   const [selectedCity, setSelectedCity] = useState(searchParams.get('city') || '');
   const [selectedWorkType, setSelectedWorkType] = useState(searchParams.get('workType') || '');
   const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'newest');
-  
+  const [postTypePath, setPostTypePath] = useState('/jobs');
+
   const [cities, setCities] = useState<string[]>([]);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
@@ -76,7 +78,7 @@ export function JobFilters({ categories, countries, showSort = false, className,
     if (selectedWorkType) params.set('workType', selectedWorkType); else params.delete('workType');
     if (sortBy) params.set('sortBy', sortBy); else params.delete('sortBy');
     
-    const targetPath = searchPath || pathname;
+    const targetPath = showPostTypeSelect ? postTypePath : (searchPath || pathname);
     router.push(`${targetPath}?${params.toString()}`);
     setIsSheetOpen(false);
   };
@@ -93,8 +95,19 @@ export function JobFilters({ categories, countries, showSort = false, className,
   
   return (
     <div className={cn(`flex gap-2 items-center`, className)}>
-      <form onSubmit={handleSearch} className="flex-grow">
-        <div className="relative w-full">
+      <form onSubmit={handleSearch} className="flex-grow flex gap-2">
+        {showPostTypeSelect && (
+            <Select value={postTypePath} onValueChange={setPostTypePath}>
+                <SelectTrigger className="h-14 text-base rounded-xl border bg-background shadow-lg focus-visible:ring-primary/50 w-[160px]">
+                    <SelectValue placeholder="أبحث عن..." />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="/jobs">وظائف</SelectItem>
+                    <SelectItem value="/workers">عمّال</SelectItem>
+                </SelectContent>
+            </Select>
+        )}
+        <div className="relative w-full flex-grow">
           <Input
             placeholder="ابحث عن وظيفة، عامل، أو خدمة..."
             className="h-14 text-base rounded-xl pl-4 pr-14 border bg-background shadow-lg focus-visible:ring-primary/50"

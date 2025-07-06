@@ -48,13 +48,12 @@ export function JobCard({ job }: JobCardProps) {
   }
 
   const category = getCategoryById(job.categoryId);
-  // Job Seeker (seeking_job) is Red (destructive). Job Offer (seeking_worker) is Green (accent).
-  const isSeekingJob = job?.postType === 'seeking_job';
-  const themeColor = isSeekingJob ? 'text-destructive' : 'text-accent';
-  const themeBg = isSeekingJob ? 'bg-destructive/10' : 'bg-accent/10';
-  const themeButtonClass = isSeekingJob 
-    ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90' 
-    : 'bg-accent text-accent-foreground hover:bg-accent/90';
+
+  // Theme colors based on category
+  const themeColor = category?.colorClasses.text || 'text-primary';
+  const themeBg = category?.colorClasses.bg || 'bg-primary/10';
+  const themeButtonClass = category?.colorClasses.button || 'bg-primary text-primary-foreground hover:bg-primary/90';
+
 
   const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | undefined }) => (
     <div className="flex items-center gap-2">
