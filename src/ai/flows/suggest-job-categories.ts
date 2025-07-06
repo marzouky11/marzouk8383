@@ -1,5 +1,3 @@
-// This file is machine-generated - edit at your own risk!
-
 'use server';
 
 /**
@@ -10,8 +8,9 @@
  * - SuggestJobCategoriesOutput - The return type for the suggestJobCategories function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { defineFlow } from 'genkit/flow';
+import { geminiPro } from '@genkit-ai/googleai';
+import * as z from 'zod';
 
 const SuggestJobCategoriesInputSchema = z.object({
   jobDescription: z
@@ -31,32 +30,35 @@ export type SuggestJobCategoriesOutput = z.infer<
   typeof SuggestJobCategoriesOutputSchema
 >;
 
-export async function suggestJobCategories(
-  input: SuggestJobCategoriesInput
-): Promise<SuggestJobCategoriesOutput> {
-  return suggestJobCategoriesFlow(input);
-}
-
-const prompt = ai.definePrompt({
-  name: 'suggestJobCategoriesPrompt',
-  input: {schema: SuggestJobCategoriesInputSchema},
-  output: {schema: SuggestJobCategoriesOutputSchema},
-  prompt: `You are a helpful assistant that suggests job categories based on a job description.
-
-  Given the following job description, suggest up to 5 relevant job categories.
-  Return the categories as a JSON array of strings.
-
-  Job Description: {{{jobDescription}}}`,
-});
-
-const suggestJobCategoriesFlow = ai.defineFlow(
+const suggestJobCategoriesFlow = defineFlow(
   {
     name: 'suggestJobCategoriesFlow',
     inputSchema: SuggestJobCategoriesInputSchema,
     outputSchema: SuggestJobCategoriesOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
+  async (input) => {
+    const llmResponse = await geminiPro.generate({
+      prompt: `You are a helpful assistant that suggests job categories based on a job description.
+
+      Given the following job description, suggest up to 5 relevant job categories.
+      Return ONLY a valid JSON object with a key "categories" which contains an array of strings. Do not include any other text or markdown formatting.
+    
+      Job Description: ${input.jobDescription}`,
+    });
+
+    const responseText = llmResponse.text();
+    try {
+        const parsedOutput = JSON.parse(responseText);
+        return SuggestJobCategoriesOutputSchema.parse(parsedOutput);
+    } catch (e) {
+        console.error("Failed to parse LLM response as JSON:", responseText, e);
+        throw new Error("Failed to get a valid JSON response from the AI model.");
+    }
   }
 );
+
+export async function suggestJobCategories(
+  input: SuggestJobCategoriesInput
+): Promise<SuggestJobCategoriesOutput> {
+  return await suggestJobCategoriesFlow(input);
+}
