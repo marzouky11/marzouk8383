@@ -9,13 +9,7 @@ import type { Metadata } from 'next';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
-type Props = {
-  params: {
-    slug: string;
-  };
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const article = getArticleBySlug(params.slug);
 
   if (!article) {
@@ -89,7 +83,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 
-export default function ArticlePage({ params }: Props) {
+export default function ArticlePage({ params }: { params: { slug: string } }) {
   const article = getArticleBySlug(params.slug);
 
   if (!article) {
