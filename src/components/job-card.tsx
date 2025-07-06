@@ -49,12 +49,6 @@ export function JobCard({ job }: JobCardProps) {
 
   const category = getCategoryById(job.categoryId);
 
-  // Theme colors based on category
-  const themeColor = category?.colorClasses.text || 'text-primary';
-  const themeBg = category?.colorClasses.bg || 'bg-primary/10';
-  const themeButtonClass = category?.colorClasses.button || 'bg-primary text-primary-foreground hover:bg-primary/90';
-
-
   const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | undefined }) => (
     <div className="flex items-center gap-2">
       <Icon className="h-4 w-4 text-muted-foreground" />
@@ -71,13 +65,13 @@ export function JobCard({ job }: JobCardProps) {
         <div className="flex justify-between items-start gap-3">
           <div className="flex-grow">
             {category && <Badge variant={'secondary'} className="mb-1 font-normal text-xs">{category.name}</Badge>}
-            <h3 className={cn("font-bold leading-tight", themeColor)}>
+            <h3 className="font-bold leading-tight text-primary">
                 {job.title}
             </h3>
           </div>
           {category && (
-            <div className={cn("flex-shrink-0 p-3 rounded-xl z-0", themeBg)}>
-              <CategoryIcon name={category.iconName} className={cn("w-6 h-6", themeColor)} />
+            <div className="flex-shrink-0 p-3 rounded-xl z-0 bg-primary/10">
+              <CategoryIcon name={category.iconName} className="w-6 h-6 text-primary" />
             </div>
           )}
         </div>
@@ -98,7 +92,7 @@ export function JobCard({ job }: JobCardProps) {
             <span className="text-xs font-medium">({job.rating})</span>
           </div>
         </div>
-        <Button asChild size="sm" className={cn("h-9 text-sm rounded-lg px-4 z-20 relative", themeButtonClass)}>
+        <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative">
           <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
         </Button>
       </div>

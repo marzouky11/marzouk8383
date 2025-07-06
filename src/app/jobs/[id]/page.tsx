@@ -110,11 +110,11 @@ const workTypeTranslations: { [key in WorkType]: string } = {
   remote: 'عن بعد',
 };
 
-const InfoItem = ({ icon: Icon, text, themeColor }: { icon: React.ElementType; text: string | number | undefined; themeColor: string }) => {
+const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | number | undefined; }) => {
     if (!text) return null;
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Icon className={cn('h-4 w-4', themeColor)} />
+        <Icon className="h-4 w-4 text-primary" />
         <span>{text}</span>
       </div>
     );
@@ -130,11 +130,6 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     const category = getCategoryById(job.categoryId || '');
     const isSeekingJob = job?.postType === 'seeking_job';
     
-    // Theme colors based on category
-    const themeColor = category?.colorClasses.text || 'text-primary';
-    const themeBg = category?.colorClasses.bg || 'bg-primary/10';
-    const themeBorder = category?.colorClasses.border || 'border-primary';
-    
     const translatedWorkType = workTypeTranslations[job.workType] || job.workType || 'غير محدد';
     
     return (
@@ -143,11 +138,11 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                 <FileText className="h-5 w-5 text-primary" />
             </MobilePageHeader>
             <div className="container mx-auto max-w-4xl px-4 py-6">
-              <Card className={cn('overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl', themeBorder)}>
+              <Card className="overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl border-primary">
                 <CardContent className="p-4 sm:p-6 space-y-5">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h1 className={cn('text-2xl font-bold', themeColor)}>
+                      <h1 className="text-2xl font-bold text-primary">
                         {job.title || 'عنوان غير متوفر'}
                       </h1>
                       <div className="flex items-center gap-2 text-muted-foreground mt-1">
@@ -156,24 +151,24 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                       </div>
                     </div>
                     {category && (
-                      <div className={cn('p-3 rounded-full', themeBg)}>
-                        <CategoryIcon name={category.iconName} className={cn('w-7 h-7', themeColor)} />
+                      <div className="p-3 rounded-full bg-primary/10">
+                        <CategoryIcon name={category.iconName} className="w-7 h-7 text-primary" />
                       </div>
                     )}
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                    <InfoItem icon={Wallet} text={job.salary ? `الأجر: ${job.salary}` : 'الأجر: عند الطلب'} themeColor={themeColor} />
-                    <InfoItem icon={Clock} text={`النوع: ${translatedWorkType}`} themeColor={themeColor} />
-                    <InfoItem icon={Award} text={`الخبرة: ${job.experience || 'غير محدد'}`} themeColor={themeColor} />
-                    {job.companyName && <InfoItem icon={Building2} text={`الشركة: ${job.companyName}`} themeColor={themeColor} />}
-                    {job.openPositions && <InfoItem icon={Users2} text={`شواغر: ${job.openPositions}`} themeColor={themeColor} />}
+                    <InfoItem icon={Wallet} text={job.salary ? `الأجر: ${job.salary}` : 'الأجر: عند الطلب'} />
+                    <InfoItem icon={Clock} text={`النوع: ${translatedWorkType}`} />
+                    <InfoItem icon={Award} text={`الخبرة: ${job.experience || 'غير محدد'}`} />
+                    {job.companyName && <InfoItem icon={Building2} text={`الشركة: ${job.companyName}`} />}
+                    {job.openPositions && <InfoItem icon={Users2} text={`شواغر: ${job.openPositions}`} />}
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <Star className="h-4 w-4 text-yellow-400 fill-current" />
                       <span className="font-semibold">{job.rating || 'N/A'}</span>
                       <span className="text-xs">(تقييم)</span>
                     </div>
-                    <InfoItem icon={CalendarDays} text={`نشر في: ${job.postedAt || 'غير معروف'}`} themeColor={themeColor} />
+                    <InfoItem icon={CalendarDays} text={`نشر في: ${job.postedAt || 'غير معروف'}`} />
                   </div>
                   
                   <div className="flex items-center gap-2">
@@ -183,7 +178,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                   <Separator />
 
                   <div>
-                    <h3 className={cn('text-lg font-bold flex items-center gap-2 mb-2', themeColor)}>
+                    <h3 className="text-lg font-bold flex items-center gap-2 mb-2 text-primary">
                         {isSeekingJob ? <UserIcon className="h-5 w-5" /> : <Briefcase className="h-5 w-5" />}
                         {isSeekingJob ? 'وصف المهارات والخبرة' : 'وصف الوظيفة'}
                     </h3>
@@ -193,7 +188,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                   </div>
 
                   <div className="bg-muted/50 rounded-xl p-4">
-                      <h3 className={cn('text-lg font-bold flex items-center gap-2 mb-3', themeColor)}>
+                      <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-primary">
                         <UserIcon className="h-5 w-5" />
                         صاحب الإعلان
                       </h3>
@@ -204,7 +199,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                   </div>
 
                   <div>
-                    <h3 className={cn('text-lg font-bold flex items-center gap-2 mb-3', themeColor)}>
+                    <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-primary">
                       <Phone className="h-5 w-5" />
                       معلومات التواصل
                     </h3>
