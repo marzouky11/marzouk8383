@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://khidmanow.com';
   
   const articleJsonLd = {
       '@context': 'https://schema.org',
