@@ -9,15 +9,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/hooks/use-toast"
 import type { Category, Country, Job } from '@/lib/types';
-import { suggestJobCategories } from '@/ai/flows/suggest-job-categories';
 import { postJob, updateAd } from '@/lib/data';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { 
-  Sparkles, Loader2, Briefcase, Users, FileText, FileSignature, 
+  Loader2, Briefcase, Users, FileText, FileSignature, 
   LayoutGrid, Globe, MapPin, Wallet, Phone, MessageSquare, Mail,
   Building2, Award, Users2, Info, Instagram
 } from 'lucide-react';
@@ -79,12 +77,9 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
   });
 
   const [cities, setCities] = useState<string[]>([]);
-  const [suggestedCategories, setSuggestedCategories] = useState<string[]>([]);
-  const [isSuggesting, setIsSuggesting] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const selectedCountry = form.watch('country');
-  const jobDescription = form.watch('description');
   const postType = form.watch('postType');
   
   // Job Seeker (seeking_job) is Red (destructive). Job Offer (seeking_worker) is Green (accent).
@@ -106,35 +101,6 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
         if(countryData) setCities(countryData.cities);
     }
   }, [job, countries]);
-
-  const handleSuggestCategories = async () => {
-    if (!jobDescription) {
-      toast({
-        variant: "destructive",
-        title: "خطأ",
-        description: "الرجاء إدخال وصف للعمل أولاً.",
-      });
-      return;
-    }
-    setIsSuggesting(true);
-    try {
-      const result = await suggestJobCategories({ jobDescription });
-      setSuggestedCategories(result.categories);
-      toast({
-        title: "اقتراحات جاهزة!",
-        description: "تم إنشاء اقتراحات للفئات. اختر واحدة منها.",
-      });
-    } catch (error) {
-      console.error("Failed to suggest categories:", error);
-      toast({
-        variant: "destructive",
-        title: "خطأ",
-        description: "حدث خطأ أثناء اقتراح الفئات.",
-      });
-    } finally {
-      setIsSuggesting(false);
-    }
-  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!user || !userData) {
@@ -169,7 +135,6 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
           description: "تم نشر إعلانك وسيظهر في القسم المناسب.",
         });
         form.reset();
-        setSuggestedCategories([]);
         router.push(`/jobs/${id}`);
       }
     } catch (error) {
@@ -284,23 +249,6 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
             <FormItem><FormLabelIcon icon={FileSignature} label={postType === 'seeking_job' ? "وصف المهارات والخبرة" : "معلومات إضافية (اختياري)"}/><FormControl><Textarea placeholder={postType === 'seeking_job' ? "اكتب تفاصيل عن مهاراتك وخبراتك..." : "اكتب تفاصيل إضافية عن الوظيفة، المتطلبات، إلخ."} {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
           )} />
           
-          <div className="flex items-center gap-4">
-            <Button type="button" variant="outline" onClick={handleSuggestCategories} disabled={isSuggesting || !jobDescription}>
-              {isSuggesting ? <Loader2 className="ml-2 h-4 w-4 animate-spin" /> : <Sparkles className="ml-2 h-4 w-4" />}
-              اقترح لي فئات
-            </Button>
-          </div>
-          {suggestedCategories.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {suggestedCategories.map((catName) => {
-                const categoryObj = categories.find(c => c.name === catName);
-                return categoryObj ? (
-                  <Badge key={categoryObj.id} variant={postType === 'seeking_job' ? 'destructive' : 'accent'} className="cursor-pointer" onClick={() => form.setValue('categoryId', categoryObj.id)}>{categoryObj.name}</Badge>
-                ) : null;
-              })}
-            </div>
-          )}
-
           <div className="border p-4 rounded-lg space-y-4">
             <h3 className="font-semibold flex items-center gap-2"><Info className="h-5 w-5 text-primary"/>طرق التواصل</h3>
             <FormField control={form.control} name="phone" render={({ field }) => (
