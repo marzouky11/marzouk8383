@@ -2,18 +2,14 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// !! تنبيه أمني !!
-// تضمين مفاتيح الربط هنا يجعلها ظاهرة للجميع.
-// الطريقة الآمنة هي استخدام متغيرات البيئة.
-// قم باستبدال القيم التالية بمفاتيح مشروعك الحقيقية من Firebase.
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY_HERE",
-    authDomain: "YOUR_AUTH_DOMAIN_HERE",
-    projectId: "YOUR_PROJECT_ID_HERE",
-    storageBucket: "YOUR_STORAGE_BUCKET_HERE",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID_HERE",
-    appId: "YOUR_APP_ID_HERE",
-    measurementId: "YOUR_MEASUREMENT_ID_HERE"
+  apiKey: "AIzaSyAsp5J4YFVlzxle6JbyMF1avaAxaKXO7fY",
+  authDomain: "tawzifak-30c62.firebaseapp.com",
+  projectId: "tawzifak-30c62",
+  storageBucket: "tawzifak-30c62.appspot.com",
+  messagingSenderId: "699343711686",
+  appId: "1:699343711686:web:87b31244c755995c4256c7",
+  measurementId: "G-FJ9YT2861Z"
 };
 
 
