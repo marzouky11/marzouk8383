@@ -9,7 +9,11 @@ import type { Metadata } from 'next';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+interface Props {
+  params: { slug: string };
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = getArticleBySlug(params.slug);
 
   if (!article) {
@@ -19,7 +23,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://khidmanow.com';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
   
   const articleJsonLd = {
       '@context': 'https://schema.org',
@@ -37,7 +41,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       },
       publisher: {
           '@type': 'Organization',
-          name: 'توظيفك',
+          name: 'Foras',
           logo: {
               '@type': 'ImageObject',
               url: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
@@ -65,7 +69,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
             },
         ],
         url: `${baseUrl}/articles/${article.slug}`,
-        siteName: 'توظيفك',
+        siteName: 'Foras',
         type: 'article',
         publishedTime: new Date(article.date).toISOString(),
         authors: [article.author],
@@ -83,7 +87,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
+export default function ArticlePage({ params }: Props) {
   const article = getArticleBySlug(params.slug);
 
   if (!article) {
