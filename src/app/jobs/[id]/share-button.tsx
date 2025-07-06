@@ -17,13 +17,13 @@ export function ShareButton({ title, text }: ShareButtonProps) {
   useEffect(() => {
     // This effect runs only on the client, after the component has mounted
     // Check if sharing or clipboard is possible and update state
-    if (navigator.share || navigator.clipboard) {
+    if (typeof navigator !== 'undefined' && ('share' in navigator || 'clipboard' in navigator)) {
       setCanShare(true);
     }
   }, []);
 
   const handleShare = async () => {
-    if (navigator.share) {
+    if ('share' in navigator && navigator.share) {
       try {
         await navigator.share({
           title: title,
@@ -41,7 +41,7 @@ export function ShareButton({ title, text }: ShareButtonProps) {
           description: 'حدث خطأ أثناء محاولة مشاركة الإعلان.',
         });
       }
-    } else if (navigator.clipboard) {
+    } else if ('clipboard' in navigator && navigator.clipboard) {
       // Fallback for browsers that don't support Web Share API
       navigator.clipboard.writeText(window.location.href).then(() => {
         toast({
