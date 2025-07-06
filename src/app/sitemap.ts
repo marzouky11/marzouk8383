@@ -4,7 +4,7 @@ import { getArticles } from '@/lib/articles'
  
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Replace with your actual domain
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://khidmanow.com';
+  const baseUrl = 'https://khidmanow.com';
 
   // Get all jobs and articles for dynamic routes
   const jobs = await getJobs();

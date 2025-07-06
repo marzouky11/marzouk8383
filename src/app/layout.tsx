@@ -4,7 +4,7 @@ import './globals.css';
 import { AuthProvider } from '@/context/auth-context';
 import { ThemeProvider } from '@/components/theme-provider';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://khidmanow.com';
+const baseUrl = 'https://khidmanow.com';
 const appName = 'توظيفك';
 
 export const metadata: Metadata = {
