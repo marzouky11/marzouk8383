@@ -1,4 +1,4 @@
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
@@ -11,6 +11,10 @@ import { JobFilters } from '@/components/job-filters';
 import { ThemeToggleButton } from '@/components/theme-toggle';
 import { HomeCarousel } from './home-carousel';
 
+export const metadata: Metadata = {
+  title: 'توظيفك - منصة لنشر الوظائف والبحث عن عمل في الوطن العربي',
+  description: 'منصة توظيفك تساعدك في نشر عروض العمل والبحث عن فرص شغل في جميع الدول العربية. وظائف يومية حقيقية وآمنة.',
+};
 
 function JobFiltersSkeleton() {
     return (

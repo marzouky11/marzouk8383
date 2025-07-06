@@ -1,5 +1,6 @@
 'use client';
 
+import type { Metadata } from 'next';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
@@ -10,6 +11,10 @@ import { getCategories, getCountries } from '@/lib/data';
 import { Loader2, PlusCircle } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 
+export const metadata: Metadata = {
+  title: 'أنشر إعلانك مجانًا - عروض عمل أو طلب وظيفة',
+  description: 'أنشر إعلان توظيف أو ابحث عن عمل في دقائق. منصة سهلة الاستخدام للمعلنين والباحثين عن فرص شغل.',
+};
 
 export default function PostJobPage() {
   const { user, loading } = useAuth();

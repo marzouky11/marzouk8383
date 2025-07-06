@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
@@ -8,6 +9,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Users } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'ابحث عن عمال محترفين في بلدك - جميع التخصصات',
+  description: 'توفر لك منصة توظيفك قاعدة بيانات كبيرة للعمال المؤهلين في الدول العربية. ابحث حسب المجال أو المدينة.',
+};
 
 
 function JobFiltersSkeleton() {

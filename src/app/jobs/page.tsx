@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
 import { getJobs, getCategories, getCountries } from '@/lib/data';
@@ -8,6 +9,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Briefcase } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'وظائف شاغرة في الوطن العربي - فرص عمل جديدة يوميًا',
+  description: 'استعرض أحدث عروض الشغل في المغرب، السعودية، مصر، الإمارات وغيرها. وظائف حقيقية في جميع القطاعات.',
+};
 
 function JobFiltersSkeleton() {
     return <div className="h-14 bg-muted rounded-lg w-full animate-pulse" />;
