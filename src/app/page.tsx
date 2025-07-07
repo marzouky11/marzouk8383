@@ -30,8 +30,8 @@ function JobFiltersSkeleton() {
 
 function JobSectionSkeleton() {
     return (
-        <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0">
-            {Array.from({ length: 4 }).map((_, i) => (
+        <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 md:p-0 md:m-0">
+            {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="w-[75vw] sm:w-[45vw] md:w-auto flex-shrink-0">
                     <JobCard job={null} />
                 </div>
@@ -68,8 +68,8 @@ function HomeHeaderMobile() {
 }
 
 export default async function HomePage() {
-  const jobOffers = await getJobs({ postType: 'seeking_worker', count: 4 });
-  const jobSeekers = await getJobs({ postType: 'seeking_job', count: 4 });
+  const jobOffers = await getJobs({ postType: 'seeking_worker', count: 6 });
+  const jobSeekers = await getJobs({ postType: 'seeking_job', count: 6 });
   const categories = getCategories();
   const countries = getCountries();
 
@@ -105,7 +105,7 @@ export default async function HomePage() {
               </Button>
               </div>
               <Suspense fallback={<JobSectionSkeleton />}>
-              <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0">
+              <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 md:p-0 md:m-0">
                   {jobOffers.map((job) => (
                   <div key={job.id} className="w-[75vw] sm:w-[45vw] md:w-auto flex-shrink-0">
                       <JobCard job={job} />
@@ -125,7 +125,7 @@ export default async function HomePage() {
               </Button>
               </div>
               <Suspense fallback={<JobSectionSkeleton />}>
-              <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0">
+              <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 md:p-0 md:m-0">
                   {jobSeekers.map((job) => (
                   <div key={job.id} className="w-[75vw] sm:w-[45vw] md:w-auto flex-shrink-0">
                       <JobCard job={job} />
