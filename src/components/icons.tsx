@@ -53,6 +53,7 @@ import {
   Leaf,
   Trash2,
 } from 'lucide-react';
+import type { CSSProperties } from 'react';
 
 const iconMap: { [key: string]: LucideIcon } = {
   Hammer,
@@ -112,9 +113,10 @@ const iconMap: { [key: string]: LucideIcon } = {
 interface CategoryIconProps {
   name: string;
   className?: string;
+  style?: CSSProperties;
 }
 
-export function CategoryIcon({ name, className }: CategoryIconProps) {
+export function CategoryIcon({ name, className, style }: CategoryIconProps) {
   const Icon = iconMap[name] || iconMap.Default;
-  return <Icon className={className} />;
+  return <Icon className={className} style={style} />;
 }
