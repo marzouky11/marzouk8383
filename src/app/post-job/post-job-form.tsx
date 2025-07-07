@@ -81,9 +81,13 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
 
   const selectedCountry = form.watch('country');
   const postType = form.watch('postType');
+  const categoryId = form.watch('categoryId');
+
+  const selectedCategoryData = React.useMemo(() => {
+    return categories.find(c => c.id === categoryId);
+  }, [categoryId, categories]);
   
-  // Job Seeker (seeking_job) is Red (destructive). Job Offer (seeking_worker) is Green (accent).
-  const themeColor = postType === 'seeking_job' ? 'text-destructive' : postType === 'seeking_worker' ? 'text-accent' : 'text-muted-foreground';
+  const categoryThemeColor = selectedCategoryData?.color;
 
   useEffect(() => {
     const countryData = countries.find(c => c.name === selectedCountry);
@@ -148,9 +152,19 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
     }
   }
   
+  const getThemeColor = () => {
+    if (categoryThemeColor) return categoryThemeColor;
+    if (postType === 'seeking_job') return 'hsl(var(--destructive))';
+    if (postType === 'seeking_worker') return 'hsl(var(--accent))';
+    return 'hsl(var(--primary))';
+  }
+
   const FormLabelIcon = ({icon: Icon, label}: {icon: React.ElementType, label: string}) => (
     <FormLabel className="flex items-center gap-2">
-      <Icon className={cn('h-4 w-4', themeColor)} />
+      <Icon 
+        className='h-4 w-4'
+        style={{ color: getThemeColor() }}
+      />
       {label}
     </FormLabel>
   )
@@ -250,7 +264,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
           )} />
           
           <div className="border p-4 rounded-lg space-y-4">
-            <h3 className="font-semibold flex items-center gap-2"><Info className="h-5 w-5 text-primary"/>طرق التواصل</h3>
+            <h3 className="font-semibold flex items-center gap-2"><Info className="h-5 w-5" style={{color: getThemeColor()}} />طرق التواصل</h3>
             <FormField control={form.control} name="phone" render={({ field }) => (
               <FormItem><FormLabelIcon icon={Phone} label="رقم الهاتف (اختياري)" /><FormControl><Input placeholder="+xxxxxxxxxx" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
             )} />
@@ -269,14 +283,8 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
             type="submit"
             size="lg"
             disabled={isSubmitting}
-            className={cn(
-              'w-full',
-              postType === 'seeking_job'
-                ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
-                : postType === 'seeking_worker'
-                ? 'bg-accent text-accent-foreground hover:bg-accent/90'
-                : ''
-            )}
+            className="w-full text-primary-foreground"
+            style={{ backgroundColor: getThemeColor() }}
           >
             {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             {isEditing ? 'تحديث الإعلان' : 'نشر الإعلان'}

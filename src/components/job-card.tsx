@@ -57,7 +57,10 @@ export function JobCard({ job }: JobCardProps) {
   );
 
   return (
-    <Card className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full">
+    <Card 
+      className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full border-t-4"
+      style={{ borderColor: category?.color }}
+    >
        <Link href={`/jobs/${job.id}`} className="focus:outline-none absolute inset-0 z-10">
          <span className="sr-only">View Job</span>
       </Link>
@@ -65,13 +68,23 @@ export function JobCard({ job }: JobCardProps) {
         <div className="flex justify-between items-start gap-3">
           <div className="flex-grow">
             {category && <Badge variant={'secondary'} className="mb-1 font-normal text-xs">{category.name}</Badge>}
-            <h3 className="font-bold leading-tight text-primary">
+            <h3 
+              className="font-bold leading-tight"
+              style={{ color: category?.color }}
+            >
                 {job.title}
             </h3>
           </div>
           {category && (
-            <div className="flex-shrink-0 p-3 rounded-xl z-0 bg-primary/10">
-              <CategoryIcon name={category.iconName} className="w-6 h-6 text-primary" />
+            <div 
+              className="flex-shrink-0 p-3 rounded-xl z-0"
+              style={{ backgroundColor: `${category.color}1A` }}
+            >
+              <CategoryIcon 
+                name={category.iconName} 
+                className="w-6 h-6"
+                style={{ color: category.color }}
+              />
             </div>
           )}
         </div>
@@ -92,7 +105,7 @@ export function JobCard({ job }: JobCardProps) {
             <span className="text-xs font-medium">({job.rating})</span>
           </div>
         </div>
-        <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative">
+        <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: category?.color }}>
           <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
         </Button>
       </div>

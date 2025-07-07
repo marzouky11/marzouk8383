@@ -4,6 +4,7 @@ export interface Category {
   id: string;
   name: string;
   iconName: string;
+  color: string;
 }
 
 export type WorkType = 'full_time' | 'part_time' | 'freelance' | 'remote';

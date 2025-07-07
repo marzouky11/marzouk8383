@@ -110,15 +110,6 @@ const workTypeTranslations: { [key in WorkType]: string } = {
   remote: 'عن بعد',
 };
 
-const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | number | undefined; }) => {
-    if (!text) return null;
-    return (
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Icon className="h-4 w-4 text-primary" />
-        <span>{text}</span>
-      </div>
-    );
-}
 
 export default async function JobDetailPage({ params }: JobDetailPageProps) {
     const job = await getJobById(params.id);
@@ -131,18 +122,32 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     const isSeekingJob = job?.postType === 'seeking_job';
     
     const translatedWorkType = workTypeTranslations[job.workType] || job.workType || 'غير محدد';
+    const categoryColor = category?.color || 'hsl(var(--primary))';
+
+    const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | number | undefined; }) => {
+        if (!text) return null;
+        return (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Icon className="h-4 w-4" style={{ color: categoryColor }}/>
+            <span>{text}</span>
+          </div>
+        );
+    }
     
     return (
         <AppLayout>
             <MobilePageHeader title="تفاصيل الإعلان">
-                <FileText className="h-5 w-5 text-primary" />
+                <FileText className="h-5 w-5" style={{ color: categoryColor }} />
             </MobilePageHeader>
             <div className="container mx-auto max-w-4xl px-4 py-6">
-              <Card className="overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl border-primary">
+              <Card 
+                className="overflow-hidden shadow-xl border-t-4 relative z-10 rounded-2xl"
+                style={{ borderColor: categoryColor }}
+              >
                 <CardContent className="p-4 sm:p-6 space-y-5">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h1 className="text-2xl font-bold text-primary">
+                      <h1 className="text-2xl font-bold" style={{ color: categoryColor }}>
                         {job.title || 'عنوان غير متوفر'}
                       </h1>
                       <div className="flex items-center gap-2 text-muted-foreground mt-1">
@@ -151,8 +156,11 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                       </div>
                     </div>
                     {category && (
-                      <div className="p-3 rounded-full bg-primary/10">
-                        <CategoryIcon name={category.iconName} className="w-7 h-7 text-primary" />
+                      <div 
+                        className="p-3 rounded-full"
+                        style={{ backgroundColor: `${category.color}1A`}}
+                      >
+                        <CategoryIcon name={category.iconName} className="w-7 h-7" style={{ color: category.color }} />
                       </div>
                     )}
                   </div>
@@ -178,7 +186,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                   <Separator />
 
                   <div>
-                    <h3 className="text-lg font-bold flex items-center gap-2 mb-2 text-primary">
+                    <h3 className="text-lg font-bold flex items-center gap-2 mb-2" style={{ color: categoryColor }}>
                         {isSeekingJob ? <UserIcon className="h-5 w-5" /> : <Briefcase className="h-5 w-5" />}
                         {isSeekingJob ? 'وصف المهارات والخبرة' : 'وصف الوظيفة'}
                     </h3>
@@ -188,7 +196,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                   </div>
 
                   <div className="bg-muted/50 rounded-xl p-4">
-                      <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-primary">
+                      <h3 className="text-lg font-bold flex items-center gap-2 mb-3" style={{ color: categoryColor }}>
                         <UserIcon className="h-5 w-5" />
                         صاحب الإعلان
                       </h3>
@@ -199,13 +207,13 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-primary">
+                    <h3 className="text-lg font-bold flex items-center gap-2 mb-3" style={{ color: categoryColor }}>
                       <Phone className="h-5 w-5" />
                       معلومات التواصل
                     </h3>
                     <div className="flex flex-col sm:flex-row gap-2">
                       {job.phone && (
-                        <Button asChild className="flex-grow">
+                        <Button asChild className="flex-grow text-primary-foreground" style={{ backgroundColor: categoryColor }}>
                           <a href={`tel:${job.phone}`}>
                             <Phone className="ml-2 h-4 w-4" />
                             اتصال
