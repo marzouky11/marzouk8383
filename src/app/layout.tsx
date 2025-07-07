@@ -12,11 +12,11 @@ export const metadata: Metadata = {
     default: appName,
     template: `%s | ${appName}`
   },
-  description: 'منصتك الأولى لإيجاد فرص العمل والعمالة الماهرة في العالم العربي.',
+  description: 'منصتك الأولى للعثور على فرص العمل والكفاءات المؤهلة في العالم العربي.',
   metadataBase: new URL(baseUrl),
   openGraph: {
     title: appName,
-    description: 'منصتك الأولى لإيجاد فرص العمل والعمالة الماهرة في العالم العربي.',
+    description: 'منصتك الأولى للعثور على فرص العمل والكفاءات المؤهلة في العالم العربي.',
     url: baseUrl,
     siteName: appName,
     images: [
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: appName,
-    description: 'منصتك الأولى لإيجاد فرص العمل والعمالة الماهرة في العالم العربي.',
+    description: 'منصتك الأولى للعثور على فرص العمل والكفاءات المؤهلة في العالم العربي.',
     images: ['https://i.postimg.cc/4Nknp5pF/Screenshot-20250704-173231.jpg'],
   },
 };
@@ -65,6 +65,8 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg" type="image/jpeg" sizes="any" />
+        <link rel="apple-touch-icon" href="https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
