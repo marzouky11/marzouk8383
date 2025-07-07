@@ -256,12 +256,19 @@ export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 
         const newDocRef = doc(adsCollection); // Create a new doc reference with a unique ID
         const id = newDocRef.id;
 
-        const newJob = {
+        const newJob: { [key: string]: any } = {
             ...jobData,
             createdAt: serverTimestamp(),
             likes: 0,
             rating: parseFloat((Math.random() * (5.0 - 3.5) + 3.5).toFixed(1)),
         };
+        
+        // Clean the object from undefined values before sending to Firestore
+        Object.keys(newJob).forEach(key => {
+            if (newJob[key] === undefined) {
+                delete newJob[key];
+            }
+        });
 
         await setDoc(newDocRef, newJob);
         return { id };
@@ -275,10 +282,17 @@ export async function updateAd(adId: string, adData: Partial<Job>) {
     try {
         const adRef = doc(db, 'ads', adId);
         
-        const dataToUpdate: any = {
+        const dataToUpdate: { [key: string]: any } = {
             ...adData,
             updatedAt: serverTimestamp()
         };
+        
+        // Clean the object from undefined values before sending to Firestore
+        Object.keys(dataToUpdate).forEach(key => {
+            if (dataToUpdate[key] === undefined) {
+                delete dataToUpdate[key];
+            }
+        });
 
         await updateDoc(adRef, dataToUpdate);
     } catch (e) {
