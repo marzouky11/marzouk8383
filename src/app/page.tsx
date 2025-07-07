@@ -12,6 +12,8 @@ import { JobFilters } from '@/components/job-filters';
 import { ThemeToggleButton } from '@/components/theme-toggle';
 import { HomeCarousel } from './home-carousel';
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export const metadata: Metadata = {
   title: 'توظيفك',
   description: 'منصتك الأولى للعثور على فرص العمل والكفاءات المؤهلة في العالم العربي.',
