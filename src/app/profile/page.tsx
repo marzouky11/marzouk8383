@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Edit, Trash2, Newspaper } from 'lucide-react';
+import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Edit, Trash2, Newspaper, HelpCircle } from 'lucide-react';
 import { getCountries, getCategories, getJobsByUserId, deleteAd } from '@/lib/data';
 import type { Job } from '@/lib/types';
 import { JobCard } from '@/components/job-card';
@@ -137,6 +137,11 @@ export default function SettingsPage() {
                         icon={Newspaper}
                         label="مقالات"
                         href="/articles"
+                    />
+                    <SettingItem
+                        icon={HelpCircle}
+                        label="الأسئلة الشائعة"
+                        href="/faq"
                     />
                     <li className="flex items-center justify-between p-4">
                         <div className="flex items-center gap-4">

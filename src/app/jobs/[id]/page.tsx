@@ -21,11 +21,14 @@ import {
   Users2,
   Clock,
   Instagram,
+  Link as LinkIcon,
+  GraduationCap
 } from 'lucide-react';
 import type { WorkType } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
 import { ShareButton } from './share-button';
 import { Separator } from '@/components/ui/separator';
+import { ReportAdDialog } from './report-ad-dialog';
 import { cn } from '@/lib/utils';
 
 interface JobDetailPageProps {
@@ -80,6 +83,7 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
         },
       },
       ...(job.workType === 'remote' && { jobLocationType: 'TELECOMMUTE' }),
+      ...(job.qualifications && { qualifications: job.qualifications }),
   };
 
   const canonicalUrl = `${baseUrl}/jobs/${job.id}`;
@@ -169,6 +173,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                     <InfoItem icon={Wallet} text={job.salary ? `الأجر: ${job.salary}` : 'الأجر: عند الطلب'} />
                     <InfoItem icon={Clock} text={`النوع: ${translatedWorkType}`} />
                     <InfoItem icon={Award} text={`الخبرة: ${job.experience || 'غير محدد'}`} />
+                    {job.qualifications && <InfoItem icon={GraduationCap} text={`المؤهلات: ${job.qualifications}`} />}
                     {job.companyName && <InfoItem icon={Building2} text={`الشركة: ${job.companyName}`} />}
                     {job.openPositions && <InfoItem icon={Users2} text={`شواغر: ${job.openPositions}`} />}
                     <div className="flex items-center gap-1 text-muted-foreground">
@@ -211,31 +216,42 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                       <Phone className="h-5 w-5" />
                       معلومات التواصل
                     </h3>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      {job.phone && (
-                        <Button asChild className="flex-grow text-primary-foreground" style={{ backgroundColor: categoryColor }}>
-                          <a href={`tel:${job.phone}`}>
-                            <Phone className="ml-2 h-4 w-4" />
-                            اتصال
-                          </a>
-                        </Button>
-                      )}
-                      {job.whatsapp && (
-                        <Button asChild className="flex-grow bg-green-600 hover:bg-green-700 text-primary-foreground">
-                          <a href={`https://wa.me/${job.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
-                            <MessageSquare className="ml-2 h-4 w-4" />
-                            واتساب
-                          </a>
-                        </Button>
-                      )}
-                      {job.instagram && (
-                        <Button asChild className="flex-grow text-primary-foreground bg-gradient-to-r from-pink-500 to-orange-500 hover:opacity-90">
-                          <a href={`https://instagram.com/${job.instagram.replace(/@/g, '')}`} target="_blank" rel="noopener noreferrer">
-                            <Instagram className="ml-2 h-4 w-4" />
-                            إنستغرام
-                          </a>
-                        </Button>
-                      )}
+                    <div className="flex flex-col gap-2">
+                      <div className="flex flex-col sm:flex-row gap-2">
+                          {job.phone && (
+                            <Button asChild className="flex-grow text-primary-foreground" style={{ backgroundColor: categoryColor }}>
+                              <a href={`tel:${job.phone}`}>
+                                <Phone className="ml-2 h-4 w-4" />
+                                اتصال
+                              </a>
+                            </Button>
+                          )}
+                          {job.whatsapp && (
+                            <Button asChild className="flex-grow bg-green-600 hover:bg-green-700 text-primary-foreground">
+                              <a href={`https://wa.me/${job.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
+                                <MessageSquare className="ml-2 h-4 w-4" />
+                                واتساب
+                              </a>
+                            </Button>
+                          )}
+                          {job.instagram && (
+                            <Button asChild className="flex-grow text-primary-foreground bg-gradient-to-r from-pink-500 to-orange-500 hover:opacity-90">
+                              <a href={`https://instagram.com/${job.instagram.replace(/@/g, '')}`} target="_blank" rel="noopener noreferrer">
+                                <Instagram className="ml-2 h-4 w-4" />
+                                إنستغرام
+                              </a>
+                            </Button>
+                          )}
+                          {job.applyUrl && job.postType === 'seeking_worker' && (
+                            <Button asChild className="flex-grow bg-blue-600 hover:bg-blue-700 text-primary-foreground">
+                              <a href={job.applyUrl} target="_blank" rel="noopener noreferrer">
+                                <LinkIcon className="ml-2 h-4 w-4" />
+                                تسجيل عبر الموقع
+                              </a>
+                            </Button>
+                          )}
+                      </div>
+                       <ReportAdDialog adId={job.id} />
                     </div>
                   </div>
                 </CardContent>

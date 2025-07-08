@@ -34,6 +34,8 @@ export interface Job {
   createdAt: Timestamp;
   ownerName: string;
   ownerAvatarColor?: string;
+  applyUrl?: string;
+  qualifications?: string;
 }
 
 export interface User {

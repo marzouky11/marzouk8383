@@ -265,7 +265,7 @@ export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 
         
         // Clean the object from undefined values before sending to Firestore
         Object.keys(newJob).forEach(key => {
-            if (newJob[key] === undefined) {
+            if (newJob[key] === undefined || newJob[key] === '') {
                 delete newJob[key];
             }
         });
@@ -308,6 +308,21 @@ export async function deleteAd(adId: string) {
     } catch (e) {
         console.error("Error deleting ad: ", e);
         throw new Error("Failed to delete ad");
+    }
+}
+
+export async function reportAd(adId: string, reason: string, details?: string) {
+    try {
+        const reportsCollection = collection(db, 'reports');
+        await addDoc(reportsCollection, {
+            adId,
+            reason,
+            details: details || '',
+            reportedAt: serverTimestamp(),
+        });
+    } catch (e) {
+        console.error("Error reporting ad: ", e);
+        throw new Error("Failed to report ad");
     }
 }
 

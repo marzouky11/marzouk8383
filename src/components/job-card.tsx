@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Star, Clock, Wallet } from 'lucide-react';
+import { MapPin, Star, Clock, Wallet, CalendarDays, GraduationCap } from 'lucide-react';
 import type { Job, WorkType } from '@/lib/types';
 import { getCategoryById } from '@/lib/data';
 import { CategoryIcon } from '@/components/icons';
@@ -49,12 +49,15 @@ export function JobCard({ job }: JobCardProps) {
 
   const category = getCategoryById(job.categoryId);
 
-  const InfoItem = ({ icon: Icon, text }: { icon: React.ElementType; text: string | undefined }) => (
-    <div className="flex items-center gap-2">
-      <Icon className="h-4 w-4 text-muted-foreground" />
-      <span className="text-sm text-muted-foreground">{text || 'غير محدد'}</span>
-    </div>
-  );
+  const InfoItem = ({ icon: Icon, text, className }: { icon: React.ElementType; text: string | undefined, className?: string }) => {
+    if (!text) return null;
+    return (
+      <div className={cn("flex items-center gap-2", className)}>
+        <Icon className="h-4 w-4 text-muted-foreground" />
+        <span className="text-sm text-muted-foreground truncate">{text}</span>
+      </div>
+    );
+  };
 
   return (
     <Card 
@@ -78,7 +81,7 @@ export function JobCard({ job }: JobCardProps) {
           {category && (
             <div 
               className="flex-shrink-0 p-3 rounded-xl z-0"
-              style={{ backgroundColor: `${category.color}1A` }}
+              style={{ backgroundColor: `${category?.color}1A` }}
             >
               <CategoryIcon 
                 name={category.iconName} 
@@ -93,17 +96,16 @@ export function JobCard({ job }: JobCardProps) {
 
         <div className="flex flex-col gap-2.5">
           <InfoItem icon={MapPin} text={`${job.country}, ${job.city}`} />
-          <InfoItem icon={Wallet} text={`الأجر: ${job.salary || 'عند الطلب'}`} />
-          <InfoItem icon={Clock} text={`طبيعة العمل: ${workTypeTranslations[job.workType]}`} />
+          <InfoItem icon={Clock} text={`${workTypeTranslations[job.workType]}`} />
+          <InfoItem icon={Wallet} text={job.salary ? job.salary : 'عند الطلب'} />
+          <InfoItem icon={GraduationCap} text={job.qualifications} className="hidden sm:flex" />
         </div>
       </div>
       
       <div className="flex items-center justify-between pt-4 mt-auto">
-        <div className="flex items-center gap-3 z-20">
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <Star className="h-4 w-4 text-yellow-400 fill-current" />
-            <span className="text-xs font-medium">({job.rating})</span>
-          </div>
+        <div className="flex items-center gap-1 text-muted-foreground">
+            <CalendarDays className="h-4 w-4" />
+            <span className="text-xs font-medium">{job.postedAt}</span>
         </div>
         <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: category?.color }}>
           <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>

@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import { 
   Loader2, Briefcase, Users, FileText, FileSignature, 
   LayoutGrid, Globe, MapPin, Wallet, Phone, MessageSquare, Mail,
-  Building2, Award, Users2, Info, Instagram
+  Building2, Award, Users2, Info, Instagram, GraduationCap, Link as LinkIcon
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -32,12 +32,14 @@ const formSchema = z.object({
   city: z.string().min(1, { message: 'المدينة مطلوبة.' }),
   salary: z.string().optional(),
   experience: z.string().optional(),
+  qualifications: z.string().optional(),
   openPositions: z.coerce.number().int().positive().optional(),
   description: z.string().optional(),
   phone: z.string().optional(),
   whatsapp: z.string().optional(),
   email: z.string().email({ message: "الرجاء إدخال بريد إلكتروني صحيح." }).optional().or(z.literal('')),
   instagram: z.string().optional(),
+  applyUrl: z.string().url({ message: 'الرجاء إدخال رابط صحيح' }).optional().or(z.literal('')),
 }).refine(data => !!data.phone || !!data.whatsapp || !!data.email || !!data.instagram, {
   message: 'يجب توفير وسيلة تواصل واحدة على الأقل.',
   path: ['phone'], // Show error under the first contact field
@@ -66,6 +68,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
       workType: job?.workType || undefined,
       salary: job?.salary || '',
       experience: job?.experience || '',
+      qualifications: job?.qualifications || '',
       companyName: job?.companyName || '',
       openPositions: job?.openPositions || undefined,
       description: job?.description || '',
@@ -73,6 +76,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
       whatsapp: job?.whatsapp || '',
       email: job?.email || '',
       instagram: job?.instagram || '',
+      applyUrl: job?.applyUrl || '',
     },
   });
 
@@ -230,6 +234,13 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
             )} />
           )}
 
+          {postType === 'seeking_worker' && (
+            <FormField control={form.control} name="applyUrl" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={LinkIcon} label="رابط التقديم (اختياري)" /><FormControl><Input type="url" placeholder="https://example.com/apply" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
+            )} />
+          )}
+
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField control={form.control} name="country" render={({ field }) => (
               <FormItem><FormLabelIcon icon={Globe} label="الدولة" /><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر الدولة" /></SelectTrigger></FormControl><SelectContent>{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
@@ -242,6 +253,11 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
            <FormField control={form.control} name="experience" render={({ field }) => (
               <FormItem><FormLabelIcon icon={Award} label={postType === 'seeking_job' ? 'الخبرة' : 'الخبرة المطلوبة'} /><FormControl><Input placeholder="مثال: 5 سنوات، بدون خبرة..." {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
            )} />
+           
+           <FormField control={form.control} name="qualifications" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={GraduationCap} label={postType === 'seeking_job' ? 'الشهادات والمؤهلات' : 'المؤهلات المطلوبة (اختياري)'} /><FormControl><Input placeholder="مثال: بكالوريوس هندسة، دبلوم تقني..." {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
+            )} />
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField control={form.control} name="salary" render={({ field }) => (

@@ -3,9 +3,10 @@ import { Handshake } from 'lucide-react';
 
 const footerLinks = [
     { label: 'من نحن', href: '/about' },
+    { label: 'الأسئلة الشائعة', href: '/faq' },
+    { label: 'اتصل بنا', href: '/contact' },
     { label: 'سياسة الخصوصية', href: '/privacy' },
     { label: 'شروط الاستخدام', href: '/terms' },
-    { label: 'اتصل بنا', href: '/contact' },
 ];
 
 export function Footer() {
