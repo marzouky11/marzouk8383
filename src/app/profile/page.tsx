@@ -1,28 +1,16 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signOut } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase';
+import { auth } from '@/lib/firebase';
 import { useAuth } from '@/context/auth-context';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Edit, Trash2, Newspaper, HelpCircle, Info, Mail, Shield, FileText } from 'lucide-react';
-import { getCategories, getJobsByUserId, deleteAd } from '@/lib/data';
-import type { Job } from '@/lib/types';
-import { JobCard } from '@/components/job-card';
+import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Newspaper, HelpCircle, Info, Mail, Shield, FileText } from 'lucide-react';
+import { getCategories } from '@/lib/data';
 import { UserAvatar } from '@/components/user-avatar';
 import { useToast } from '@/hooks/use-toast';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
@@ -32,27 +20,12 @@ export default function SettingsPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { user, userData, loading } = useAuth();
-  const [myAds, setMyAds] = useState<Job[]>([]);
-  const [adsLoading, setAdsLoading] = useState(true);
-  const [adToDelete, setAdToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
-
-  useEffect(() => {
-    if (user) {
-        const fetchAds = async () => {
-            setAdsLoading(true);
-            const ads = await getJobsByUserId(user.uid);
-            setMyAds(ads);
-            setAdsLoading(false);
-        };
-        fetchAds();
-    }
-  }, [user]);
 
   const categories = getCategories();
 
@@ -63,19 +36,6 @@ export default function SettingsPage() {
       router.push('/');
     } catch (error) {
       toast({ variant: 'destructive', title: 'حدث خطأ أثناء تسجيل الخروج.' });
-    }
-  };
-
-  const handleDeleteAd = async () => {
-    if (!adToDelete) return;
-    try {
-        await deleteAd(adToDelete);
-        setMyAds(prevAds => prevAds.filter(ad => ad.id !== adToDelete));
-        toast({ title: "تم حذف الإعلان بنجاح" });
-    } catch (error) {
-        toast({ variant: 'destructive', title: 'فشل حذف الإعلان' });
-    } finally {
-        setAdToDelete(null);
     }
   };
 
@@ -123,7 +83,7 @@ export default function SettingsPage() {
                  <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <SettingsIcon className="h-5 w-5" />
-                        الإعدادات العامة
+                        إعدادات الحساب
                     </CardTitle>
                  </CardHeader>
                 <CardContent className="p-0">
@@ -133,15 +93,10 @@ export default function SettingsPage() {
                         label="تعديل الملف الشخصي"
                         href="/profile/edit"
                     />
-                    <SettingItem
-                        icon={Newspaper}
-                        label="مقالات"
-                        href="/articles"
-                    />
-                    <SettingItem
-                        icon={HelpCircle}
-                        label="الأسئلة الشائعة"
-                        href="/faq"
+                     <SettingItem
+                        icon={FileText}
+                        label="إعلاناتي"
+                        href="/profile/my-ads"
                     />
                     <li className="flex items-center justify-between p-4">
                         <div className="flex items-center gap-4">
@@ -153,46 +108,8 @@ export default function SettingsPage() {
                   </ul>
                 </CardContent>
               </Card>
-
+              
               <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <User className="h-5 w-5" />
-                        إعلاناتي
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {adsLoading ? (
-                        <div className="flex justify-center p-8">
-                            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                        </div>
-                    ) : myAds.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            {myAds.map(ad => (
-                                <div key={ad.id} className="flex flex-col gap-2">
-                                    <JobCard job={ad} />
-                                    <div className="flex gap-2">
-                                        <Button asChild variant="outline" className="flex-1">
-                                            <Link href={`/edit-job/${ad.id}`}>
-                                                <Edit className="ml-2 h-4 w-4" />
-                                                تعديل
-                                            </Link>
-                                        </Button>
-                                        <Button variant="destructive" className="flex-1" onClick={() => setAdToDelete(ad.id)}>
-                                            <Trash2 className="ml-2 h-4 w-4" />
-                                            حذف
-                                        </Button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-center text-muted-foreground p-8">لم تقم بنشر أي إعلانات بعد.</p>
-                    )}
-                </CardContent>
-              </Card>
-
-              <Card className="md:hidden">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Info className="h-5 w-5" />
@@ -201,6 +118,16 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="p-0">
                   <ul className="divide-y divide-border">
+                     <SettingItem
+                        icon={Newspaper}
+                        label="مقالات"
+                        href="/articles"
+                    />
+                    <SettingItem
+                        icon={HelpCircle}
+                        label="الأسئلة الشائعة"
+                        href="/faq"
+                    />
                     <SettingItem
                         icon={Info}
                         label="من نحن"
@@ -226,7 +153,7 @@ export default function SettingsPage() {
               </Card>
               
                <Card>
-                 <CardContent className="p-4 space-y-4">
+                 <CardContent className="p-4">
                     <Button variant="destructive" className="w-full" onClick={handleLogout}>
                       <LogOut className="ml-2 h-4 w-4" />
                       تسجيل الخروج
@@ -238,20 +165,6 @@ export default function SettingsPage() {
           </div>
         )}
       </div>
-      <AlertDialog open={!!adToDelete} onOpenChange={(open) => !open && setAdToDelete(null)}>
-        <AlertDialogContent>
-            <AlertDialogHeader>
-            <AlertDialogTitle>هل أنت متأكد؟</AlertDialogTitle>
-            <AlertDialogDescription>
-                هذا الإجراء سيقوم بحذف إعلانك بشكل نهائي. لا يمكن التراجع عن هذا القرار.
-            </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setAdToDelete(null)}>إلغاء</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteAd}>تأكيد الحذف</AlertDialogAction>
-            </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </AppLayout>
   );
 }
