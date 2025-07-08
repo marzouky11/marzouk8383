@@ -19,8 +19,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Edit, Trash2, Newspaper, HelpCircle } from 'lucide-react';
-import { getCountries, getCategories, getJobsByUserId, deleteAd } from '@/lib/data';
+import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Edit, Trash2, Newspaper, HelpCircle, Info, Mail, Shield, FileText } from 'lucide-react';
+import { getCategories, getJobsByUserId, deleteAd } from '@/lib/data';
 import type { Job } from '@/lib/types';
 import { JobCard } from '@/components/job-card';
 import { UserAvatar } from '@/components/user-avatar';
@@ -189,6 +189,39 @@ export default function SettingsPage() {
                     ) : (
                         <p className="text-center text-muted-foreground p-8">لم تقم بنشر أي إعلانات بعد.</p>
                     )}
+                </CardContent>
+              </Card>
+
+              <Card className="md:hidden">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Info className="h-5 w-5" />
+                        روابط ومعلومات
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <ul className="divide-y divide-border">
+                    <SettingItem
+                        icon={Info}
+                        label="من نحن"
+                        href="/about"
+                    />
+                    <SettingItem
+                        icon={Mail}
+                        label="اتصل بنا"
+                        href="/contact"
+                    />
+                    <SettingItem
+                        icon={Shield}
+                        label="سياسة الخصوصية"
+                        href="/privacy"
+                    />
+                    <SettingItem
+                        icon={FileText}
+                        label="شروط الاستخدام"
+                        href="/terms"
+                    />
+                  </ul>
                 </CardContent>
               </Card>
               
