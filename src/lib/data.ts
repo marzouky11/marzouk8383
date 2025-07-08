@@ -70,7 +70,8 @@ const categories: Category[] = [
   { id: '65', name: 'عامل نقل أثاث', iconName: 'Truck', color: '#0369a1' },
   { id: '66', name: 'عامل نظافة شوارع', iconName: 'Trash2', color: '#e11d48' },
   { id: '67', name: 'عامل مغسلة ملابس', iconName: 'Shirt', color: '#7c3aed' },
-  { id: '68', name: 'موزع إعلانات', iconName: 'Megaphone', color: '#be123c' }
+  { id: '68', name: 'موزع إعلانات', iconName: 'Megaphone', color: '#be123c' },
+  { id: '69', name: 'متطوع', iconName: 'Handshake', color: '#10b981' }
 ];
 
 const countries: Country[] = [

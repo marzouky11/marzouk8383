@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Star, Clock, Wallet, CalendarDays, GraduationCap } from 'lucide-react';
+import { MapPin, Star, Clock, Wallet, CalendarDays, GraduationCap, Briefcase, Users } from 'lucide-react';
 import type { Job, WorkType } from '@/lib/types';
 import { getCategoryById } from '@/lib/data';
 import { CategoryIcon } from '@/components/icons';
@@ -47,7 +47,18 @@ export function JobCard({ job }: JobCardProps) {
     );
   }
 
-  const category = getCategoryById(job.categoryId);
+  const category = getCategoryById(job.categoryId || '');
+  const isSeekingJob = job.postType === 'seeking_job';
+
+  const defaultColor = isSeekingJob ? 'hsl(var(--destructive))' : 'hsl(var(--primary))';
+  const defaultIconName = isSeekingJob ? 'Users' : 'Briefcase';
+  
+  const finalColor = category?.color || defaultColor;
+  const finalIconName = category?.iconName || defaultIconName;
+  const iconContainerStyle = {
+    backgroundColor: category ? `${category.color}1A` : (isSeekingJob ? 'hsl(var(--destructive) / 0.1)' : 'hsl(var(--primary) / 0.1)')
+  };
+
 
   const InfoItem = ({ icon: Icon, text, className }: { icon: React.ElementType; text: string | undefined, className?: string }) => {
     if (!text) return null;
@@ -62,7 +73,7 @@ export function JobCard({ job }: JobCardProps) {
   return (
     <Card 
       className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full border-t-4"
-      style={{ borderColor: category?.color }}
+      style={{ borderColor: finalColor }}
     >
        <Link href={`/jobs/${job.id}`} className="focus:outline-none absolute inset-0 z-10">
          <span className="sr-only">View Job</span>
@@ -73,23 +84,21 @@ export function JobCard({ job }: JobCardProps) {
             {category && <Badge variant={'secondary'} className="mb-1 font-normal text-xs">{category.name}</Badge>}
             <h3 
               className="font-bold leading-tight"
-              style={{ color: category?.color }}
+              style={{ color: finalColor }}
             >
                 {job.title}
             </h3>
           </div>
-          {category && (
-            <div 
-              className="flex-shrink-0 p-3 rounded-xl z-0"
-              style={{ backgroundColor: `${category?.color}1A` }}
-            >
-              <CategoryIcon 
-                name={category.iconName} 
-                className="w-6 h-6"
-                style={{ color: category.color }}
-              />
-            </div>
-          )}
+          <div 
+            className="flex-shrink-0 p-3 rounded-xl z-0"
+            style={iconContainerStyle}
+          >
+            <CategoryIcon 
+              name={finalIconName} 
+              className="w-6 h-6"
+              style={{ color: finalColor }}
+            />
+          </div>
         </div>
         
         <Separator />
@@ -107,7 +116,7 @@ export function JobCard({ job }: JobCardProps) {
             <CalendarDays className="h-4 w-4" />
             <span className="text-xs font-medium">{job.postedAt}</span>
         </div>
-        <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: category?.color }}>
+        <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: finalColor }}>
           <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
         </Button>
       </div>

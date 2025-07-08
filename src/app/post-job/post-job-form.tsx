@@ -25,7 +25,7 @@ import { cn } from '@/lib/utils';
 const formSchema = z.object({
   postType: z.enum(['seeking_worker', 'seeking_job'], { required_error: 'الرجاء تحديد نوع الإعلان.' }),
   title: z.string().min(1, { message: 'اسم الإعلان مطلوب.' }),
-  categoryId: z.string().min(1, { message: 'الفئة مطلوبة.' }),
+  categoryId: z.string().optional(),
   workType: z.enum(['full_time', 'part_time', 'freelance', 'remote'], { required_error: 'نوع العمل مطلوب.' }),
   companyName: z.string().optional(),
   country: z.string().min(1, { message: 'الدولة مطلوبة.' }),
@@ -221,7 +221,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
           )} />
           
           <FormField control={form.control} name="categoryId" render={({ field }) => (
-            <FormItem><FormLabelIcon icon={LayoutGrid} label="الفئة"/><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر فئة العمل" /></SelectTrigger></FormControl><SelectContent>{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+            <FormItem><FormLabelIcon icon={LayoutGrid} label="الفئة (اختياري)"/><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر فئة العمل (اختياري)" /></SelectTrigger></FormControl><SelectContent>{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
           )} />
 
           <FormField control={form.control} name="workType" render={({ field }) => (
