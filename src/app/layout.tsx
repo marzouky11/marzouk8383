@@ -6,17 +6,22 @@ import { ThemeProvider } from '@/components/theme-provider';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
 const appName = 'توظيفك';
+const homePageTitle = 'توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل';
+const homePageDescription = 'توظيفك منصة التوظيف العربية لنشر إعلانات البحث عن عمل وتوظيف العمال بسهولة. اكتشف فرص عمل في الوطن العربي، ونشر إعلانات توظيف للمؤسسات والشركات الباحثة عن موظفين مؤهلين.';
 
 export const metadata: Metadata = {
   title: {
-    default: appName,
+    default: homePageTitle,
     template: `%s | ${appName}`
   },
-  description: 'منصتك الأولى للعثور على فرص العمل والكفاءات المؤهلة في العالم العربي.',
+  description: homePageDescription,
   metadataBase: new URL(baseUrl),
   openGraph: {
-    title: appName,
-    description: 'منصتك الأولى للعثور على فرص العمل والكفاءات المؤهلة في العالم العربي.',
+    title: {
+      default: homePageTitle,
+      template: `%s | ${appName}`
+    },
+    description: homePageDescription,
     url: baseUrl,
     siteName: appName,
     images: [
@@ -31,8 +36,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: appName,
-    description: 'منصتك الأولى للعثور على فرص العمل والكفاءات المؤهلة في العالم العربي.',
+    title: {
+      default: homePageTitle,
+      template: `%s | ${appName}`
+    },
+    description: homePageDescription,
     images: ['https://i.postimg.cc/4Nknp5pF/Screenshot-20250704-173231.jpg'],
   },
 };
