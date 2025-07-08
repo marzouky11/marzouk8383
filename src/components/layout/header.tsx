@@ -17,29 +17,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import {
   Plus,
   LogOut,
   User as UserIcon,
   Handshake,
   Newspaper,
   Settings,
-  Info,
-  Shield,
-  FileText,
-  Phone,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { ThemeToggleButton } from '../theme-toggle';
-import { ProfileForm } from '../../app/profile/profile-form';
-import { getCountries, getCategories } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const navLinks = [
@@ -58,9 +45,6 @@ export function Header() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  const countries = getCountries();
-  const categories = getCategories();
 
   const handleLogout = async () => {
     try {
@@ -84,81 +68,44 @@ export function Header() {
 
     if (user && userData) {
       return (
-        <Sheet>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="rounded-full">
-                <UserAvatar name={userData.name} color={userData.avatarColor} className="h-8 w-8" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>
-                <p>{userData.name}</p>
-                <p className="text-xs font-normal text-muted-foreground">{userData.email}</p>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <SheetTrigger asChild>
-                <DropdownMenuItem className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>تعديل الملف الشخصي</span>
-                </DropdownMenuItem>
-              </SheetTrigger>
-              <DropdownMenuItem asChild>
-                <Link href="/profile">
-                  <UserIcon className="mr-2 h-4 w-4" />
-                  <span>إعدادات الحساب</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/articles">
-                  <Newspaper className="mr-2 h-4 w-4" />
-                  <span>مقالات</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/about">
-                  <Info className="mr-2 h-4 w-4" />
-                  <span>من نحن</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/privacy">
-                  <Shield className="mr-2 h-4 w-4" />
-                  <span>سياسة الخصوصية</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/terms">
-                  <FileText className="mr-2 h-4 w-4" />
-                  <span>شروط الاستخدام</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/contact">
-                  <Phone className="mr-2 h-4 w-4" />
-                  <span>اتصل بنا</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer focus:bg-destructive/10 focus:text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>تسجيل الخروج</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle className="flex items-center gap-3">
-                 <Settings className="h-5 w-5 text-primary" />
-                 تعديل الملف الشخصي
-              </SheetTitle>
-            </SheetHeader>
-            <div className="py-4">
-               <ProfileForm countries={countries} categories={categories} user={userData} />
-            </div>
-          </SheetContent>
-        </Sheet>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary" size="icon" className="rounded-full">
+              <UserAvatar name={userData.name} color={userData.avatarColor} className="h-8 w-8" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>
+              <p>{userData.name}</p>
+              <p className="text-xs font-normal text-muted-foreground">{userData.email}</p>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/profile/edit">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>تعديل الملف الشخصي</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/profile">
+                <UserIcon className="mr-2 h-4 w-4" />
+                <span>إعدادات الحساب</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/articles">
+                <Newspaper className="mr-2 h-4 w-4" />
+                <span>مقالات</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer focus:bg-destructive/10 focus:text-destructive">
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>تسجيل الخروج</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     }
 

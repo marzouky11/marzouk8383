@@ -10,13 +10,6 @@ import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -26,8 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Info, Shield, FileText, Phone, Edit, Trash2, Newspaper } from 'lucide-react';
-import { ProfileForm } from './profile-form';
+import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Edit, Trash2, Newspaper } from 'lucide-react';
 import { getCountries, getCategories, getJobsByUserId, deleteAd } from '@/lib/data';
 import type { Job } from '@/lib/types';
 import { JobCard } from '@/components/job-card';
@@ -62,7 +54,6 @@ export default function SettingsPage() {
     }
   }, [user]);
 
-  const countries = getCountries();
   const categories = getCategories();
 
   const handleLogout = async () => {
@@ -90,15 +81,19 @@ export default function SettingsPage() {
 
   const SettingItem = ({ icon: Icon, label, action, href }: { icon: React.ElementType, label: string, action?: React.ReactNode, href?: string }) => {
     const content = (
-        <li className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
+        <div className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors w-full">
             <div className="flex items-center gap-4">
                 <Icon className="h-5 w-5 text-primary" />
                 <span className="font-medium">{label}</span>
             </div>
-            {action || <ChevronLeft className="h-5 w-5 text-muted-foreground" />}
-        </li>
+            {action ? action : (href ? <ChevronLeft className="h-5 w-5 text-muted-foreground" /> : null)}
+        </div>
     );
-    return href ? <Link href={href}>{content}</Link> : content;
+    return (
+        <li className="flex items-center w-full">
+            {href ? <Link href={href} className="w-full">{content}</Link> : content}
+        </li>
+    )
   };
   
   return (
@@ -133,68 +128,16 @@ export default function SettingsPage() {
                  </CardHeader>
                 <CardContent className="p-0">
                   <ul className="divide-y divide-border">
-                    <li>
-                      {/* Mobile: Link to a dedicated page */}
-                      <Link href="/profile/edit" className="md:hidden">
-                          <div className="flex w-full items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
-                              <div className="flex items-center gap-4">
-                                  <User className="h-5 w-5 text-primary" />
-                                  <span className="font-medium">تعديل الملف الشخصي</span>
-                              </div>
-                              <ChevronLeft className="h-5 w-5 text-muted-foreground" />
-                          </div>
-                      </Link>
-                      {/* Desktop: Use a Sheet */}
-                      <Sheet>
-                          <SheetTrigger asChild>
-                              <div className="hidden md:flex w-full items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
-                                  <div className="flex items-center gap-4">
-                                      <User className="h-5 w-5 text-primary" />
-                                      <span className="font-medium">تعديل الملف الشخصي</span>
-                                  </div>
-                                  <ChevronLeft className="h-5 w-5 text-muted-foreground" />
-                              </div>
-                          </SheetTrigger>
-                          <SheetContent>
-                              <SheetHeader>
-                                  <SheetTitle className="flex items-center gap-3">
-                                      <User className="h-5 w-5 text-primary" />
-                                      تعديل الملف الشخصي
-                                  </SheetTitle>
-                              </SheetHeader>
-                              <div className="py-4">
-                                  <ProfileForm countries={countries} categories={categories} user={userData} />
-                              </div>
-                          </SheetContent>
-                      </Sheet>
-                    </li>
-
+                    <SettingItem
+                        icon={User}
+                        label="تعديل الملف الشخصي"
+                        href="/profile/edit"
+                    />
                     <SettingItem
                         icon={Newspaper}
                         label="مقالات"
                         href="/articles"
                     />
-                    <SettingItem
-                      icon={Info}
-                      label="من نحن"
-                      href="/about"
-                    />
-                     <SettingItem
-                      icon={Shield}
-                      label="سياسة الخصوصية"
-                      href="/privacy"
-                    />
-                     <SettingItem
-                      icon={FileText}
-                      label="شروط الاستخدام"
-                      href="/terms"
-                    />
-                     <SettingItem
-                      icon={Phone}
-                      label="اتصل بنا"
-                      href="/contact"
-                    />
-
                     <li className="flex items-center justify-between p-4">
                         <div className="flex items-center gap-4">
                           <SettingsIcon className="h-5 w-5 text-primary" />
@@ -209,7 +152,7 @@ export default function SettingsPage() {
               <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                        <FileText className="h-5 w-5" />
+                        <User className="h-5 w-5" />
                         إعلاناتي
                     </CardTitle>
                 </CardHeader>
