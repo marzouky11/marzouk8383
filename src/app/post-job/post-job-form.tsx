@@ -62,7 +62,7 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
     defaultValues: {
       postType: job?.postType || undefined,
       title: job?.title || '',
-      categoryId: job?.categoryId || '',
+      categoryId: job?.categoryId,
       country: job?.country || '',
       city: job?.city || '',
       workType: job?.workType || undefined,

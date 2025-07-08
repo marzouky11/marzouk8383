@@ -15,7 +15,7 @@ export interface Job {
   userId: string;
   postType: PostType;
   title: string;
-  categoryId: string;
+  categoryId?: string;
   country: string;
   city: string;
   workType: WorkType;
