@@ -65,8 +65,7 @@ export function JobCard({ job }: JobCardProps) {
       <div className={cn("flex items-start gap-2", className)}>
         <Icon className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
         <p className="text-sm text-muted-foreground truncate">
-          <span className="font-semibold text-foreground/90">{label}:</span>{' '}
-          {value}
+          {label}: {value}
         </p>
       </div>
     );
