@@ -311,22 +311,6 @@ export async function deleteAd(adId: string) {
     }
 }
 
-export async function reportAd(adId: string, reason: string, details?: string) {
-    try {
-        const reportsCollection = collection(db, 'reports');
-        await addDoc(reportsCollection, {
-            adId,
-            reason,
-            details: details || '',
-            reportedAt: serverTimestamp(),
-        });
-    } catch (e) {
-        console.error("Error reporting ad: ", e);
-        throw new Error("Failed to report ad");
-    }
-}
-
-
 export async function updateUserProfile(uid: string, profileData: Partial<User>) {
     try {
         const userRef = doc(db, 'users', uid);
