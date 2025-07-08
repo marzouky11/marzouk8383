@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           name: 'توظيفك',
           logo: {
               '@type': 'ImageObject',
-              url: 'https://i.postimg.cc/4Nknp5pF/Screenshot-20250704-173231.jpg',
+              url: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
           },
       },
       datePublished: new Date(article.date).toISOString(),

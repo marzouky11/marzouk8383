@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: appName,
     images: [
       {
-        url: 'https://i.postimg.cc/4Nknp5pF/Screenshot-20250704-173231.jpg',
+        url: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
         width: 1200,
         height: 630,
         alt: appName,
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
       template: `%s | ${appName}`
     },
     description: homePageDescription,
-    images: ['https://i.postimg.cc/4Nknp5pF/Screenshot-20250704-173231.jpg'],
+    images: ['https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg'],
   },
 };
 
@@ -55,7 +55,7 @@ export default function RootLayout({
     '@type': 'Organization',
     name: appName,
     url: baseUrl,
-    logo: 'https://i.postimg.cc/4Nknp5pF/Screenshot-20250704-173231.jpg',
+    logo: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
   };
 
   const webSiteSchema = {
