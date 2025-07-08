@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Star, Clock, Wallet, CalendarDays, GraduationCap, Briefcase, Users } from 'lucide-react';
+import { MapPin, Clock, Wallet, CalendarDays, GraduationCap, Briefcase, Users } from 'lucide-react';
 import type { Job, WorkType } from '@/lib/types';
 import { getCategoryById } from '@/lib/data';
 import { CategoryIcon } from '@/components/icons';
@@ -59,13 +59,15 @@ export function JobCard({ job }: JobCardProps) {
     backgroundColor: category ? `${category.color}1A` : (isSeekingJob ? 'hsl(var(--destructive) / 0.1)' : 'hsl(var(--primary) / 0.1)')
   };
 
-
-  const InfoItem = ({ icon: Icon, text, className }: { icon: React.ElementType; text: string | undefined, className?: string }) => {
-    if (!text) return null;
+  const InfoItem = ({ icon: Icon, label, value, className }: { icon: React.ElementType; label: string; value: string | undefined, className?: string }) => {
+    if (!value) return null;
     return (
-      <div className={cn("flex items-center gap-2", className)}>
-        <Icon className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm text-muted-foreground truncate">{text}</span>
+      <div className={cn("flex items-start gap-2", className)}>
+        <Icon className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+        <p className="text-sm text-muted-foreground truncate">
+          <span className="font-semibold text-foreground/90">{label}:</span>{' '}
+          {value}
+        </p>
       </div>
     );
   };
@@ -104,10 +106,10 @@ export function JobCard({ job }: JobCardProps) {
         <Separator />
 
         <div className="flex flex-col gap-2.5">
-          <InfoItem icon={MapPin} text={`${job.country}, ${job.city}`} />
-          <InfoItem icon={Clock} text={`${workTypeTranslations[job.workType]}`} />
-          <InfoItem icon={Wallet} text={job.salary ? job.salary : 'عند الطلب'} />
-          <InfoItem icon={GraduationCap} text={job.qualifications} className="hidden sm:flex" />
+          <InfoItem icon={MapPin} label="المكان" value={`${job.country}, ${job.city}`} />
+          <InfoItem icon={Clock} label="النوع" value={`${workTypeTranslations[job.workType]}`} />
+          <InfoItem icon={Wallet} label="الأجر" value={job.salary ? job.salary : 'عند الطلب'} />
+          <InfoItem icon={GraduationCap} label="المؤهلات" value={job.qualifications} className="hidden sm:flex" />
         </div>
       </div>
       
