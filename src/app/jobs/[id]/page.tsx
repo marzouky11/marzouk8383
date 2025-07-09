@@ -55,9 +55,12 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
   };
 
   const jobTitle = job.title || 'إعلان وظيفة';
-  const jobDescription = job.description || jobTitle;
   const jobCity = job.city || 'مدينة غير محددة';
   const jobCountry = job.country || 'دولة غير محددة';
+
+  const metaDescription = (job.description || `إعلان عن ${jobTitle} في ${jobCity}, ${jobCountry}.`).substring(0, 160);
+  const jsonLdDescription = job.description || `إعلان عن ${jobTitle} في ${jobCity}, ${jobCountry}.`;
+
   const createdAtDate = (job.createdAt && typeof job.createdAt.toDate === 'function') 
     ? job.createdAt.toDate() 
     : new Date();
@@ -66,7 +69,7 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
       '@context': 'https://schema.org',
       '@type': 'JobPosting',
       title: jobTitle,
-      description: jobDescription,
+      description: jsonLdDescription,
       datePosted: createdAtDate.toISOString(),
       employmentType: employmentTypeMapping[job.workType] || 'OTHER',
       hiringOrganization: {
@@ -87,19 +90,34 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
   };
 
   const canonicalUrl = `${baseUrl}/jobs/${job.id}`;
+  const siteThumbnail = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
 
   return {
     title: jobTitle,
-    description: jobDescription.substring(0, 160) || `إعلان عن ${jobTitle} في ${jobCity}, ${jobCountry}.`,
+    description: metaDescription,
     alternates: {
         canonical: canonicalUrl,
     },
     openGraph: {
         title: jobTitle,
-        description: jobDescription.substring(0, 160) || `إعلان عن ${jobTitle} في ${jobCity}, ${jobCountry}.`,
+        description: metaDescription,
         url: canonicalUrl,
         siteName: 'توظيفك',
         type: 'article',
+        images: [
+            {
+                url: siteThumbnail,
+                width: 1200,
+                height: 630,
+                alt: jobTitle,
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: jobTitle,
+        description: metaDescription,
+        images: [siteThumbnail],
     },
     other: {
         'application/ld+json': JSON.stringify(jobPostingJsonLd, null, 2)
