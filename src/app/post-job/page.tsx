@@ -1,6 +1,6 @@
 
 import type { Metadata } from 'next';
-import { getCategories, getCountries } from '@/lib/data';
+import { getCategories } from '@/lib/data';
 import PostJobClientPage from './post-job-client-page';
 
 export const metadata: Metadata = {
@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 
 export default function PostJobPage() {
   const categories = getCategories();
-  const countries = getCountries();
 
-  return <PostJobClientPage categories={categories} countries={countries} />;
+  return <PostJobClientPage categories={categories} />;
 }

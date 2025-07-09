@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from "@/hooks/use-toast"
-import type { Country, User, Category } from '@/lib/types';
+import type { User, Category } from '@/lib/types';
 import { updateUserProfile } from '@/lib/data';
 import { useAuth } from '@/context/auth-context';
 import { Loader2 } from 'lucide-react';
@@ -29,12 +29,11 @@ const formSchema = z.object({
 });
 
 interface ProfileFormProps {
-  countries: Country[];
   categories: Category[];
   user: User;
 }
 
-export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
+export function ProfileForm({ categories, user }: ProfileFormProps) {
   const { toast } = useToast();
   const { user: authUser } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,27 +52,6 @@ export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
       instagram: user?.instagram || '',
     },
   });
-
-  const [cities, setCities] = useState<string[]>([]);
-  const selectedCountry = form.watch('country');
-
-  useEffect(() => {
-    if (selectedCountry) {
-      const countryData = countries.find(c => c.name === selectedCountry);
-      setCities(countryData ? countryData.cities : []);
-    }
-  }, [selectedCountry, countries]);
-  
-  useEffect(() => {
-    // Set initial cities based on default user country
-    if (user?.country) {
-        const initialCountry = countries.find(c => c.name === user.country);
-        if(initialCountry) {
-            setCities(initialCountry.cities);
-        }
-    }
-  }, [countries, user]);
-
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!authUser) return;
@@ -169,10 +147,10 @@ export function ProfileForm({ countries, categories, user }: ProfileFormProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField control={form.control} name="country" render={({ field }) => (
-            <FormItem><FormLabel>الدولة</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر دولتك" /></SelectTrigger></FormControl><SelectContent>{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+            <FormItem><FormLabel>الدولة</FormLabel><FormControl><Input placeholder="الدولة التي تقيم بها" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="city" render={({ field }) => (
-            <FormItem><FormLabel>المدينة</FormLabel><Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountry}><FormControl><SelectTrigger><SelectValue placeholder="اختر مدينتك" /></SelectTrigger></FormControl><SelectContent>{cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+            <FormItem><FormLabel>المدينة</FormLabel><FormControl><Input placeholder="المدينة التي تقيم بها" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
           )} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

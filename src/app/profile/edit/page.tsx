@@ -6,7 +6,7 @@ import { useAuth } from '@/context/auth-context';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProfileForm } from '@/app/profile/profile-form';
-import { getCategories, getCountries } from '@/lib/data';
+import { getCategories } from '@/lib/data';
 import { Loader2, User } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 
@@ -21,7 +21,6 @@ export default function EditProfilePage() {
   }, [user, loading, router]);
   
   const categories = getCategories();
-  const countries = getCountries();
 
   return (
     <AppLayout>
@@ -46,7 +45,7 @@ export default function EditProfilePage() {
                         <p className="text-muted-foreground mb-6 text-center">
                             قم بتحديث معلومات ملفك الشخصي.
                         </p>
-                        <ProfileForm countries={countries} categories={categories} user={userData} />
+                        <ProfileForm categories={categories} user={userData} />
                     </CardContent>
                 </Card>
             </div>

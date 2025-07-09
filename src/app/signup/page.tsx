@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
@@ -13,10 +13,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Loader2, UserPlus } from 'lucide-react';
-import { getCountries } from '@/lib/data';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import type { Country } from '@/lib/types';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 
 
@@ -29,16 +26,7 @@ export default function SignupPage() {
   const [gender, setGender] = useState<'male' | 'female' | ''>('');
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
-  const [cities, setCities] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  
-  const countries = getCountries();
-
-  useEffect(() => {
-    const countryData = countries.find((c: Country) => c.name === country);
-    setCities(countryData ? countryData.cities : []);
-    setCity(''); // Reset city when country changes
-  }, [country, countries]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,26 +156,26 @@ export default function SignupPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="country">الدولة</Label>
-                <Select value={country} onValueChange={setCountry}>
-                  <SelectTrigger id="country">
-                    <SelectValue placeholder="اختر الدولة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}
-                  </SelectContent>
-                </Select>
+                <Input
+                  id="country"
+                  type="text"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  required
+                  placeholder="الدولة التي تقيم بها"
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="city">المدينة</Label>
-                <Select value={city} onValueChange={setCity} disabled={!country}>
-                  <SelectTrigger id="city">
-                    <SelectValue placeholder="اختر المدينة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}
-                  </SelectContent>
-                </Select>
+                <Input
+                  id="city"
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  required
+                  placeholder="المدينة التي تقيم بها"
+                />
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>

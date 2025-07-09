@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from "@/hooks/use-toast"
-import type { Category, Country, Job } from '@/lib/types';
+import type { Category, Job } from '@/lib/types';
 import { postJob, updateAd } from '@/lib/data';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
@@ -40,18 +40,19 @@ const formSchema = z.object({
   email: z.string().email({ message: "الرجاء إدخال بريد إلكتروني صحيح." }).optional().or(z.literal('')),
   instagram: z.string().optional(),
   applyUrl: z.string().url({ message: 'الرجاء إدخال رابط صحيح' }).optional().or(z.literal('')),
-}).refine(data => !!data.phone || !!data.whatsapp || !!data.email || !!data.instagram, {
-  message: 'يجب توفير وسيلة تواصل واحدة على الأقل.',
-  path: ['phone'], // Show error under the first contact field
+}).refine(data => 
+    (!!data.phone || !!data.whatsapp || !!data.email || !!data.instagram) || 
+    (!!data.applyUrl && data.postType === 'seeking_worker'), {
+  message: 'يجب توفير وسيلة تواصل واحدة على الأقل أو رابط للتقديم.',
+  path: ['phone'],
 });
 
 interface PostJobFormProps {
   categories: Category[];
-  countries: Country[];
   job?: Job | null;
 }
 
-export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
+export function PostJobForm({ categories, job }: PostJobFormProps) {
   const { toast } = useToast();
   const { user, userData } = useAuth();
   const router = useRouter();
@@ -80,10 +81,8 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
     },
   });
 
-  const [cities, setCities] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const selectedCountry = form.watch('country');
   const postType = form.watch('postType');
   const categoryId = form.watch('categoryId');
 
@@ -93,22 +92,6 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
   
   const categoryThemeColor = selectedCategoryData?.color;
 
-  useEffect(() => {
-    const countryData = countries.find(c => c.name === selectedCountry);
-    setCities(countryData ? countryData.cities : []);
-    if (form.getValues('country') === selectedCountry) {
-        // country hasn't changed, don't reset city
-    } else {
-        form.setValue('city', '');
-    }
-  }, [selectedCountry, countries, form]);
-
-  useEffect(() => {
-    if (job?.country) {
-        const countryData = countries.find(c => c.name === job.country);
-        if(countryData) setCities(countryData.cities);
-    }
-  }, [job, countries]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!user || !userData) {
@@ -242,11 +225,11 @@ export function PostJobForm({ categories, countries, job }: PostJobFormProps) {
 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField control={form.control} name="country" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={Globe} label="الدولة" /><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر الدولة" /></SelectTrigger></FormControl><SelectContent>{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+             <FormField control={form.control} name="country" render={({ field }) => (
+                <FormItem><FormLabelIcon icon={Globe} label="الدولة" /><FormControl><Input placeholder="مثال: المغرب" {...field} /></FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="city" render={({ field }) => (
-              <FormItem><FormLabelIcon icon={MapPin} label="المدينة"/><Select onValueChange={field.onChange} value={field.value} disabled={!selectedCountry}><FormControl><SelectTrigger><SelectValue placeholder="اختر المدينة" /></SelectTrigger></FormControl><SelectContent>{cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+                <FormItem><FormLabelIcon icon={MapPin} label="المدينة"/><FormControl><Input placeholder="مثال: الدار البيضاء" {...field} /></FormControl><FormMessage /></FormItem>
             )} />
           </div>
 

@@ -6,7 +6,7 @@ import { useAuth } from '@/context/auth-context';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { PostJobForm } from '@/app/post-job/post-job-form';
-import { getCategories, getCountries, getJobById } from '@/lib/data';
+import { getCategories, getJobById } from '@/lib/data';
 import { Loader2, Edit } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import type { Job } from '@/lib/types';
@@ -46,7 +46,6 @@ export default function EditJobPage() {
   }, [params.id, user]);
 
   const categories = getCategories();
-  const countries = getCountries();
 
   if (authLoading || loading) {
     return (
@@ -72,7 +71,6 @@ export default function EditJobPage() {
               </p>
               <PostJobForm
                 categories={categories}
-                countries={countries}
                 job={job}
               />
             </CardContent>

@@ -9,14 +9,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PostJobForm } from './post-job-form';
 import { Loader2, PlusCircle } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
-import type { Category, Country } from '@/lib/types';
+import type { Category } from '@/lib/types';
 
 interface PostJobClientPageProps {
     categories: Category[];
-    countries: Country[];
 }
 
-export default function PostJobClientPage({ categories, countries }: PostJobClientPageProps) {
+export default function PostJobClientPage({ categories }: PostJobClientPageProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -41,7 +40,7 @@ export default function PostJobClientPage({ categories, countries }: PostJobClie
                 <Card>
                 <CardContent className="pt-6">
                     <p className="text-muted-foreground mb-6 text-center">املأ الحقول التالية لنشر فرصة عمل جديدة في المنصة.</p>
-                    <PostJobForm categories={categories} countries={countries} />
+                    <PostJobForm categories={categories} />
                 </CardContent>
                 </Card>
             </div>
