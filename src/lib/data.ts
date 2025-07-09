@@ -162,28 +162,38 @@ export async function getJobs(
     });
 
     // We apply the more specific filters here in the code.
+    // This allows for flexible, partial matching without complex Firestore indexes.
+    
     if (country) {
-        const trimmedCountry = country.trim().toLowerCase();
-        if (trimmedCountry) {
-            jobs = jobs.filter(job => job.country.trim().toLowerCase().includes(trimmedCountry));
+        const normalizedSearchCountry = country.trim().toLowerCase();
+        if (normalizedSearchCountry) {
+            jobs = jobs.filter(job => 
+                job.country && job.country.trim().toLowerCase().includes(normalizedSearchCountry)
+            );
         }
     }
+    
     if (city) {
-        const trimmedCity = city.trim().toLowerCase();
-        if (trimmedCity) {
-            jobs = jobs.filter(job => job.city.trim().toLowerCase().includes(trimmedCity));
+        const normalizedSearchCity = city.trim().toLowerCase();
+        if (normalizedSearchCity) {
+            jobs = jobs.filter(job => 
+                job.city && job.city.trim().toLowerCase().includes(normalizedSearchCity)
+            );
         }
     }
+
     if (categoryId) {
         jobs = jobs.filter(job => job.categoryId === categoryId);
     }
+    
     if (workType) {
         jobs = jobs.filter(job => job.workType === workType);
     }
+    
     if (searchQuery) {
         const lowercasedQuery = searchQuery.toLowerCase();
         jobs = jobs.filter(job => 
-            job.title.toLowerCase().includes(lowercasedQuery) ||
+            (job.title && job.title.toLowerCase().includes(lowercasedQuery)) ||
             (job.description && job.description.toLowerCase().includes(lowercasedQuery))
         );
     }
