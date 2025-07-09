@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -41,25 +42,40 @@ export function JobFilters({ categories, showSort = false, className, searchPath
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
-  const [selectedCountry, setSelectedCountry] = useState(searchParams.get('country') || '');
-  const [selectedCity, setSelectedCity] = useState(searchParams.get('city') || '');
-  const [selectedWorkType, setSelectedWorkType] = useState(searchParams.get('workType') || '');
-  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'newest');
-  const [postTypePath, setPostTypePath] = useState('/jobs');
+  // State for the main search input
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  // States for the filters inside the sheet
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedWorkType, setSelectedWorkType] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
+  const [postTypePath, setPostTypePath] = useState(pathname);
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  
+  // Effect to sync state with URL search params. This prevents hydration errors.
+  useEffect(() => {
+    setSearchQuery(searchParams.get('q') || '');
+    setSelectedCategory(searchParams.get('category') || '');
+    setSelectedCountry(searchParams.get('country') || '');
+    setSelectedCity(searchParams.get('city') || '');
+    setSelectedWorkType(searchParams.get('workType') || '');
+    setSortBy(searchParams.get('sortBy') || 'newest');
+    setPostTypePath(pathname);
+  }, [searchParams, pathname]);
 
   const handleFilter = () => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams();
     
-    if (searchQuery) params.set('q', searchQuery); else params.delete('q');
-    if (selectedCategory) params.set('category', selectedCategory); else params.delete('category');
-    if (selectedCountry) params.set('country', selectedCountry); else params.delete('country');
-    if (selectedCity) params.set('city', selectedCity); else params.delete('city');
-    if (selectedWorkType) params.set('workType', selectedWorkType); else params.delete('workType');
-    if (sortBy) params.set('sortBy', sortBy); else params.delete('sortBy');
+    // Set params from state. We use the main searchQuery for 'q'.
+    if (searchQuery) params.set('q', searchQuery);
+    if (selectedCategory) params.set('category', selectedCategory);
+    if (selectedCountry) params.set('country', selectedCountry);
+    if (selectedCity) params.set('city', selectedCity);
+    if (selectedWorkType) params.set('workType', selectedWorkType);
+    if (sortBy) params.set('sortBy', sortBy);
     
     const targetPath = showPostTypeSelect ? postTypePath : (searchPath || pathname);
     router.push(`${targetPath}?${params.toString()}`);
