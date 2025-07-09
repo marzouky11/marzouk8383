@@ -64,7 +64,7 @@ export function PostJobForm({ categories, job }: PostJobFormProps) {
     defaultValues: {
       postType: job?.postType || undefined,
       title: job?.title || '',
-      categoryId: job?.categoryId,
+      categoryId: job?.categoryId || '',
       customCategory: !job?.categoryId && job?.categoryName ? job.categoryName : '',
       country: job?.country || '',
       city: job?.city || '',
@@ -132,11 +132,29 @@ export function PostJobForm({ categories, job }: PostJobFormProps) {
         router.push(`/profile`);
       } else {
         const newJobData = {
-          ...dataToSave,
           userId: user.uid,
           ownerName: userData.name,
           ownerAvatarColor: userData.avatarColor,
+          postType: values.postType,
+          title: values.title,
+          country: values.country,
+          city: values.city,
+          workType: values.workType,
+          categoryId: dataToSave.categoryId,
+          categoryName: dataToSave.categoryName,
+          companyName: values.companyName,
+          salary: values.salary,
+          experience: values.experience,
+          qualifications: values.qualifications,
+          openPositions: values.openPositions,
+          description: values.description,
+          phone: values.phone,
+          whatsapp: values.whatsapp,
+          email: values.email,
+          instagram: values.instagram,
+          applyUrl: values.applyUrl,
         };
+
         const { id } = await postJob(newJobData);
         toast({
           title: "تم النشر بنجاح!",
@@ -242,7 +260,7 @@ export function PostJobForm({ categories, job }: PostJobFormProps) {
                 {...field}
                 onChange={(e) => {
                   field.onChange(e);
-                  form.setValue('categoryId', undefined);
+                  form.setValue('categoryId', '');
                 }}
               /></FormControl><FormMessage /></FormItem>
             )} />
