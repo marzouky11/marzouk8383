@@ -55,9 +55,6 @@ export function JobCard({ job }: JobCardProps) {
   
   const finalColor = category?.color || defaultColor;
   const finalIconName = category?.iconName || defaultIconName;
-  const iconContainerStyle = {
-    backgroundColor: category ? `${category.color}1A` : (isSeekingJob ? 'hsl(var(--destructive) / 0.1)' : 'hsl(var(--primary) / 0.1)')
-  };
 
   const InfoItem = ({ icon: Icon, label, value, className }: { icon: React.ElementType; label: string; value: string | undefined, className?: string }) => {
     if (!value) return null;
@@ -82,7 +79,7 @@ export function JobCard({ job }: JobCardProps) {
       <div className="flex-grow space-y-3">
         <div className="flex justify-between items-start gap-3">
           <div className="flex-grow">
-            {category && <Badge variant={'secondary'} className="mb-1 font-normal text-xs">{category.name}</Badge>}
+            {job.categoryName && <Badge variant={'secondary'} className="mb-1 font-normal text-xs">{job.categoryName}</Badge>}
             <h3 
               className="font-bold leading-tight"
               style={{ color: finalColor }}
@@ -92,7 +89,9 @@ export function JobCard({ job }: JobCardProps) {
           </div>
           <div 
             className="flex-shrink-0 p-3 rounded-xl z-0"
-            style={iconContainerStyle}
+            style={{
+              backgroundColor: category ? `${category.color}1A` : (isSeekingJob ? 'hsl(var(--destructive) / 0.1)' : 'hsl(var(--primary) / 0.1)')
+            }}
           >
             <CategoryIcon 
               name={finalIconName} 

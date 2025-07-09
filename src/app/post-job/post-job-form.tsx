@@ -26,6 +26,7 @@ const formSchema = z.object({
   postType: z.enum(['seeking_worker', 'seeking_job'], { required_error: 'الرجاء تحديد نوع الإعلان.' }),
   title: z.string().min(1, { message: 'اسم الإعلان مطلوب.' }),
   categoryId: z.string().optional(),
+  customCategory: z.string().optional(),
   workType: z.enum(['full_time', 'part_time', 'freelance', 'remote'], { required_error: 'نوع العمل مطلوب.' }),
   companyName: z.string().optional(),
   country: z.string().min(1, { message: 'الدولة مطلوبة.' }),
@@ -64,6 +65,7 @@ export function PostJobForm({ categories, job }: PostJobFormProps) {
       postType: job?.postType || undefined,
       title: job?.title || '',
       categoryId: job?.categoryId,
+      customCategory: !job?.categoryId && job?.categoryName ? job.categoryName : '',
       country: job?.country || '',
       city: job?.city || '',
       workType: job?.workType || undefined,
@@ -106,8 +108,23 @@ export function PostJobForm({ categories, job }: PostJobFormProps) {
 
     setIsSubmitting(true);
     try {
+      const { customCategory, ...restOfValues } = values;
+
+      const dataToSave: { [key: string]: any } = { ...restOfValues };
+
+      if (customCategory) {
+          dataToSave.categoryName = customCategory;
+          dataToSave.categoryId = undefined;
+      } else if (values.categoryId) {
+          const selectedCat = categories.find(c => c.id === values.categoryId);
+          dataToSave.categoryName = selectedCat?.name;
+      } else {
+          dataToSave.categoryName = undefined;
+          dataToSave.categoryId = undefined;
+      }
+
       if (isEditing && job) {
-        await updateAd(job.id, values);
+        await updateAd(job.id, dataToSave);
         toast({
           title: "تم تحديث الإعلان بنجاح!",
           description: "تم حفظ التغييرات على إعلانك.",
@@ -115,7 +132,7 @@ export function PostJobForm({ categories, job }: PostJobFormProps) {
         router.push(`/profile`);
       } else {
         const newJobData = {
-          ...values,
+          ...dataToSave,
           userId: user.uid,
           ownerName: userData.name,
           ownerAvatarColor: userData.avatarColor,
@@ -203,9 +220,33 @@ export function PostJobForm({ categories, job }: PostJobFormProps) {
             <FormItem><FormLabelIcon icon={FileText} label="عنوان الإعلان" /><FormControl><Input placeholder={postType === 'seeking_job' ? "مثال: مصمم جرافيك يبحث عن فرصة..." : "مثال: مطلوب مهندس مدني..."} {...field} /></FormControl><FormMessage /></FormItem>
           )} />
           
-          <FormField control={form.control} name="categoryId" render={({ field }) => (
-            <FormItem><FormLabelIcon icon={LayoutGrid} label="الفئة (اختياري)"/><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر فئة العمل (اختياري)" /></SelectTrigger></FormControl><SelectContent>{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
-          )} />
+          <div className="space-y-2">
+            <FormField control={form.control} name="categoryId" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={LayoutGrid} label="الفئة (اختياري)"/><Select 
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  form.setValue('customCategory', '');
+                }} 
+                value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر فئة العمل من القائمة" /></SelectTrigger></FormControl><SelectContent>{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
+            )} />
+
+            <div className="relative flex items-center">
+                <div className="flex-grow border-t border-border"></div>
+                <span className="flex-shrink mx-4 text-xs text-muted-foreground">أو</span>
+                <div className="flex-grow border-t border-border"></div>
+            </div>
+
+            <FormField control={form.control} name="customCategory" render={({ field }) => (
+              <FormItem><FormControl><Input 
+                placeholder="أدخل فئة مخصصة" 
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                  form.setValue('categoryId', undefined);
+                }}
+              /></FormControl><FormMessage /></FormItem>
+            )} />
+          </div>
 
           <FormField control={form.control} name="workType" render={({ field }) => (
             <FormItem><FormLabelIcon icon={Briefcase} label="نوع العمل" /><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="اختر نوع العمل" /></SelectTrigger></FormControl><SelectContent><SelectItem value="full_time">دوام كامل</SelectItem><SelectItem value="part_time">دوام جزئي</SelectItem><SelectItem value="freelance">عمل حر</SelectItem><SelectItem value="remote">عن بعد</SelectItem></SelectContent></Select><FormMessage /></FormItem>
