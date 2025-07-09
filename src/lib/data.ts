@@ -1,6 +1,6 @@
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
-import type { Job, Category, Country, PostType, User, WorkType } from './types';
+import type { Job, Category, PostType, User, WorkType } from './types';
 
 const categories: Category[] = [
   { id: '1', name: 'نجار', iconName: 'Hammer', color: '#a16207' },
@@ -72,26 +72,6 @@ const categories: Category[] = [
   { id: '67', name: 'عامل مغسلة ملابس', iconName: 'Shirt', color: '#7c3aed' },
   { id: '68', name: 'موزع إعلانات', iconName: 'Megaphone', color: '#be123c' },
   { id: '69', name: 'متطوع', iconName: 'Handshake', color: '#10b981' }
-];
-
-const countries: Country[] = [
-    { name: 'المغرب', cities: ['الدار البيضاء', 'الرباط', 'فاس', 'مراكش', 'طنجة', 'أكادير', 'مكناس', 'وجدة', 'القنيطرة', 'تطوان', 'العيون', 'المحمدية', 'الجديدة', 'آسفي', 'خريبكة', 'بني ملال', 'الناظور', 'تازة', 'سطات', 'برشيد'] },
-    { name: 'الجزائر', cities: ['الجزائر العاصمة', 'وهران', 'قسنطينة', 'عنابة', 'سطيف', 'باتنة', 'البليدة', 'تلمسان', 'بجاية', 'سكيكدة', 'تيزي وزو', 'الأغواط', 'بسكرة', 'ورقلة', 'تبسة', 'مستغانم', 'معسكر', 'برج بوعريريج', 'الشلف', 'الجلفة'] },
-    { name: 'تونس', cities: ['تونس العاصمة', 'صفاقس', 'سوسة', 'القيروان', 'بنزرت', 'قابس', 'أريانة', 'قفصة', 'المنستير', 'نابل', 'مدنين', 'بن عروس', 'القصرين', 'سيدي بوزيد', 'جندوبة', 'تطاوين', 'المهدية', 'الكاف', 'سليانة', 'زغوان'] },
-    { name: 'مصر', cities: ['القاهرة', 'الإسكندرية', 'الجيزة', 'الأقصر', 'أسوان', 'شرم الشيخ', 'الغردقة', 'المنصورة', 'طنطا', 'الزقازيق', 'الإسماعيلية', 'السويس', 'بورسعيد', 'دمياط', 'الفيوم', 'بني سويف', 'المنيا', 'أسيوط', 'سوهاج', 'قنا'] },
-    { name: 'السعودية', cities: ['الرياض', 'جدة', 'مكة المكرمة', 'المدينة المنورة', 'الدمام', 'الخبر', 'الظهران', 'الطائف', 'تبوك', 'بريدة', 'حائل', 'أبها', 'خميس مشيط', 'جازان', 'نجران', 'ينبع', 'الجبيل', 'الهفوف', 'الباحة', 'سكاكا'] },
-    { name: 'الإمارات', cities: ['دبي', 'أبوظبي', 'الشارقة', 'عجمان', 'رأس الخيمة', 'الفجيرة', 'أم القيوين', 'العين', 'خورفكان', 'دبا الحصن'] },
-    { name: 'الأردن', cities: ['عمان', 'الزرقاء', 'إربد', 'العقبة', 'السلط', 'الكرك', 'مأدبا', 'الرمثا', 'جرش', 'معان', 'الطفيلة', 'المفرق'] },
-    { name: 'لبنان', cities: ['بيروت', 'طرابلس', 'صيدا', 'صور', 'جونيه', 'زحلة', 'بعلبك', 'النبطية', 'جبيل'] },
-    { name: 'سوريا', cities: ['دمشق', 'حلب', 'حمص', 'حماة', 'اللاذقية', 'طرطوس', 'دير الزور', 'الرقة', 'إدلب', 'السويداء'] },
-    { name: 'العراق', cities: ['بغداد', 'البصرة', 'الموصل', 'أربيل', 'السليمانية', 'كركوك', 'النجف', 'كربلاء', 'دهوك', 'الرمادي', 'الفلوجة', 'سامراء', 'الحلة'] },
-    { name: 'الكويت', cities: ['مدينة الكويت', 'الأحمدي', 'حولي', 'السالمية', 'الفروانية', 'الجهراء'] },
-    { name: 'قطر', cities: ['الدوحة', 'الريان', 'الوكرة', 'الخور', 'أم صلال محمد', 'مدينة الشمال'] },
-    { name: 'البحرين', cities: ['المنامة', 'المحرق', 'الرفاع', 'مدينة حمد', 'مدينة عيسى', 'سترة'] },
-    { name: 'عمان', cities: ['مسقط', 'صلالة', 'صحار', 'نزوى', 'صور', 'البريمي', 'عبري'] },
-    { name: 'اليمن', cities: ['صنعاء', 'عدن', 'تعز', 'الحديدة', 'المكلا', 'إب', 'ذمار'] },
-    { name: 'السودان', cities: ['الخرطوم', 'أم درمان', 'بورتسودان', 'كسلا', 'الأبيض', 'كوستي', 'ود مدني', 'القضارف'] },
-    { name: 'ليبيا', cities: ['طرابلس', 'بنغازي', 'مصراتة', 'البيضاء', 'سبها', 'طبرق', 'سرت'] },
 ];
 
 function formatTimeAgo(timestamp: any) {
@@ -182,12 +162,17 @@ export async function getJobs(
     });
 
     // We apply the more specific filters here in the code.
-    // This is a common pattern to work around database index limitations during development.
     if (country) {
-        jobs = jobs.filter(job => job.country === country);
+        const trimmedCountry = country.trim().toLowerCase();
+        if (trimmedCountry) {
+            jobs = jobs.filter(job => job.country.trim().toLowerCase().includes(trimmedCountry));
+        }
     }
     if (city) {
-        jobs = jobs.filter(job => job.city === city);
+        const trimmedCity = city.trim().toLowerCase();
+        if (trimmedCity) {
+            jobs = jobs.filter(job => job.city.trim().toLowerCase().includes(trimmedCity));
+        }
     }
     if (categoryId) {
         jobs = jobs.filter(job => job.categoryId === categoryId);
@@ -196,17 +181,16 @@ export async function getJobs(
         jobs = jobs.filter(job => job.workType === workType);
     }
     if (searchQuery) {
+        const lowercasedQuery = searchQuery.toLowerCase();
         jobs = jobs.filter(job => 
-            job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (job.description && job.description.toLowerCase().includes(searchQuery.toLowerCase()))
+            job.title.toLowerCase().includes(lowercasedQuery) ||
+            (job.description && job.description.toLowerCase().includes(lowercasedQuery))
         );
     }
 
     return jobs;
   } catch (error) {
     console.error("Error fetching jobs: ", error);
-    // If you see Firestore errors about indexes, you may need to create them in the Firebase console.
-    // This is a common issue when adding complex queries.
     return [];
   }
 }
@@ -337,8 +321,4 @@ export function getCategories() {
 
 export function getCategoryById(id: string) {
     return categories.find((cat) => cat.id === id);
-}
-
-export function getCountries() {
-    return countries;
 }

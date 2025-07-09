@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
-import { getJobs, getCategories, getCountries } from '@/lib/data';
+import { getJobs, getCategories } from '@/lib/data';
 import { JobFilters } from '@/components/job-filters';
 import type { WorkType } from '@/lib/types';
 import { Suspense } from 'react';
@@ -46,7 +46,6 @@ export default async function JobsPage({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const categories = getCategories();
-  const countries = getCountries();
 
   const jobs = await getJobs({
       postType: 'seeking_worker',
@@ -67,7 +66,7 @@ export default async function JobsPage({
         <h1 className="sr-only">عروض العمل المتاحة</h1>
         <div className="mb-6">
           <Suspense fallback={<JobFiltersSkeleton />}>
-            <JobFilters categories={categories} countries={countries} showSort={true} />
+            <JobFilters categories={categories} showSort={true} />
           </Suspense>
         </div>
         

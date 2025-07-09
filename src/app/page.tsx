@@ -5,7 +5,7 @@ import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { getJobs, getCategories, getCountries } from '@/lib/data';
+import { getJobs, getCategories } from '@/lib/data';
 import React, { Suspense } from 'react';
 import { Handshake, Newspaper } from 'lucide-react';
 import { JobFilters } from '@/components/job-filters';
@@ -66,7 +66,6 @@ export default async function HomePage() {
   const jobOffers = await getJobs({ postType: 'seeking_worker', count: 6 });
   const jobSeekers = await getJobs({ postType: 'seeking_job', count: 6 });
   const categories = getCategories();
-  const countries = getCountries();
 
   return (
     <AppLayout>
@@ -75,14 +74,14 @@ export default async function HomePage() {
       {/* Search filters for mobile, outside the header */}
       <div className="md:hidden container mt-4">
         <Suspense fallback={<JobFiltersSkeleton />}>
-          <JobFilters categories={categories} countries={countries} showPostTypeSelect={true} />
+          <JobFilters categories={categories} showPostTypeSelect={true} />
         </Suspense>
       </div>
       
       <div className="container hidden md:block pt-6">
         <Card className="p-2 rounded-2xl shadow-lg">
           <Suspense fallback={<JobFiltersSkeleton />}>
-            <JobFilters categories={categories} countries={countries} showPostTypeSelect={true} />
+            <JobFilters categories={categories} showPostTypeSelect={true} />
           </Suspense>
         </Card>
       </div>

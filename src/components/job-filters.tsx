@@ -18,12 +18,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Search, SlidersHorizontal } from 'lucide-react';
-import type { Category, Country, WorkType } from '@/lib/types';
+import type { Category, WorkType } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 interface JobFiltersProps {
   categories: Category[];
-  countries: Country[];
   showSort?: boolean;
   className?: string;
   searchPath?: string;
@@ -37,7 +36,7 @@ const workTypeTranslations: { [key in WorkType]: string } = {
   remote: 'عن بعد',
 };
 
-export function JobFilters({ categories, countries, showSort = false, className, searchPath, showPostTypeSelect = false }: JobFiltersProps) {
+export function JobFilters({ categories, showSort = false, className, searchPath, showPostTypeSelect = false }: JobFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -50,23 +49,7 @@ export function JobFilters({ categories, countries, showSort = false, className,
   const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'newest');
   const [postTypePath, setPostTypePath] = useState('/jobs');
 
-  const [cities, setCities] = useState<string[]>([]);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-
-  useEffect(() => {
-    const countryData = countries.find(c => c.name === selectedCountry);
-    setCities(countryData ? countryData.cities : []);
-  }, [selectedCountry, countries]);
-  
-  useEffect(() => {
-    const initialCountry = searchParams.get('country');
-    if (initialCountry) {
-        const countryData = countries.find(c => c.name === initialCountry);
-        if (countryData) {
-            setCities(countryData.cities);
-        }
-    }
-  }, [countries, searchParams]);
 
   const handleFilter = () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -88,11 +71,6 @@ export function JobFilters({ categories, countries, showSort = false, className,
       handleFilter();
   }
 
-  const handleCountryChange = (value: string) => {
-    setSelectedCountry(value);
-    setSelectedCity('');
-  }
-  
   return (
     <div className={cn(`flex gap-2 items-center`, className)}>
       <form onSubmit={handleSearch} className="flex-grow flex gap-2">
@@ -143,25 +121,32 @@ export function JobFilters({ categories, countries, showSort = false, className,
               )}
               <div className="grid grid-cols-2 gap-4">
                  <div>
-                   <Label htmlFor="country" className="mb-2 block">الدولة</Label>
-                   <Select value={selectedCountry} onValueChange={handleCountryChange}>
-                     <SelectTrigger id="country"><SelectValue placeholder="اختر الدولة" /></SelectTrigger>
-                     <SelectContent position="item-aligned">{countries.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}</SelectContent>
-                   </Select>
+                   <Label htmlFor="country-filter" className="mb-2 block">الدولة</Label>
+                   <Input 
+                      id="country-filter"
+                      placeholder="اكتب الدولة"
+                      value={selectedCountry}
+                      onChange={(e) => setSelectedCountry(e.target.value)}
+                   />
                  </div>
                  <div>
-                   <Label htmlFor="city" className="mb-2 block">المدينة</Label>
-                   <Select value={selectedCity} onValueChange={setSelectedCity} disabled={!selectedCountry}>
-                     <SelectTrigger id="city"><SelectValue placeholder="اختر المدينة" /></SelectTrigger>
-                     <SelectContent position="item-aligned">{cities.map(city => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent>
-                   </Select>
+                   <Label htmlFor="city-filter" className="mb-2 block">المدينة</Label>
+                   <Input
+                      id="city-filter"
+                      placeholder="اكتب المدينة"
+                      value={selectedCity}
+                      onChange={(e) => setSelectedCity(e.target.value)}
+                   />
                  </div>
               </div>
                <div>
                  <Label htmlFor="category" className="mb-2 block">الفئة</Label>
                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                    <SelectTrigger id="category"><SelectValue placeholder="اختر الفئة" /></SelectTrigger>
-                   <SelectContent position="item-aligned">{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
+                   <SelectContent position="item-aligned">
+                    <SelectItem value="">الكل</SelectItem>
+                    {categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+                   </SelectContent>
                  </Select>
                </div>
                <div>
@@ -169,6 +154,7 @@ export function JobFilters({ categories, countries, showSort = false, className,
                   <Select value={selectedWorkType} onValueChange={(value) => setSelectedWorkType(value as WorkType)}>
                     <SelectTrigger><SelectValue placeholder="اختر طبيعة العمل" /></SelectTrigger>
                     <SelectContent position="item-aligned">
+                      <SelectItem value="">الكل</SelectItem>
                       {Object.entries(workTypeTranslations).map(([value, label]) => (
                         <SelectItem key={value} value={value}>{label}</SelectItem>
                       ))}
