@@ -152,7 +152,7 @@ export async function getJobs(
     const q = query(adsRef, ...queryConstraints);
     const querySnapshot = await getDocs(q);
     
-    let jobs = querySnapshot.docs.map(doc => {
+    const allJobs = querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
             id: doc.id,
@@ -161,44 +161,39 @@ export async function getJobs(
         } as Job;
     });
 
-    // We apply the more specific filters here in the code.
-    // This allows for flexible, partial matching without complex Firestore indexes.
-    
-    if (country) {
-        const normalizedSearchCountry = country.trim().toLowerCase();
-        if (normalizedSearchCountry) {
-            jobs = jobs.filter(job => 
-                job.country && job.country.trim().toLowerCase().includes(normalizedSearchCountry)
-            );
+    // Apply more complex filters in code. This allows for flexible, partial matching.
+    const filteredJobs = allJobs.filter(job => {
+        const normalizedSearchCountry = country?.trim().toLowerCase();
+        if (normalizedSearchCountry && (!job.country || !job.country.trim().toLowerCase().includes(normalizedSearchCountry))) {
+            return false;
         }
-    }
-    
-    if (city) {
-        const normalizedSearchCity = city.trim().toLowerCase();
-        if (normalizedSearchCity) {
-            jobs = jobs.filter(job => 
-                job.city && job.city.trim().toLowerCase().includes(normalizedSearchCity)
-            );
+        
+        const normalizedSearchCity = city?.trim().toLowerCase();
+        if (normalizedSearchCity && (!job.city || !job.city.trim().toLowerCase().includes(normalizedSearchCity))) {
+            return false;
         }
-    }
 
-    if (categoryId) {
-        jobs = jobs.filter(job => job.categoryId === categoryId);
-    }
-    
-    if (workType) {
-        jobs = jobs.filter(job => job.workType === workType);
-    }
-    
-    if (searchQuery) {
-        const lowercasedQuery = searchQuery.toLowerCase();
-        jobs = jobs.filter(job => 
-            (job.title && job.title.toLowerCase().includes(lowercasedQuery)) ||
-            (job.description && job.description.toLowerCase().includes(lowercasedQuery))
-        );
-    }
+        if (categoryId && job.categoryId !== categoryId) {
+            return false;
+        }
+        
+        if (workType && job.workType !== workType) {
+            return false;
+        }
+        
+        if (searchQuery) {
+            const lowercasedQuery = searchQuery.trim().toLowerCase();
+            const titleMatch = job.title?.toLowerCase().includes(lowercasedQuery);
+            const descriptionMatch = job.description?.toLowerCase().includes(lowercasedQuery);
+            if (!titleMatch && !descriptionMatch) {
+                return false;
+            }
+        }
+        
+        return true;
+    });
 
-    return jobs;
+    return filteredJobs;
   } catch (error) {
     console.error("Error fetching jobs: ", error);
     return [];
