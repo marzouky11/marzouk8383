@@ -46,10 +46,10 @@ export function JobFilters({ categories, showSort = false, className, searchPath
   const [searchQuery, setSearchQuery] = useState('');
   
   // States for the filters inside the sheet
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
-  const [selectedWorkType, setSelectedWorkType] = useState('');
+  const [selectedWorkType, setSelectedWorkType] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [postTypePath, setPostTypePath] = useState(pathname);
 
@@ -58,10 +58,10 @@ export function JobFilters({ categories, showSort = false, className, searchPath
   // Effect to sync state with URL search params. This prevents hydration errors.
   useEffect(() => {
     setSearchQuery(searchParams.get('q') || '');
-    setSelectedCategory(searchParams.get('category') || '');
+    setSelectedCategory(searchParams.get('category') || 'all');
     setSelectedCountry(searchParams.get('country') || '');
     setSelectedCity(searchParams.get('city') || '');
-    setSelectedWorkType(searchParams.get('workType') || '');
+    setSelectedWorkType(searchParams.get('workType') || 'all');
     setSortBy(searchParams.get('sortBy') || 'newest');
     setPostTypePath(pathname);
   }, [searchParams, pathname]);
@@ -71,11 +71,13 @@ export function JobFilters({ categories, showSort = false, className, searchPath
     
     // Set params from state. We use the main searchQuery for 'q'.
     if (searchQuery) params.set('q', searchQuery);
-    if (selectedCategory) params.set('category', selectedCategory);
+    if (selectedCategory && selectedCategory !== 'all') params.set('category', selectedCategory);
     if (selectedCountry) params.set('country', selectedCountry);
     if (selectedCity) params.set('city', selectedCity);
-    if (selectedWorkType) params.set('workType', selectedWorkType);
-    if (sortBy) params.set('sortBy', sortBy);
+    if (selectedWorkType && selectedWorkType !== 'all') params.set('workType', selectedWorkType);
+    if (showSort && sortBy) {
+        params.set('sortBy', sortBy);
+    }
     
     const targetPath = showPostTypeSelect ? postTypePath : (searchPath || pathname);
     router.push(`${targetPath}?${params.toString()}`);
@@ -160,17 +162,17 @@ export function JobFilters({ categories, showSort = false, className, searchPath
                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                    <SelectTrigger id="category"><SelectValue placeholder="اختر الفئة" /></SelectTrigger>
                    <SelectContent position="item-aligned">
-                    <SelectItem value="">الكل</SelectItem>
+                    <SelectItem value="all">الكل</SelectItem>
                     {categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                    </SelectContent>
                  </Select>
                </div>
                <div>
                   <Label className="mb-2 block">طبيعة العمل</Label>
-                  <Select value={selectedWorkType} onValueChange={(value) => setSelectedWorkType(value as WorkType)}>
+                  <Select value={selectedWorkType} onValueChange={setSelectedWorkType}>
                     <SelectTrigger><SelectValue placeholder="اختر طبيعة العمل" /></SelectTrigger>
                     <SelectContent position="item-aligned">
-                      <SelectItem value="">الكل</SelectItem>
+                      <SelectItem value="all">الكل</SelectItem>
                       {Object.entries(workTypeTranslations).map(([value, label]) => (
                         <SelectItem key={value} value={value}>{label}</SelectItem>
                       ))}
