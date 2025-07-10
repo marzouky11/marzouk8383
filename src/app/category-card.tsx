@@ -26,9 +26,9 @@ export function CategoryCard({ category }: CategoryCardProps) {
         className="flex flex-col items-center justify-center text-center p-4 aspect-square transition-all duration-300 ease-in-out border-2 group-hover:scale-105 group-hover:shadow-lg"
         style={cardStyle}
       >
-        <CategoryIcon name={category.iconName} className="w-8 h-8 sm:w-10 sm:h-10 transition-transform group-hover:-translate-y-1" style={iconStyle} />
+        <CategoryIcon name={category.iconName} className="w-8 h-8 sm:w-8 sm:h-8 transition-transform group-hover:-translate-y-1" style={iconStyle} />
         <p
-          className="mt-2 font-semibold text-sm sm:text-base leading-tight"
+          className="mt-2 font-semibold text-xs sm:text-sm leading-tight"
           style={{ color: category.color }}
         >
           {category.name}

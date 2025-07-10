@@ -1,43 +1,45 @@
-
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CategoryCard } from './category-card';
 import type { Category } from '@/lib/types';
 import { LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
 
 interface CategorySectionProps {
   categories: Category[];
 }
 
 const INITIAL_MOBILE_COUNT = 6;
+const INITIAL_DESKTOP_COUNT = 8;
 
 export function CategorySection({ categories }: CategorySectionProps) {
-  const isMobile = useIsMobile();
   const [showAll, setShowAll] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
+    const checkIsMobile = () => window.innerWidth < 768;
+    setIsMobile(checkIsMobile());
     setIsClient(true);
+    
+    const handleResize = () => setIsMobile(checkIsMobile());
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  if (!isClient) {
-    // Render a placeholder or null on the server to avoid hydration mismatch
-    return null;
-  }
-  
-  const handleShowAll = () => {
-    setShowAll(true);
+
+  const handleToggleShow = () => {
+    setShowAll(prev => !prev);
   };
   
-  const displayedCategories = isMobile && !showAll
-    ? categories.slice(0, INITIAL_MOBILE_COUNT)
-    : categories;
-
-  const showMoreButtonVisible = isMobile && !showAll && categories.length > INITIAL_MOBILE_COUNT;
+  if (!isClient) {
+    return null; // Avoid hydration mismatch
+  }
+  
+  const initialCount = isMobile ? INITIAL_MOBILE_COUNT : INITIAL_DESKTOP_COUNT;
+  const displayedCategories = showAll ? categories : categories.slice(0, initialCount);
+  const showToggleButton = categories.length > initialCount;
 
   return (
     <section>
@@ -52,10 +54,10 @@ export function CategorySection({ categories }: CategorySectionProps) {
           <CategoryCard key={category.id} category={category} />
         ))}
       </div>
-      {showMoreButtonVisible && (
+      {showToggleButton && (
         <div className="mt-6 text-center">
-          <Button onClick={handleShowAll} variant="outline">
-            عرض كل الفئات
+          <Button onClick={handleToggleShow} variant="outline">
+            {showAll ? 'عرض أقل' : 'عرض الكل'}
           </Button>
         </div>
       )}
