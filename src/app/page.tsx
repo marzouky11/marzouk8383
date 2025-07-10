@@ -12,7 +12,7 @@ import { Handshake, Newspaper, LayoutGrid } from 'lucide-react';
 import { JobFilters } from '@/components/job-filters';
 import { ThemeToggleButton } from '@/components/theme-toggle';
 import { HomeCarousel } from './home-carousel';
-import { CategoryCard } from './category-card';
+import { CategorySection } from './category-section';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -68,7 +68,6 @@ export default async function HomePage() {
   const jobOffers = await getJobs({ postType: 'seeking_worker', count: 6 });
   const jobSeekers = await getJobs({ postType: 'seeking_job', count: 6 });
   const categories = getCategories();
-  const featuredCategories = categories.slice(0, 12);
 
   return (
     <AppLayout>
@@ -132,19 +131,7 @@ export default async function HomePage() {
               </Suspense>
           </section>
 
-          <section>
-            <div className="flex justify-between items-baseline mb-4">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <LayoutGrid className="h-5 w-5 text-primary" />
-                تصفح حسب الفئة
-              </h2>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
-              {featuredCategories.map((category) => (
-                <CategoryCard key={category.id} category={category} />
-              ))}
-            </div>
-          </section>
+          <CategorySection categories={categories} />
       </div>
     </AppLayout>
   );
