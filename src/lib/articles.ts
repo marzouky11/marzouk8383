@@ -176,7 +176,7 @@ const articles: Article[] = [
         title: 'مواقع موثوقة للتقديم على وظائف في الإمارات 2025',
         author: 'فريق التحرير',
         date: '2024-08-05',
-        imageUrl: 'https://i.ibb.co/34cKFNZ/uae-skyline.jpg',
+        imageUrl: 'https://i.postimg.cc/G2RyJgtk/136450.jpg',
         imageHint: 'uae jobs',
         summary: 'تعد الإمارات من أكثر الدول جذبًا للباحثين عن فرص عمل متميزة. تتوفر العديد من المواقع الموثوقة التي تساعدك على الوصول إلى فرص عمل مناسبة سواء كنت محترفًا أو مبتدئًا.',
         content: `### لماذا تحتاج إلى مواقع موثوقة للتقديم على وظائف في الإمارات؟
@@ -239,7 +239,7 @@ const articles: Article[] = [
         title: 'أفضل الوظائف الموسمية في قطر قبل كأس العالم 2025',
         author: 'فريق التحرير',
         date: '2024-08-07',
-        imageUrl: 'https://i.ibb.co/CbfP3v6/qatar-stadium.jpg',
+        imageUrl: 'https://i.postimg.cc/T1XfWnHH/2149333728.jpg',
         imageHint: 'qatar jobs',
         summary: 'مع اقتراب كأس العالم 2025 في قطر، يزداد الطلب على الوظائف الموسمية في قطاعات الضيافة والسياحة. إذا كنت تبحث عن فرصة عمل مؤقتة، فهذه المقالة لك.',
         content: `### لماذا العمل الموسمي في قطر قبل كأس العالم؟
