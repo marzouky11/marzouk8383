@@ -12,7 +12,7 @@ export interface Article {
 const articles: Article[] = [
     {
         slug: 'jobs-without-certificate-saudi-arabia-2025',
-        title: 'وظائف بدون شهادة في السعودية 2025: فرص عمل متنوعة تناسب الجميع',
+        title: 'وظائف بدون شهادة في السعودية 2025',
         author: 'فريق التحرير',
         date: '2024-08-15',
         imageUrl: 'https://i.postimg.cc/QtH6DP8p/man-diligently-working-his-desk.jpg',
@@ -57,7 +57,7 @@ const articles: Article[] = [
     },
     {
         slug: 'government-jobs-morocco-2025',
-        title: 'وظائف حكومية في المغرب 2025: دليلك الكامل للتقديم والنجاح',
+        title: 'وظائف حكومية في المغرب 2025',
         author: 'فريق التحرير',
         date: '2024-08-14',
         imageUrl: 'https://i.postimg.cc/Wz0wbcQJ/35666.jpg',
@@ -99,7 +99,7 @@ const articles: Article[] = [
     },
     {
         slug: 'remote-jobs-algeria-2025',
-        title: 'وظائف عن بعد في الجزائر 2025: دليلك لفرص العمل المرنة والمربحة',
+        title: 'وظائف عن بعد في الجزائر 2025',
         author: 'فريق التحرير',
         date: '2024-08-13',
         imageUrl: 'https://i.postimg.cc/fTcQ13gM/9449.jpg',
@@ -140,7 +140,7 @@ const articles: Article[] = [
     },
     {
         slug: 'top-10-jobs-for-women-gulf-2025',
-        title: 'أفضل 10 وظائف للنساء في الخليج 2025: فرص متميزة ومسارات مهنية ناجحة',
+        title: 'أفضل 10 وظائف للنساء في الخليج 2025',
         author: 'فريق التحرير',
         date: '2024-08-12',
         imageUrl: 'https://i.postimg.cc/wjj4F3Cf/1874.jpg',
@@ -190,7 +190,7 @@ const articles: Article[] = [
     },
     {
         slug: 'reliable-sites-for-uae-jobs-2025',
-        title: 'مواقع موثوقة للتقديم على وظائف في الإمارات 2025: دليلك للعثور على فرص العمل المناسبة',
+        title: 'مواقع موثوقة للتقديم على وظائف في الإمارات 2025',
         author: 'فريق التحرير',
         date: '2024-08-11',
         imageUrl: 'https://i.postimg.cc/T1XfWnHH/2149333728.jpg',
@@ -227,7 +227,7 @@ const articles: Article[] = [
     },
     {
         slug: 'how-to-write-professional-arabic-cv',
-        title: 'كيف تكتب سيرة ذاتية احترافية باللغة العربية: دليل شامل لعام 2025',
+        title: 'كيف تكتب سيرة ذاتية احترافية باللغة العربية',
         author: 'فريق التحرير',
         date: '2024-08-10',
         imageUrl: 'https://i.postimg.cc/Z5qZ3bVZ/17650.jpg',
@@ -274,7 +274,7 @@ const articles: Article[] = [
     },
     {
         slug: 'seasonal-jobs-qatar-asia-cup-2025',
-        title: 'أفضل الوظائف الموسمية في قطر قبل كأس آسيا 2025: فرص عمل مؤقتة براتب جيد',
+        title: 'أفضل الوظائف الموسمية في قطر قبل كأس آسيا 2025',
         author: 'فريق التحرير',
         date: '2024-08-09',
         imageUrl: 'https://i.postimg.cc/T1XfWnHH/2149333728.jpg',
@@ -318,7 +318,7 @@ const articles: Article[] = [
     },
     {
         slug: 'restaurant-hotel-jobs-kuwait-2025',
-        title: 'فرص عمل في المطاعم والفنادق في الكويت 2025: دليلك للعثور على وظيفة مميزة',
+        title: 'فرص عمل في المطاعم والفنادق في الكويت 2025',
         author: 'فريق التحرير',
         date: '2024-08-08',
         imageUrl: 'https://i.postimg.cc/tCxvMLJP/chef-working-together-professional-kitchen.jpg',
@@ -364,7 +364,7 @@ const articles: Article[] = [
     },
     {
         slug: 'student-jobs-tunisia-2025',
-        title: 'وظائف للطلبة في تونس – كيف تشتغل وأنت تدرس؟ دليل 2025',
+        title: 'وظائف للطلبة في تونس – كيف تشتغل وأنت تدرس؟',
         author: 'فريق التحرير',
         date: '2024-08-07',
         imageUrl: 'https://i.postimg.cc/25KXJmQQ/28571285-7457197.jpg',
@@ -409,7 +409,7 @@ const articles: Article[] = [
     },
     {
         slug: '7-ways-to-get-job-quickly-2025',
-        title: 'أفضل 7 طرق للحصول على عمل بسرعة في بلدك 2025: دليل عملي للباحثين عن وظيفة',
+        title: 'أفضل 7 طرق للحصول على عمل بسرعة في بلدك',
         author: 'فريق التحرير',
         date: '2024-08-06',
         imageUrl: 'https://i.postimg.cc/d3LQFJpJ/1752158568328.jpg',
