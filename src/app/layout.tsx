@@ -1,8 +1,16 @@
 import type { Metadata } from 'next';
+import { PT_Sans } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
 import { AuthProvider } from '@/context/auth-context';
 import { ThemeProvider } from '@/components/theme-provider';
+import { cn } from '@/lib/utils';
+
+const ptSans = PT_Sans({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-pt-sans',
+});
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
 const appName = 'توظيفك';
@@ -75,9 +83,6 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg" type="image/jpeg" sizes="any" />
         <link rel="apple-touch-icon" href="https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
@@ -87,7 +92,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
       </head>
-      <body className="font-body antialiased">
+      <body className={cn("font-body antialiased", ptSans.variable)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
