@@ -3,10 +3,6 @@ import Image from 'next/image';
 import type { Article } from '@/lib/articles';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, User } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
-import { ar } from 'date-fns/locale';
 
 interface ArticleCardProps {
   article: Article;
@@ -38,11 +34,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
           {article.summary}
         </p>
       </CardContent>
-      <CardFooter className="flex justify-between items-center text-xs text-muted-foreground pt-4 border-t mt-auto">
-        <div className="flex items-center gap-2">
-            <Calendar className="h-3.5 w-3.5" />
-            <span>{format(new Date(article.date), 'd MMMM yyyy', { locale: ar })}</span>
-        </div>
+      <CardFooter className="flex justify-end items-center text-xs text-muted-foreground pt-4 border-t mt-auto">
         <Button asChild variant="link" size="sm" className="p-0 h-auto">
             <Link href={`/articles/${article.slug}`}>
                 اقرأ المزيد &gt;

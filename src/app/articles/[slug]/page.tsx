@@ -4,10 +4,8 @@ import { getArticleBySlug } from '@/lib/articles';
 import { AppLayout } from '@/components/layout/app-layout';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent } from '@/components/ui/card';
-import { Calendar, User, Newspaper } from 'lucide-react';
+import { User, Newspaper } from 'lucide-react';
 import type { Metadata } from 'next';
-import { format } from 'date-fns';
-import { ar } from 'date-fns/locale';
 
 interface Props {
   params: { slug: string };
@@ -111,10 +109,6 @@ export default function ArticlePage({ params }: Props) {
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
                     <span>{article.author}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    <span>{format(new Date(article.date), 'd MMMM yyyy', { locale: ar })}</span>
                   </div>
                 </div>
               </header>
