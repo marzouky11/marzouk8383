@@ -65,8 +65,8 @@ function HomeHeaderMobile() {
 }
 
 export default async function HomePage() {
-  const jobOffers = await getJobs({ postType: 'seeking_worker', count: 3 });
-  const jobSeekers = await getJobs({ postType: 'seeking_job', count: 3 });
+  const jobOffers = await getJobs({ postType: 'seeking_worker', count: 6 });
+  const jobSeekers = await getJobs({ postType: 'seeking_job', count: 6 });
   const categories = getCategories();
 
   return (
