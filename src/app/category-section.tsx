@@ -11,7 +11,7 @@ interface CategorySectionProps {
 }
 
 const INITIAL_MOBILE_COUNT = 6;
-const INITIAL_DESKTOP_COUNT = 8;
+const INITIAL_DESKTOP_COUNT = 10;
 
 export function CategorySection({ categories }: CategorySectionProps) {
   const [showAll, setShowAll] = useState(false);
@@ -34,7 +34,21 @@ export function CategorySection({ categories }: CategorySectionProps) {
   };
   
   if (!isClient) {
-    return null; // Avoid hydration mismatch
+    // Return a skeleton or null to avoid hydration mismatch, and ensure the UI doesn't jump.
+    // A simple container with a fixed height could work.
+    return (
+        <section>
+            <div className="flex justify-between items-baseline mb-4">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                    <LayoutGrid className="h-5 w-5 text-primary" />
+                    تصفح حسب الفئة
+                </h2>
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+              {/* You can add skeleton loaders here for better UX */}
+            </div>
+        </section>
+    );
   }
   
   const initialCount = isMobile ? INITIAL_MOBILE_COUNT : INITIAL_DESKTOP_COUNT;
