@@ -4,7 +4,7 @@ import { getArticleBySlug } from '@/lib/articles';
 import { AppLayout } from '@/components/layout/app-layout';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent } from '@/components/ui/card';
-import { User, Newspaper, CalendarDays } from 'lucide-react';
+import { User, Newspaper } from 'lucide-react';
 import type { Metadata } from 'next';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = getArticleBySlug(params.slug);
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
   const siteThumbnail = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
 
   if (!article) {

@@ -37,7 +37,7 @@ interface JobDetailPageProps {
 
 export async function generateMetadata({ params }: JobDetailPageProps): Promise<Metadata> {
   const job = await getJobById(params.id);
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
   const siteThumbnail = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
   
   if (!job) {
@@ -204,7 +204,6 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                       <span className="font-semibold">{job.rating || 'N/A'}</span>
                       <span className="text-xs">(تقييم)</span>
                     </div>
-                    <InfoItem icon={CalendarDays} text={`نشر في: ${job.postedAt || 'غير معروف'}`} />
                   </div>
                   
                   <div className="flex items-center gap-2">
