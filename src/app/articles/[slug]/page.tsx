@@ -13,15 +13,17 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = getArticleBySlug(params.slug);
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+  const siteThumbnail = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
 
   if (!article) {
     return {
       title: 'المقال غير موجود',
       description: 'لم نتمكن من العثور على المقال الذي تبحث عنه.',
+      openGraph: { images: [{ url: siteThumbnail }] },
+      twitter: { images: [siteThumbnail] }
     };
   }
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
   
   const articleJsonLd = {
       '@context': 'https://schema.org',
@@ -42,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           name: 'توظيفك',
           logo: {
               '@type': 'ImageObject',
-              url: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
+              url: siteThumbnail,
           },
       },
       datePublished: new Date(article.date).toISOString(),

@@ -16,6 +16,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
 const appName = 'توظيفك';
 const homePageTitle = 'توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل';
 const homePageDescription = 'توظيفك منصة التوظيف العربية لنشر إعلانات البحث عن عمل وتوظيف العمال بسهولة. اكتشف فرص عمل في الوطن العربي، ونشر إعلانات توظيف للمؤسسات والشركات الباحثة عن موظفين مؤهلين.';
+const siteThumbnail = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
 
 export const metadata: Metadata = {
   title: {
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     siteName: appName,
     images: [
       {
-        url: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
+        url: siteThumbnail,
         width: 1200,
         height: 630,
         alt: appName,
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
       template: `%s | ${appName}`
     },
     description: homePageDescription,
-    images: ['https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg'],
+    images: [siteThumbnail],
   },
 };
 
@@ -63,7 +64,7 @@ export default function RootLayout({
     '@type': 'Organization',
     name: appName,
     url: baseUrl,
-    logo: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
+    logo: siteThumbnail,
   };
 
   const webSiteSchema = {
@@ -82,8 +83,8 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7860245146219810" crossOrigin="anonymous"></script>
-        <link rel="icon" href="https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg" type="image/jpeg" sizes="any" />
-        <link rel="apple-touch-icon" href="https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg" />
+        <link rel="icon" href={siteThumbnail} type="image/jpeg" sizes="any" />
+        <link rel="apple-touch-icon" href={siteThumbnail} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}

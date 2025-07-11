@@ -37,15 +37,17 @@ interface JobDetailPageProps {
 
 export async function generateMetadata({ params }: JobDetailPageProps): Promise<Metadata> {
   const job = await getJobById(params.id);
-
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+  const siteThumbnail = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
+  
   if (!job) {
     return {
       title: 'الإعلان غير موجود',
       description: 'لم نتمكن من العثور على الإعلان الذي تبحث عنه.',
+      openGraph: { images: [{ url: siteThumbnail }] },
+      twitter: { images: [siteThumbnail] }
     };
   }
-  
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
   
   const employmentTypeMapping: {[key: string]: string} = {
     'full_time': 'FULL_TIME',
@@ -90,7 +92,6 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
   };
 
   const canonicalUrl = `${baseUrl}/jobs/${job.id}`;
-  const siteThumbnail = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
 
   return {
     title: jobTitle,
