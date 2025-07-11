@@ -83,8 +83,8 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7860245146219810" crossOrigin="anonymous"></script>
-        <link rel="icon" href={siteThumbnail} type="image/jpeg" sizes="any" />
-        <link rel="apple-touch-icon" href={siteThumbnail} />
+        <link rel="icon" href="https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg" type="image/jpeg" sizes="any" />
+        <link rel="apple-touch-icon" href="https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
