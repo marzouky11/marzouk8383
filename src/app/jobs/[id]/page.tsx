@@ -22,7 +22,8 @@ import {
   Clock,
   Instagram,
   Link as LinkIcon,
-  GraduationCap
+  GraduationCap,
+  Mail
 } from 'lucide-react';
 import type { WorkType } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
@@ -256,6 +257,14 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                               </a>
                             </Button>
                           )}
+                           {job.email && (
+                              <Button asChild className="flex-grow bg-gray-600 hover:bg-gray-700 text-primary-foreground">
+                                <a href={`mailto:${job.email}`}>
+                                  <Mail className="ml-2 h-4 w-4" />
+                                  البريد الإلكتروني
+                                </a>
+                              </Button>
+                            )}
                           {job.instagram && (
                             <Button asChild className="flex-grow text-primary-foreground bg-gradient-to-r from-pink-500 to-orange-500 hover:opacity-90">
                               <a href={`https://instagram.com/${job.instagram.replace(/@/g, '')}`} target="_blank" rel="noopener noreferrer">
