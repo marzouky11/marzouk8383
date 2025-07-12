@@ -12,7 +12,7 @@ const ptSans = PT_Sans({
   variable: '--font-pt-sans',
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
+const baseUrl = 'https://www.tawzifak.com';
 const appName = 'توظيفك';
 const homePageTitle = 'توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل';
 const homePageDescription = 'توظيفك منصة التوظيف العربية لنشر إعلانات البحث عن عمل وتوظيف العمال بسهولة. اكتشف فرص عمل في الوطن العربي، ونشر إعلانات توظيف للمؤسسات والشركات الباحثة عن موظفين مؤهلين.';
@@ -77,6 +77,7 @@ export default function RootLayout({
       target: `${baseUrl}/jobs?q={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
+    logo: siteThumbnail
   };
   
   return (

@@ -36,11 +36,13 @@ export function ArticleCard({ article }: ArticleCardProps) {
           {article.summary}
         </p>
       </CardContent>
-      <CardFooter className="flex justify-between items-center text-xs text-muted-foreground pt-4 border-t mt-auto">
+      <CardFooter className="flex justify-end items-center text-xs text-muted-foreground pt-4 border-t mt-auto">
+        {/*
         <div className="flex items-center gap-1">
           <CalendarDays className="h-4 w-4" />
           <time dateTime={article.date}>{new Date(article.date).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
         </div>
+        */}
         <Button asChild variant="link" size="sm" className="p-0 h-auto">
             <Link href={`/articles/${article.slug}`}>
                 اقرأ المزيد &gt;

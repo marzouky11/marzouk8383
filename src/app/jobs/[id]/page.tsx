@@ -79,6 +79,7 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
         '@type': 'Organization',
         name: job.companyName || 'توظيفك',
         sameAs: baseUrl,
+        logo: siteThumbnail,
       },
       jobLocation: {
         '@type': 'Place',

@@ -112,10 +112,12 @@ export default function ArticlePage({ params }: Props) {
                     <User className="h-4 w-4" />
                     <span>{article.author}</span>
                   </div>
+                  {/*
                   <div className="flex items-center gap-2">
                     <CalendarDays className="h-4 w-4" />
                     <time dateTime={article.date}>{new Date(article.date).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
                   </div>
+                  */}
                 </div>
               </header>
 
