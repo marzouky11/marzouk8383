@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -147,7 +148,7 @@ export function JobCard({ job }: JobCardProps) {
       <div className="p-4 flex justify-between items-center text-xs text-muted-foreground">
          <div className="flex items-center gap-1">
           <CalendarDays className="h-4 w-4" />
-          <time dateTime={job.createdAt.toString()}>{job.postedAt}</time>
+          {job.createdAt && <time dateTime={job.createdAt.toString()}>{job.postedAt}</time>}
         </div>
         <Button asChild size="sm" className="z-10 relative">
           <Link href={`/jobs/${job.id}`}>
