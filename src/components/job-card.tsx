@@ -62,7 +62,7 @@ export function JobCard({ job }: JobCardProps) {
   const isSeekingJob = job.postType === 'seeking_job';
 
   if (isSeekingJob) {
-    // New Mini-CV Design for Job Seekers
+    const seekerCategoryIcon = category?.iconName || 'User';
     return (
        <Card 
           className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full border-l-4"
@@ -74,7 +74,10 @@ export function JobCard({ job }: JobCardProps) {
         <div className="flex flex-col items-center text-center flex-grow">
             <UserAvatar name={job.ownerName} color={job.ownerAvatarColor} className="h-20 w-20 text-3xl mb-3 border-4 border-background shadow-md" />
             <h3 className="font-bold text-lg text-foreground">{job.ownerName}</h3>
-            <p className="text-destructive font-semibold text-sm mb-3">{job.title}</p>
+            <div className="flex items-center gap-2 text-destructive font-semibold text-sm mb-3">
+                <CategoryIcon name={seekerCategoryIcon} className="h-4 w-4" />
+                <p>{job.title}</p>
+            </div>
             
             <div className="flex flex-col items-start text-right gap-2.5 w-full mt-4 pt-4 border-t">
                 <SeekerInfoItem icon={MapPin} value={`${job.country}, ${job.city}`} />
@@ -105,34 +108,37 @@ export function JobCard({ job }: JobCardProps) {
   const InfoItem = ({ icon: Icon, value }: { icon: React.ElementType, value: string | undefined }) => {
     if (!value) return null;
     return (
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Icon className="h-3.5 w-3.5" />
+      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+        <Icon className="h-4 w-4" />
         <span>{value}</span>
       </div>
     );
   };
   
   return (
-    <Card className="flex flex-col overflow-hidden transition-shadow hover:shadow-lg h-full">
+    <Card 
+        className="flex flex-col overflow-hidden transition-shadow hover:shadow-lg h-full border-l-4"
+        style={{ borderColor: finalColor }}
+    >
       <CardHeader>
         <div className="flex justify-between items-start gap-4">
           <div>
-            <CardTitle className="leading-snug mb-1">
+            <Badge variant="outline" style={{ borderColor: finalColor, color: finalColor }} className="text-xs font-medium mb-2">
+              <CategoryIcon name={finalIconName} className="ml-1 h-3 w-3" />
+              {category?.name || job.categoryName || 'متفرقات'}
+            </Badge>
+            <CardTitle className="leading-snug text-lg">
               <Link href={`/jobs/${job.id}`} className="hover:text-primary transition-colors line-clamp-2">
                 {job.title}
               </Link>
             </CardTitle>
-            <Badge variant="outline" style={{ borderColor: finalColor, color: finalColor }} className="text-xs font-medium">
-              <CategoryIcon name={finalIconName} className="ml-1 h-3 w-3" />
-              {category?.name || job.categoryName || 'متفرقات'}
-            </Badge>
           </div>
-          <div className="p-2 rounded-lg" style={{ backgroundColor: `${finalColor}1A`}}>
+          <div className="p-2 rounded-lg flex-shrink-0" style={{ backgroundColor: `${finalColor}1A`}}>
              <CategoryIcon name={finalIconName} className="h-6 w-6" style={{ color: finalColor }} />
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex-grow space-y-2 text-sm">
+      <CardContent className="flex-grow space-y-2.5 text-sm">
         <InfoItem icon={MapPin} value={`${job.country}, ${job.city}`} />
         <InfoItem icon={Clock} value={workTypeTranslations[job.workType]} />
         <InfoItem icon={Wallet} value={job.salary ? job.salary : 'عند الطلب'} />
