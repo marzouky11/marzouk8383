@@ -83,7 +83,7 @@ export function JobCard({ job }: JobCardProps) {
                 <SeekerInfoItem icon={MapPin} value={`${job.country}, ${job.city}`} />
                 <SeekerInfoItem icon={Award} value={job.experience} />
                 <SeekerInfoItem icon={GraduationCap} value={job.qualifications} />
-                <SeekerInfoItem icon={Clock} value={workTypeTranslations[job.workType]} />
+                {job.workType && <SeekerInfoItem icon={Clock} value={workTypeTranslations[job.workType]} />}
             </div>
         </div>
         <div className="flex items-center justify-between pt-4 mt-auto">
@@ -140,7 +140,7 @@ export function JobCard({ job }: JobCardProps) {
       </CardHeader>
       <CardContent className="flex-grow space-y-2.5 text-sm">
         <InfoItem icon={MapPin} value={`${job.country}, ${job.city}`} />
-        <InfoItem icon={Clock} value={workTypeTranslations[job.workType]} />
+        <InfoItem icon={Clock} value={job.workType ? workTypeTranslations[job.workType] : undefined} />
         <InfoItem icon={Wallet} value={job.salary ? job.salary : 'عند الطلب'} />
       </CardContent>
       <Separator />
