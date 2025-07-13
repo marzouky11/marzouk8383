@@ -151,6 +151,9 @@ export async function getJobs(
 
     if (count && !excludeId) {
       queryConstraints.push(limit(count));
+    } else if (count && excludeId) {
+        // Fetch a bit more to have enough items after filtering
+        queryConstraints.push(limit(count + 5));
     }
 
     const q = query(adsRef, ...queryConstraints);
@@ -204,7 +207,7 @@ export async function getJobs(
         return true;
     });
 
-    if (count && excludeId) {
+    if (count) {
         return filteredJobs.slice(0, count);
     }
 
@@ -342,3 +345,5 @@ export function getCategories() {
 export function getCategoryById(id: string) {
     return categories.find((cat) => cat.id === id);
 }
+
+    
