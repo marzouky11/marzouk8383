@@ -96,63 +96,57 @@ export function JobCard({ job }: JobCardProps) {
     )
   }
 
-  // Existing Design for Job Offers
+  // Original Design for Job Offers
   const defaultColor = 'hsl(var(--primary))';
   const defaultIconName = 'Briefcase';
-  
   const finalColor = category?.color || defaultColor;
   const finalIconName = category?.iconName || defaultIconName;
 
-  const InfoItem = ({ icon: Icon, value, className }: { icon: React.ElementType; value: string | undefined, className?: string }) => {
+  const InfoItem = ({ icon: Icon, value }: { icon: React.ElementType, value: string | undefined }) => {
     if (!value) return null;
     return (
-      <div className={cn("flex items-center gap-2", className)}>
-        <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-        <p className="text-sm text-muted-foreground truncate">{value}</p>
+      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <Icon className="h-3.5 w-3.5" />
+        <span>{value}</span>
       </div>
     );
   };
-
+  
   return (
-    <Card 
-      className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full border-l-4"
-      style={{ borderColor: finalColor }}
-    >
-       <Link href={`/jobs/${job.id}`} className="focus:outline-none absolute inset-0 z-10">
-         <span className="sr-only">View Job</span>
-      </Link>
-      <div className="flex-grow space-y-3">
-        <div className="flex justify-between items-start gap-3">
-          <div className="flex-grow">
-            {job.companyName && <Badge variant={'secondary'} className="font-normal text-xs mb-1"><Building className="w-3 h-3 ml-1" />{job.companyName}</Badge>}
-            <h3 className="font-bold leading-tight text-lg" style={{ color: finalColor }}>
+    <Card className="flex flex-col overflow-hidden transition-shadow hover:shadow-lg h-full">
+      <CardHeader>
+        <div className="flex justify-between items-start gap-4">
+          <div>
+            <CardTitle className="leading-snug mb-1">
+              <Link href={`/jobs/${job.id}`} className="hover:text-primary transition-colors line-clamp-2">
                 {job.title}
-            </h3>
+              </Link>
+            </CardTitle>
+            <Badge variant="outline" style={{ borderColor: finalColor, color: finalColor }} className="text-xs font-medium">
+              <CategoryIcon name={finalIconName} className="ml-1 h-3 w-3" />
+              {category?.name || job.categoryName || 'متفرقات'}
+            </Badge>
           </div>
-          <div 
-            className="flex-shrink-0 p-3 rounded-xl z-0"
-            style={{ backgroundColor: `${finalColor}1A` }}
-          >
-            <CategoryIcon name={finalIconName} className="w-6 h-6" style={{ color: finalColor }} />
+          <div className="p-2 rounded-lg" style={{ backgroundColor: `${finalColor}1A`}}>
+             <CategoryIcon name={finalIconName} className="h-6 w-6" style={{ color: finalColor }} />
           </div>
         </div>
-        
-        <Separator />
-
-        <div className="flex flex-col gap-2.5">
-          <InfoItem icon={MapPin} value={`${job.country}, ${job.city}`} />
-          <InfoItem icon={Clock} value={`${workTypeTranslations[job.workType]}`} />
-          <InfoItem icon={Wallet} value={job.salary ? job.salary : 'عند الطلب'} />
+      </CardHeader>
+      <CardContent className="flex-grow space-y-2 text-sm">
+        <InfoItem icon={MapPin} value={`${job.country}, ${job.city}`} />
+        <InfoItem icon={Clock} value={workTypeTranslations[job.workType]} />
+        <InfoItem icon={Wallet} value={job.salary ? job.salary : 'عند الطلب'} />
+      </CardContent>
+      <Separator />
+      <div className="p-4 flex justify-between items-center text-xs text-muted-foreground">
+         <div className="flex items-center gap-1">
+          <CalendarDays className="h-4 w-4" />
+          <time dateTime={job.createdAt.toString()}>{job.postedAt}</time>
         </div>
-      </div>
-      
-      <div className="flex items-center justify-between pt-4 mt-auto">
-        <div className="flex items-center gap-1 text-muted-foreground">
-            <CalendarDays className="h-4 w-4" />
-            <span className="text-xs font-medium">{job.postedAt}</span>
-        </div>
-        <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: finalColor }}>
-          <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
+        <Button asChild size="sm" className="z-10 relative">
+          <Link href={`/jobs/${job.id}`}>
+            عرض التفاصيل
+          </Link>
         </Button>
       </div>
     </Card>
