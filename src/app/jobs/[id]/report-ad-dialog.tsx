@@ -102,9 +102,9 @@ export function ReportAdDialog({ adId }: ReportAdDialogProps) {
         }
     }}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className="text-destructive border-destructive/50 hover:bg-destructive/10 hover:text-destructive w-full">
+        <Button variant="link" className="text-destructive hover:text-destructive/80 w-fit mx-auto p-0 h-auto">
           <Flag className="ml-2 h-4 w-4" />
-          إبلاغ عن الإعلان
+          الإبلاغ عن هذا الإعلان
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

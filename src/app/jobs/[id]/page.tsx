@@ -23,7 +23,8 @@ import {
   Instagram,
   Link as LinkIcon,
   GraduationCap,
-  Mail
+  Mail,
+  Flag
 } from 'lucide-react';
 import type { WorkType } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
@@ -240,8 +241,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                       <Phone className="h-5 w-5" />
                       معلومات التواصل
                     </h3>
-                    <div className="flex flex-col gap-2">
-                      <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {job.phone && (
                             <Button asChild className="flex-grow text-primary-foreground" style={{ backgroundColor: finalColor }}>
                               <a href={`tel:${job.phone}`}>

@@ -1,15 +1,14 @@
-
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { PostJobForm } from './post-job-form';
 import { Loader2, PlusCircle } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
-import type { Category } from '@/lib/types';
+import type { Category, PostType } from '@/lib/types';
 
 interface PostJobClientPageProps {
     categories: Category[];
@@ -18,16 +17,23 @@ interface PostJobClientPageProps {
 export default function PostJobClientPage({ categories }: PostJobClientPageProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const postType = searchParams.get('type') as PostType | null;
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
-  }, [user, loading, router]);
+    if (!postType) {
+        router.push('/post-job/select-type');
+    }
+  }, [user, loading, router, postType]);
+
+  const pageTitle = postType === 'seeking_job' ? 'نشر طلب عمل' : 'نشر عرض عمل';
 
   return (
     <AppLayout>
-      <MobilePageHeader title="نشر إعلان جديد">
+      <MobilePageHeader title={pageTitle}>
         <PlusCircle className="h-5 w-5 text-primary" />
       </MobilePageHeader>
       <div className="flex-grow">
@@ -39,8 +45,12 @@ export default function PostJobClientPage({ categories }: PostJobClientPageProps
             <div className="container mx-auto max-w-3xl px-4 py-8">
                 <Card>
                 <CardContent className="pt-6">
-                    <p className="text-muted-foreground mb-6 text-center">املأ الحقول التالية لنشر فرصة عمل جديدة في المنصة.</p>
-                    <PostJobForm categories={categories} />
+                    <p className="text-muted-foreground mb-6 text-center">
+                        {postType === 'seeking_job' 
+                            ? "املأ الحقول التالية لعرض مهاراتك وخبراتك للشركات." 
+                            : "املأ الحقول التالية لنشر فرصة عمل جديدة في المنصة."}
+                    </p>
+                    {postType && <PostJobForm categories={categories} preselectedType={postType} />}
                 </CardContent>
                 </Card>
             </div>

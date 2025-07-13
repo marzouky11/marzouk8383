@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { AppLayout } from '@/components/layout/app-layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { Loader2, LogIn } from 'lucide-react';
+import { Loader2, LogIn, Mail, Lock } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 
 export default function LoginPage() {
@@ -25,12 +25,15 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      toast({ title: 'تم تسجيل الدخول بنجاح!' });
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      toast({
+        title: `👋 مرحبًا ${userCredential.user.displayName || 'بعودتك'}!`,
+        description: 'سعيدون بعودتك إلى توظيفك! تصفح فرص العمل أو أنشر إعلانك الآن.',
+      });
       router.push('/profile');
     } catch (error: any) {
        let errorMessage = "الرجاء التحقق من البريد الإلكتروني أو كلمة المرور.";
-       if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+       if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
            errorMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
        }
       toast({
@@ -49,35 +52,46 @@ export default function LoginPage() {
         <LogIn className="h-5 w-5 text-primary" />
       </MobilePageHeader>
       <div className="container mx-auto max-w-md py-8">
-        <Card>
-          <CardHeader className="hidden md:block">
-            <CardTitle className="flex items-center gap-2 text-2xl">
-              <LogIn className="h-6 w-6 text-primary" />
-              تسجيل الدخول
-            </CardTitle>
+        <Card className="shadow-lg">
+          <CardHeader className="text-center">
+            <div className="mx-auto bg-primary/10 w-fit p-3 rounded-full mb-2">
+                <LogIn className="h-8 w-8 text-primary" />
+            </div>
+            <CardTitle className="text-2xl">أهلاً بك مجدداً!</CardTitle>
+            <CardDescription>سجّل دخولك للوصول إلى حسابك وإدارة إعلاناتك.</CardDescription>
           </CardHeader>
-          <CardContent className="pt-6">
-            <p className="text-center text-sm text-muted-foreground mb-6">أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى حسابك.</p>
+          <CardContent className="pt-2">
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">البريد الإلكتروني</Label>
+                <Label htmlFor="email" className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  البريد الإلكتروني
+                </Label>
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  placeholder="email@example.com"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">كلمة المرور</Label>
+                <Label htmlFor="password"  className="flex items-center gap-2">
+                  <Lock className="h-4 w-4 text-muted-foreground" />
+                  كلمة المرور
+                </Label>
                 <Input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  placeholder="••••••••"
                 />
+                 <p className="text-xs text-muted-foreground pt-1">
+                    🔐 كلمة المرور الخاصة بك مشفرة ومحمية بالكامل.
+                </p>
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
@@ -86,7 +100,7 @@ export default function LoginPage() {
             </form>
             <p className="text-center text-sm text-muted-foreground mt-4">
               ليس لديك حساب؟{' '}
-              <Link href="/signup" className="text-primary hover:underline">
+              <Link href="/signup" className="text-primary hover:underline font-semibold">
                 أنشئ حسابًا جديدًا
               </Link>
             </p>

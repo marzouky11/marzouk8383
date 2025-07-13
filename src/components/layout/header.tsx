@@ -157,7 +157,7 @@ export function Header() {
           </Button>
           <ThemeToggleButton />
           <Button asChild>
-            <Link href="/post-job">
+            <Link href="/post-job/select-type">
               <Plus className="ml-2 h-4 w-4" />
               <span className="hidden sm:inline">نشر إعلان</span>
             </Link>

@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from "@/hooks/use-toast"
-import type { Category, Job } from '@/lib/types';
+import type { Category, Job, PostType } from '@/lib/types';
 import { postJob, updateAd } from '@/lib/data';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const formSchema = z.object({
   postType: z.enum(['seeking_worker', 'seeking_job'], { required_error: 'الرجاء تحديد نوع الإعلان.' }),
@@ -51,9 +52,10 @@ const formSchema = z.object({
 interface PostJobFormProps {
   categories: Category[];
   job?: Job | null;
+  preselectedType?: PostType;
 }
 
-export function PostJobForm({ categories, job }: PostJobFormProps) {
+export function PostJobForm({ categories, job, preselectedType }: PostJobFormProps) {
   const { toast } = useToast();
   const { user, userData } = useAuth();
   const router = useRouter();
@@ -62,7 +64,7 @@ export function PostJobForm({ categories, job }: PostJobFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      postType: job?.postType || undefined,
+      postType: job?.postType || preselectedType,
       title: job?.title || '',
       categoryId: job?.categoryId || '',
       customCategory: !job?.categoryId && job?.categoryName ? job.categoryName : '',
@@ -84,6 +86,13 @@ export function PostJobForm({ categories, job }: PostJobFormProps) {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (preselectedType) {
+      form.setValue('postType', preselectedType);
+    }
+  }, [preselectedType, form]);
+
 
   const postType = form.watch('postType');
   const categoryId = form.watch('categoryId');
@@ -199,35 +208,24 @@ export function PostJobForm({ categories, job }: PostJobFormProps) {
           control={form.control}
           name="postType"
           render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>ماذا تريد أن تنشر؟</FormLabel>
+            <FormItem>
               <FormControl>
-                 <div className="grid grid-cols-2 gap-4">
-                    <Card
-                      onClick={() => field.onChange('seeking_worker')}
-                      className={cn(
-                        'p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2',
-                        field.value === 'seeking_worker'
-                          ? 'border-accent bg-accent/10 text-accent'
-                          : 'hover:bg-muted'
-                      )}
-                    >
-                      <Briefcase className="h-8 w-8" />
-                      <span className="font-semibold text-center">أبحث عن عامل</span>
-                    </Card>
-                     <Card
-                      onClick={() => field.onChange('seeking_job')}
-                      className={cn(
-                        'p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2',
-                        field.value === 'seeking_job'
-                          ? 'border-destructive bg-destructive/10 text-destructive'
-                          : 'hover:bg-muted'
-                      )}
-                    >
-                      <Users className="h-8 w-8" />
-                      <span className="font-semibold text-center">أبحث عن عمل</span>
-                    </Card>
-                 </div>
+                 <RadioGroup
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    className="hidden" // Visually hide the radio group
+                  >
+                    <FormItem>
+                      <FormControl>
+                        <RadioGroupItem value="seeking_worker" />
+                      </FormControl>
+                    </FormItem>
+                    <FormItem>
+                      <FormControl>
+                        <RadioGroupItem value="seeking_job" />
+                      </FormControl>
+                    </FormItem>
+                  </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>

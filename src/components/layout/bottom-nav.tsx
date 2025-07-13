@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 const navItems = [
   { href: '/', label: 'الرئيسية', icon: Home },
   { href: '/jobs', label: 'الوظائف', icon: Briefcase },
-  { href: '/post-job', label: 'إضافة', icon: Plus, isFab: true },
+  { href: '/post-job/select-type', label: 'إضافة', icon: Plus, isFab: true },
   { href: '/workers', label: 'العمال', icon: Users },
   { href: '/profile', label: 'الإعدادات', icon: Settings },
 ];
