@@ -116,6 +116,7 @@ export async function getJobs(
     categoryId?: string;
     workType?: WorkType;
     sortBy?: 'newest';
+    excludeId?: string;
   } = {}
 ): Promise<Job[]> {
   try {
@@ -128,6 +129,7 @@ export async function getJobs(
       categoryId,
       workType,
       sortBy = 'newest',
+      excludeId,
     } = options;
 
     const adsRef = collection(db, 'ads');
@@ -137,6 +139,9 @@ export async function getJobs(
 
     if (postType) {
       queryConstraints.push(where('postType', '==', postType));
+    }
+     if (categoryId) {
+      queryConstraints.push(where('categoryId', '==', categoryId));
     }
     
     // Sorting by date is a primary requirement.
@@ -152,7 +157,7 @@ export async function getJobs(
     const q = query(adsRef, ...queryConstraints);
     const querySnapshot = await getDocs(q);
     
-    const allJobs = querySnapshot.docs.map(doc => {
+    let allJobs = querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
             id: doc.id,
@@ -160,21 +165,26 @@ export async function getJobs(
             postedAt: formatTimeAgo(data.createdAt),
         } as Job;
     });
-
+    
+    // Post-query filtering
+    if (excludeId) {
+        allJobs = allJobs.filter(job => job.id !== excludeId);
+    }
+    
     // Apply more complex filters in code. This allows for flexible, partial matching.
     const filteredJobs = allJobs.filter(job => {
-        const normalizedSearchCountry = country?.trim().toLowerCase();
-        if (normalizedSearchCountry && (!job.country || !job.country.trim().toLowerCase().includes(normalizedSearchCountry))) {
-            return false;
+        if (country) {
+            const normalizedSearchCountry = country.trim().toLowerCase();
+            if (!job.country || !job.country.trim().toLowerCase().includes(normalizedSearchCountry)) {
+                return false;
+            }
         }
         
-        const normalizedSearchCity = city?.trim().toLowerCase();
-        if (normalizedSearchCity && (!job.city || !job.city.trim().toLowerCase().includes(normalizedSearchCity))) {
-            return false;
-        }
-
-        if (categoryId && job.categoryId !== categoryId) {
-            return false;
+        if (city) {
+            const normalizedSearchCity = city.trim().toLowerCase();
+            if (!job.city || !job.city.trim().toLowerCase().includes(normalizedSearchCity)) {
+                return false;
+            }
         }
         
         if (workType && job.workType !== workType) {
