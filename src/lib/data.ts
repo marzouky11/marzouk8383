@@ -1,3 +1,4 @@
+
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType } from './types';
@@ -133,8 +134,6 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
-    // We construct a simpler query for Firestore to avoid needing complex composite indexes
-    // that must be created manually in the Firebase Console.
     const queryConstraints: any[] = [];
 
     if (postType) {
@@ -144,22 +143,19 @@ export async function getJobs(
       queryConstraints.push(where('categoryId', '==', categoryId));
     }
     
-    // Sorting by date is a primary requirement.
     if (sortBy === 'newest') {
       queryConstraints.push(orderBy('createdAt', 'desc'));
     }
 
-    if (count && !excludeId) {
-      queryConstraints.push(limit(count));
-    } else if (count && excludeId) {
-        // Fetch a bit more to have enough items after filtering
-        queryConstraints.push(limit(count + 5));
+    if (count) {
+        // Fetch a bit more to have enough items after filtering out the excluded ID
+        queryConstraints.push(limit(excludeId ? count + 1 : count));
     }
 
     const q = query(adsRef, ...queryConstraints);
     const querySnapshot = await getDocs(q);
     
-    let allJobs = querySnapshot.docs.map(doc => {
+    const allJobs = querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
             id: doc.id,
@@ -168,44 +164,34 @@ export async function getJobs(
         } as Job;
     });
     
-    // Post-query filtering
+    // Apply client-side filtering
     let filteredJobs = allJobs;
 
     if (excludeId) {
       filteredJobs = filteredJobs.filter(job => job.id !== excludeId);
     }
     
-    // Apply more complex filters in code. This allows for flexible, partial matching.
-    filteredJobs = filteredJobs.filter(job => {
-        if (country) {
-            const normalizedSearchCountry = country.trim().toLowerCase();
-            if (!job.country || !job.country.trim().toLowerCase().includes(normalizedSearchCountry)) {
-                return false;
-            }
-        }
-        
-        if (city) {
-            const normalizedSearchCity = city.trim().toLowerCase();
-            if (!job.city || !job.city.trim().toLowerCase().includes(normalizedSearchCity)) {
-                return false;
-            }
-        }
-        
-        if (workType && job.workType !== workType) {
-            return false;
-        }
-        
-        if (searchQuery) {
-            const lowercasedQuery = searchQuery.trim().toLowerCase();
-            const titleMatch = job.title?.toLowerCase().includes(lowercasedQuery);
-            const descriptionMatch = job.description?.toLowerCase().includes(lowercasedQuery);
-            if (!titleMatch && !descriptionMatch) {
-                return false;
-            }
-        }
-        
-        return true;
-    });
+    if (country) {
+        const normalizedSearchCountry = country.trim().toLowerCase();
+        filteredJobs = filteredJobs.filter(job => job.country && job.country.trim().toLowerCase().includes(normalizedSearchCountry));
+    }
+    
+    if (city) {
+        const normalizedSearchCity = city.trim().toLowerCase();
+        filteredJobs = filteredJobs.filter(job => job.city && job.city.trim().toLowerCase().includes(normalizedSearchCity));
+    }
+    
+    if (workType) {
+        filteredJobs = filteredJobs.filter(job => job.workType === workType);
+    }
+    
+    if (searchQuery) {
+        const lowercasedQuery = searchQuery.trim().toLowerCase();
+        filteredJobs = filteredJobs.filter(job => 
+            job.title?.toLowerCase().includes(lowercasedQuery) ||
+            job.description?.toLowerCase().includes(lowercasedQuery)
+        );
+    }
 
     if (count) {
         return filteredJobs.slice(0, count);
@@ -345,5 +331,3 @@ export function getCategories() {
 export function getCategoryById(id: string) {
     return categories.find((cat) => cat.id === id);
 }
-
-    

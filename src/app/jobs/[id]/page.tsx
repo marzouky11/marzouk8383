@@ -156,6 +156,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     
     const similarJobs = await getJobs({
       categoryId: job.categoryId,
+      postType: job.postType,
       count: 4,
       excludeId: job.id,
     });
@@ -163,7 +164,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     const category = getCategoryById(job.categoryId || '');
     const isSeekingJob = job?.postType === 'seeking_job';
     
-    const translatedWorkType = workTypeTranslations[job.workType] || job.workType || 'غير محدد';
+    const translatedWorkType = job.workType ? workTypeTranslations[job.workType] : 'غير محدد';
     const finalColor = category?.color || (isSeekingJob ? 'hsl(var(--destructive))' : 'hsl(var(--primary))');
     const finalIconName = category?.iconName || (isSeekingJob ? 'Users' : 'Briefcase');
     
