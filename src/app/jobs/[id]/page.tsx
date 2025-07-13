@@ -1,3 +1,4 @@
+
 import { notFound } from 'next/navigation';
 import { getJobById, getCategoryById, getJobs } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -11,7 +12,6 @@ import {
   MessageSquare,
   MapPin,
   Wallet,
-  Star,
   CalendarDays,
   User as UserIcon,
   Briefcase,
@@ -25,7 +25,6 @@ import {
   GraduationCap,
   Mail,
   Flag,
-  Share2
 } from 'lucide-react';
 import type { WorkType } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';

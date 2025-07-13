@@ -149,8 +149,7 @@ export async function getJobs(
       queryConstraints.push(orderBy('createdAt', 'desc'));
     }
 
-    // The limit is only used on the homepage, which doesn't have other filters.
-    if (count) {
+    if (count && !excludeId) {
       queryConstraints.push(limit(count));
     }
 
@@ -167,12 +166,14 @@ export async function getJobs(
     });
     
     // Post-query filtering
+    let filteredJobs = allJobs;
+
     if (excludeId) {
-        allJobs = allJobs.filter(job => job.id !== excludeId);
+      filteredJobs = filteredJobs.filter(job => job.id !== excludeId);
     }
     
     // Apply more complex filters in code. This allows for flexible, partial matching.
-    const filteredJobs = allJobs.filter(job => {
+    filteredJobs = filteredJobs.filter(job => {
         if (country) {
             const normalizedSearchCountry = country.trim().toLowerCase();
             if (!job.country || !job.country.trim().toLowerCase().includes(normalizedSearchCountry)) {
@@ -202,6 +203,10 @@ export async function getJobs(
         
         return true;
     });
+
+    if (count && excludeId) {
+        return filteredJobs.slice(0, count);
+    }
 
     return filteredJobs;
   } catch (error) {

@@ -59,9 +59,9 @@ export function ShareButton({ title, text }: ShareButtonProps) {
   }
 
   return (
-    <Button onClick={handleShare} variant="outline" className="w-fit">
+    <Button onClick={handleShare} variant="outline" className="w-full">
       <Share2 className="ml-2 h-4 w-4" />
-      مشاركة
+      مشاركة الإعلان
     </Button>
   );
 }
