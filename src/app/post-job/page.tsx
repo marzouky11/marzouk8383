@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
+import { getCategories } from '@/lib/data';
+import PostJobClientPage from './post-job-client-page';
 
 export const metadata: Metadata = {
   title: 'أنشر إعلانك مجانًا - عروض عمل أو طلب وظيفة',
@@ -7,5 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default function PostJobPage() {
-  redirect('/post-job/select-type');
+    const categories = getCategories();
+    return <PostJobClientPage categories={categories} />;
 }
