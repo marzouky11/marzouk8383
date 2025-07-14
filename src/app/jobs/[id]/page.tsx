@@ -1,4 +1,5 @@
 
+
 import { notFound, redirect } from 'next/navigation';
 import { getJobById, getCategoryById, getJobs } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -160,17 +161,16 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
     const similarJobs = await getJobs({
       categoryId: job.categoryId,
-      postType: job.postType,
+      postType: 'seeking_worker', // Explicitly set to 'seeking_worker'
       count: 4,
       excludeId: job.id,
     });
 
     const category = getCategoryById(job.categoryId || '');
-    const isSeekingJob = job.postType === 'seeking_job';
     
     const translatedWorkType = job.workType ? workTypeTranslations[job.workType] : undefined;
-    const finalColor = category?.color || (isSeekingJob ? 'hsl(var(--destructive))' : 'hsl(var(--primary))');
-    const finalIconName = category?.iconName || (isSeekingJob ? 'Users' : 'Briefcase');
+    const finalColor = category?.color || 'hsl(var(--primary))';
+    const finalIconName = category?.iconName || 'Briefcase';
     
     // Default Layout for Job Offers
     return (
