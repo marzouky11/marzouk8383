@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
       title: jobTitle,
       description: jsonLdDescription,
       datePosted: createdAtDate.toISOString(),
-      employmentType: employmentTypeMapping[job.workType] || 'OTHER',
+      employmentType: job.workType ? employmentTypeMapping[job.workType] : 'OTHER',
       hiringOrganization: {
         '@type': 'Organization',
         name: job.companyName || 'توظيفك',
@@ -178,10 +178,15 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                 <Card className="overflow-hidden shadow-lg border-t-4" style={{ borderColor: finalColor }}>
                     <CardHeader className="bg-muted/30 p-4 sm:p-6">
                         <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-                            <div>
-                                <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: finalColor }}>
-                                    {job.title || 'عنوان غير متوفر'}
-                                </h1>
+                            <div className="flex-grow">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="p-2 sm:p-3 rounded-xl flex-shrink-0" style={{ backgroundColor: `${finalColor}1A` }}>
+                                        <CategoryIcon name={finalIconName} className="w-6 h-6 sm:w-8 sm:h-8" style={{ color: finalColor }} />
+                                    </div>
+                                    <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: finalColor }}>
+                                        {job.title || 'عنوان غير متوفر'}
+                                    </h1>
+                                </div>
                                 <div className="flex items-center gap-4 text-muted-foreground mt-2 text-sm">
                                     <div className="flex items-center gap-1.5">
                                         <MapPin className="h-4 w-4" />
@@ -193,14 +198,11 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="p-3 rounded-xl flex-shrink-0" style={{ backgroundColor: `${finalColor}1A` }}>
-                                <CategoryIcon name={finalIconName} className="w-8 h-8" style={{ color: finalColor }} />
-                            </div>
                         </div>
                     </CardHeader>
                     <CardContent className="p-4 sm:p-6 space-y-6">
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                            <InfoItem icon={Clock} label="نوع الدوام" value={translatedWorkType} />
+                            {job.workType && <InfoItem icon={Clock} label="نوع الدوام" value={translatedWorkType} />}
                             <InfoItem icon={Wallet} label="الأجر" value={job.salary ? job.salary : 'عند الطلب'} />
                             <InfoItem icon={Award} label="الخبرة" value={job.experience || 'غير محدد'} />
                             {job.qualifications && <InfoItem icon={GraduationCap} label="المؤهلات" value={job.qualifications} />}
