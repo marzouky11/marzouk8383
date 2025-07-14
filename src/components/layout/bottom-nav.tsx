@@ -1,10 +1,11 @@
+
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Briefcase, Plus, Users, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 const navItems = [
   { href: '/', label: 'الرئيسية', icon: Home },
@@ -16,29 +17,23 @@ const navItems = [
 
 function BottomNavContent() {
   const pathname = usePathname();
-  const [activeHref, setActiveHref] = useState(pathname);
-  const previousPathnameRef = useRef(pathname);
+  const [activeHref, setActiveHref] = useState('/');
 
   useEffect(() => {
-    const previousPathname = previousPathnameRef.current;
+    // Find the best matching navigation item for the current path.
+    // We sort by href length descending to prioritize more specific paths (e.g., '/profile/edit' over '/profile').
+    const bestMatch = navItems
+      .filter(item => item.href !== '/') // Exclude the homepage from startsWith logic
+      .sort((a, b) => b.href.length - a.href.length)
+      .find(item => pathname.startsWith(item.href));
 
-    // If navigating to a job detail page, preserve the previous section's active state
-    if (pathname.startsWith('/jobs/') && (previousPathname.startsWith('/jobs') || previousPathname.startsWith('/workers'))) {
-      setActiveHref(previousPathname.startsWith('/workers') ? '/workers' : '/jobs');
-    } else {
-      // For all other navigation, update the active href based on the current path
-      let currentActive = '/'; // Default to home
-      for (const item of navItems) {
-        if (item.href !== '/' && pathname.startsWith(item.href)) {
-          currentActive = item.href;
-          break;
-        }
-      }
-      setActiveHref(currentActive);
+    if (bestMatch) {
+      setActiveHref(bestMatch.href);
+    } else if (pathname === '/') {
+      setActiveHref('/');
     }
-
-    previousPathnameRef.current = pathname;
   }, [pathname]);
+
 
   return (
     <div className="relative flex items-center justify-around h-16 mx-4 bg-card border rounded-2xl shadow-lg">
