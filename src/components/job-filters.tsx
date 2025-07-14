@@ -49,20 +49,12 @@ export function JobFilters({ categories, showSort = false, className, showPostTy
   const [selectedWorkType, setSelectedWorkType] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   
-  const isJobsPath = pathname.startsWith('/jobs');
-  const isWorkersPath = pathname.startsWith('/workers');
-  
-  const determineInitialPostTypePath = () => {
-    if (isJobsPath) return '/jobs';
-    if (isWorkersPath) return '/workers';
-    // For homepage or other pages, default to jobs but allow user to change
-    return searchParams.get('type') === 'workers' ? '/workers' : '/jobs';
-  };
-  
-  const [postTypePath, setPostTypePath] = useState(determineInitialPostTypePath);
+  // This state will hold the target path for the search, e.g., '/jobs' or '/workers'
+  const [postTypePath, setPostTypePath] = useState('/jobs');
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   
   useEffect(() => {
+    // Set initial values from URL params
     setSearchQuery(searchParams.get('q') || '');
     setSelectedCategory(searchParams.get('category') || 'all');
     setSelectedCountry(searchParams.get('country') || '');
@@ -70,15 +62,13 @@ export function JobFilters({ categories, showSort = false, className, showPostTy
     setSelectedWorkType(searchParams.get('workType') || 'all');
     setSortBy(searchParams.get('sortBy') || 'newest');
     
-    // This ensures that when the user navigates, the radio button updates
-    if (showPostTypeSelect) {
-      if (isJobsPath) {
-        setPostTypePath('/jobs');
-      } else if (isWorkersPath) {
-        setPostTypePath('/workers');
-      }
+    // Set the initial postTypePath based on the current page, not for search logic
+    if (pathname.startsWith('/workers')) {
+      setPostTypePath('/workers');
+    } else {
+      setPostTypePath('/jobs');
     }
-  }, [searchParams, pathname, showPostTypeSelect, isJobsPath, isWorkersPath]);
+  }, [searchParams, pathname]);
 
   const handleFilter = () => {
     const params = new URLSearchParams();
@@ -92,6 +82,7 @@ export function JobFilters({ categories, showSort = false, className, showPostTy
         params.set('sortBy', sortBy);
     }
     
+    // Use the state `postTypePath` which is controlled by the radio buttons
     const targetPath = showPostTypeSelect ? postTypePath : pathname;
     router.push(`${targetPath}?${params.toString()}`);
     setIsSheetOpen(false);
