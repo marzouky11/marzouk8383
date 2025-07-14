@@ -15,7 +15,6 @@ import {
   CalendarDays,
   User as UserIcon,
   Briefcase,
-  FileText,
   Building2,
   Award,
   Users2,
