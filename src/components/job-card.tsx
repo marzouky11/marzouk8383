@@ -3,14 +3,13 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Clock, Wallet, CalendarDays, GraduationCap, Award, User as UserIcon, Briefcase } from 'lucide-react';
+import { MapPin, Clock, Wallet, CalendarDays, User as UserIcon, Briefcase } from 'lucide-react';
 import type { Job, WorkType } from '@/lib/types';
 import { getCategoryById } from '@/lib/data';
 import { CategoryIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { UserAvatar } from '@/components/user-avatar';
 
 interface JobCardProps {
   job: Job | null;
@@ -22,17 +21,6 @@ const workTypeTranslations: { [key in WorkType]: string } = {
   freelance: 'عمل حر',
   remote: 'عن بعد',
 };
-
-const SeekerInfoItem = ({ icon: Icon, value, className }: { icon: React.ElementType; value: string | undefined, className?: string }) => {
-    if (!value) return null;
-    return (
-      <div className={cn("flex items-center gap-2", className)}>
-        <Icon className="h-4 w-4 text-primary/80 flex-shrink-0" />
-        <p className="text-sm text-muted-foreground truncate font-medium">{value}</p>
-      </div>
-    );
-};
-
 
 export function JobCard({ job }: JobCardProps) {
   if (!job) {
@@ -63,40 +51,38 @@ export function JobCard({ job }: JobCardProps) {
   const isSeekingJob = job.postType === 'seeking_job';
 
   if (isSeekingJob) {
-    const seekerCategoryIcon = category?.iconName || 'User';
     const finalColor = category?.color || 'hsl(var(--destructive))';
-    const categoryName = category?.name || job.categoryName || 'باحث عن عمل';
+    const finalIconName = category?.iconName || 'User';
 
     return (
        <Card 
-          className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full border-l-4"
-          style={{ borderColor: finalColor }}
+          className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full"
         >
         <Link href={`/jobs/${job.id}`} className="focus:outline-none absolute inset-0 z-10">
           <span className="sr-only">عرض الملف الشخصي</span>
         </Link>
         
-        <div className="flex-grow space-y-3">
-            <h3 className="font-bold text-lg leading-tight" style={{ color: finalColor }}>
-                {job.title}
-            </h3>
-            
-            <div className="flex items-center gap-2 text-sm font-semibold" style={{color: finalColor}}>
-                <CategoryIcon name={seekerCategoryIcon} className="h-4 w-4" />
-                <p>{categoryName}</p>
+        <div className="flex-grow flex flex-col">
+            <div className="flex items-start gap-4">
+               <div 
+                    className="flex-shrink-0 p-3 rounded-xl flex items-center justify-center"
+                    style={{ backgroundColor: `${finalColor}1A` }}
+                >
+                    <CategoryIcon name={finalIconName} className="w-6 h-6" style={{ color: finalColor }} />
+                </div>
+                <div className="flex-grow">
+                    <h3 className="font-bold text-base leading-tight text-foreground line-clamp-2">
+                        {job.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">{job.ownerName}</p>
+                </div>
             </div>
 
-            <Separator />
-
-            <div className="flex flex-col gap-2.5">
-                <div className="flex items-center gap-2 text-base text-muted-foreground">
-                    <UserIcon className="h-4 w-4 flex-shrink-0" />
-                    <span>{job.ownerName}</span>
-                </div>
-                <div className="flex items-center gap-2 text-base text-muted-foreground">
-                    <MapPin className="h-4 w-4 flex-shrink-0" />
-                    <span>{job.country}, {job.city}</span>
-                </div>
+            <Separator className="my-3" />
+            
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 flex-shrink-0" />
+                <span>{job.country}, {job.city}</span>
             </div>
         </div>
 
@@ -155,7 +141,7 @@ export function JobCard({ job }: JobCardProps) {
 
         <div className="flex flex-col gap-2.5">
           <div className="flex items-center gap-2 text-base text-muted-foreground"><MapPin className="h-4 w-4 flex-shrink-0" /><span>{job.country}, {job.city}</span></div>
-          <div className="flex items-center gap-2 text-base text-muted-foreground"><Clock className="h-4 w-4 flex-shrink-0" /><span>{workTypeTranslations[job.workType]}</span></div>
+          {job.workType && <div className="flex items-center gap-2 text-base text-muted-foreground"><Clock className="h-4 w-4 flex-shrink-0" /><span>{workTypeTranslations[job.workType]}</span></div>}
           <div className="flex items-center gap-2 text-base text-muted-foreground"><Wallet className="h-4 w-4 flex-shrink-0" /><span>{job.salary ? job.salary : 'عند الطلب'}</span></div>
         </div>
       </div>
