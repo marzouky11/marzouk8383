@@ -64,35 +64,48 @@ export function JobCard({ job }: JobCardProps) {
 
   if (isSeekingJob) {
     const seekerCategoryIcon = category?.iconName || 'User';
+    const finalColor = category?.color || 'hsl(var(--destructive))';
+    const categoryName = category?.name || job.categoryName || 'باحث عن عمل';
+
     return (
        <Card 
           className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full border-l-4"
-          style={{ borderColor: 'hsl(var(--destructive))' }}
+          style={{ borderColor: finalColor }}
         >
         <Link href={`/jobs/${job.id}`} className="focus:outline-none absolute inset-0 z-10">
           <span className="sr-only">عرض الملف الشخصي</span>
         </Link>
-        <div className="flex flex-col items-center text-center flex-grow">
-            <UserAvatar name={job.ownerName} color={job.ownerAvatarColor} className="h-20 w-20 text-3xl mb-3 border-4 border-background shadow-md" />
-            <h3 className="font-bold text-lg text-foreground">{job.ownerName}</h3>
-            <div className="flex items-center gap-2 text-destructive font-semibold text-sm mb-3">
-                <CategoryIcon name={seekerCategoryIcon} className="h-4 w-4" />
-                <p>{job.title}</p>
-            </div>
+        
+        <div className="flex-grow space-y-3">
+            <h3 className="font-bold text-lg leading-tight" style={{ color: finalColor }}>
+                {job.title}
+            </h3>
             
-            <div className="flex flex-col items-start text-right gap-2.5 w-full mt-4 pt-4 border-t">
-                <SeekerInfoItem icon={MapPin} value={`${job.country}, ${job.city}`} />
-                <SeekerInfoItem icon={Award} value={job.experience} />
-                <SeekerInfoItem icon={GraduationCap} value={job.qualifications} />
-                {job.workType && <SeekerInfoItem icon={Clock} value={workTypeTranslations[job.workType]} />}
+            <div className="flex items-center gap-2 text-sm font-semibold" style={{color: finalColor}}>
+                <CategoryIcon name={seekerCategoryIcon} className="h-4 w-4" />
+                <p>{categoryName}</p>
+            </div>
+
+            <Separator />
+
+            <div className="flex flex-col gap-2.5">
+                <div className="flex items-center gap-2 text-base text-muted-foreground">
+                    <UserIcon className="h-4 w-4 flex-shrink-0" />
+                    <span>{job.ownerName}</span>
+                </div>
+                <div className="flex items-center gap-2 text-base text-muted-foreground">
+                    <MapPin className="h-4 w-4 flex-shrink-0" />
+                    <span>{job.country}, {job.city}</span>
+                </div>
             </div>
         </div>
+
         <div className="flex items-center justify-between pt-4 mt-auto">
             <div className="flex items-center gap-1 text-muted-foreground">
                 <CalendarDays className="h-4 w-4" />
                 {job.createdAt && <time dateTime={job.createdAt.toDate().toISOString()} className="text-xs font-medium">{job.postedAt}</time>}
             </div>
-            <Button asChild size="sm" variant="destructive" className="h-9 text-sm rounded-lg px-4 z-20 relative">
+            <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: finalColor }}>
               <Link href={`/jobs/${job.id}`}>عرض الملف</Link>
             </Button>
         </div>
