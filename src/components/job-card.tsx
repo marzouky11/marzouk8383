@@ -63,7 +63,7 @@ export function JobCard({ job }: JobCardProps) {
   const isSeekingJob = job.postType === 'seeking_job';
 
   if (isSeekingJob) {
-    const seekerCategoryIcon = category?.iconName || 'UserIcon';
+    const seekerCategoryIcon = category?.iconName || 'User';
     return (
        <Card 
           className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full border-l-4"
@@ -106,7 +106,7 @@ export function JobCard({ job }: JobCardProps) {
 
   return (
     <Card 
-        className="relative flex flex-col overflow-hidden rounded-2xl border-t-4 bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full"
+        className="relative flex flex-col overflow-hidden rounded-2xl border-l-4 bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full"
         style={{ borderColor: finalColor }}
     >
       <Link href={`/jobs/${job.id}`} className="focus:outline-none absolute inset-0 z-10">
@@ -141,9 +141,9 @@ export function JobCard({ job }: JobCardProps) {
         <Separator />
 
         <div className="flex flex-col gap-2.5">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground"><MapPin className="h-4 w-4 flex-shrink-0" /><span>{job.country}, {job.city}</span></div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground"><Clock className="h-4 w-4 flex-shrink-0" /><span>{workTypeTranslations[job.workType]}</span></div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground"><Wallet className="h-4 w-4 flex-shrink-0" /><span>{job.salary ? job.salary : 'عند الطلب'}</span></div>
+          <div className="flex items-center gap-2 text-base text-muted-foreground"><MapPin className="h-4 w-4 flex-shrink-0" /><span>{job.country}, {job.city}</span></div>
+          <div className="flex items-center gap-2 text-base text-muted-foreground"><Clock className="h-4 w-4 flex-shrink-0" /><span>{workTypeTranslations[job.workType]}</span></div>
+          <div className="flex items-center gap-2 text-base text-muted-foreground"><Wallet className="h-4 w-4 flex-shrink-0" /><span>{job.salary ? job.salary : 'عند الطلب'}</span></div>
         </div>
       </div>
       
