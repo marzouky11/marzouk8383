@@ -20,17 +20,24 @@ function BottomNavContent() {
   const [activeHref, setActiveHref] = useState('/');
 
   useEffect(() => {
-    // Find the best matching navigation item for the current path.
-    // We sort by href length descending to prioritize more specific paths (e.g., '/profile/edit' over '/profile').
-    const bestMatch = navItems
-      .filter(item => item.href !== '/') // Exclude the homepage from startsWith logic
-      .sort((a, b) => b.href.length - a.href.length)
-      .find(item => pathname.startsWith(item.href));
+    // Prioritize more specific paths first to ensure correct highlighting.
+    const sortedNavItems = navItems
+      .filter(item => item.href !== '/')
+      .sort((a, b) => b.href.length - a.href.length);
+      
+    const bestMatch = sortedNavItems.find(item => pathname.startsWith(item.href));
 
     if (bestMatch) {
       setActiveHref(bestMatch.href);
     } else if (pathname === '/') {
       setActiveHref('/');
+    } else if (pathname.startsWith('/jobs/')) {
+        // Fallback for detail pages, try to guess from history if possible
+        // This part is tricky, but we can default to /jobs if no other info is available
+        // A more robust solution might need state management
+        setActiveHref('/jobs');
+    } else {
+      setActiveHref(pathname); // Default to current path if no match
     }
   }, [pathname]);
 
@@ -81,6 +88,7 @@ function BottomNavContent() {
     </div>
   );
 }
+
 
 export function BottomNav() {
   const [isClient, setIsClient] = useState(false);

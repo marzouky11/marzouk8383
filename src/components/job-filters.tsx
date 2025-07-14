@@ -55,7 +55,8 @@ export function JobFilters({ categories, showSort = false, className, showPostTy
   const determineInitialPostTypePath = () => {
     if (isJobsPath) return '/jobs';
     if (isWorkersPath) return '/workers';
-    return '/jobs'; // Default for homepage
+    // For homepage or other pages, default to jobs but allow user to change
+    return searchParams.get('type') === 'workers' ? '/workers' : '/jobs';
   };
   
   const [postTypePath, setPostTypePath] = useState(determineInitialPostTypePath);
@@ -68,8 +69,16 @@ export function JobFilters({ categories, showSort = false, className, showPostTy
     setSelectedCity(searchParams.get('city') || '');
     setSelectedWorkType(searchParams.get('workType') || 'all');
     setSortBy(searchParams.get('sortBy') || 'newest');
-    setPostTypePath(determineInitialPostTypePath());
-  }, [searchParams, pathname]);
+    
+    // This ensures that when the user navigates, the radio button updates
+    if (showPostTypeSelect) {
+      if (isJobsPath) {
+        setPostTypePath('/jobs');
+      } else if (isWorkersPath) {
+        setPostTypePath('/workers');
+      }
+    }
+  }, [searchParams, pathname, showPostTypeSelect, isJobsPath, isWorkersPath]);
 
   const handleFilter = () => {
     const params = new URLSearchParams();
