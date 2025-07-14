@@ -70,11 +70,11 @@ export function JobCard({ job }: JobCardProps) {
                 >
                     <CategoryIcon name={finalIconName} className="w-6 h-6" style={{ color: finalColor }} />
                 </div>
-                <div className="flex-grow">
-                    <h3 className="font-bold text-base leading-tight text-foreground line-clamp-2">
+                <div className="flex-grow overflow-hidden">
+                    <h3 className="font-bold text-base leading-tight text-foreground truncate">
                         {job.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1">{job.ownerName}</p>
+                    <p className="text-sm text-muted-foreground mt-1 truncate">{job.ownerName}</p>
                 </div>
             </div>
 
@@ -82,7 +82,7 @@ export function JobCard({ job }: JobCardProps) {
             
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 flex-shrink-0" />
-                <span>{job.country}, {job.city}</span>
+                <span className="truncate">{job.country}, {job.city}</span>
             </div>
         </div>
 
@@ -114,10 +114,10 @@ export function JobCard({ job }: JobCardProps) {
 
        <div className="flex-grow space-y-3">
         <div className="flex justify-between items-start gap-3">
-          <div className="flex-grow">
+          <div className="flex-grow overflow-hidden">
             <Badge variant={'secondary'} className="mb-1 font-normal text-xs">{category?.name || job.categoryName}</Badge>
             <h3 
-              className="font-bold text-lg leading-tight"
+              className="font-bold text-lg leading-tight truncate"
               style={{ color: finalColor }}
             >
                 {job.title}
