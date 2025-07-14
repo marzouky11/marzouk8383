@@ -26,7 +26,6 @@ interface JobFiltersProps {
   categories: Category[];
   showSort?: boolean;
   className?: string;
-  searchPath?: string;
   showPostTypeSelect?: boolean;
 }
 
@@ -37,25 +36,31 @@ const workTypeTranslations: { [key in WorkType]: string } = {
   remote: 'عن بعد',
 };
 
-export function JobFilters({ categories, showSort = false, className, searchPath, showPostTypeSelect = false }: JobFiltersProps) {
+export function JobFilters({ categories, showSort = false, className, showPostTypeSelect = false }: JobFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  // State for the main search input
   const [searchQuery, setSearchQuery] = useState('');
   
-  // States for the filters inside the sheet
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedWorkType, setSelectedWorkType] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
-  const [postTypePath, setPostTypePath] = useState(pathname);
-
+  
+  const isJobsPath = pathname.startsWith('/jobs');
+  const isWorkersPath = pathname.startsWith('/workers');
+  
+  const determineInitialPostTypePath = () => {
+    if (isJobsPath) return '/jobs';
+    if (isWorkersPath) return '/workers';
+    return '/jobs'; // Default for homepage
+  };
+  
+  const [postTypePath, setPostTypePath] = useState(determineInitialPostTypePath);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   
-  // Effect to sync state with URL search params. This prevents hydration errors.
   useEffect(() => {
     setSearchQuery(searchParams.get('q') || '');
     setSelectedCategory(searchParams.get('category') || 'all');
@@ -63,13 +68,12 @@ export function JobFilters({ categories, showSort = false, className, searchPath
     setSelectedCity(searchParams.get('city') || '');
     setSelectedWorkType(searchParams.get('workType') || 'all');
     setSortBy(searchParams.get('sortBy') || 'newest');
-    setPostTypePath(pathname);
+    setPostTypePath(determineInitialPostTypePath());
   }, [searchParams, pathname]);
 
   const handleFilter = () => {
     const params = new URLSearchParams();
     
-    // Set params from state. We use the main searchQuery for 'q'.
     if (searchQuery) params.set('q', searchQuery);
     if (selectedCategory && selectedCategory !== 'all') params.set('category', selectedCategory);
     if (selectedCountry) params.set('country', selectedCountry);
@@ -79,7 +83,7 @@ export function JobFilters({ categories, showSort = false, className, searchPath
         params.set('sortBy', sortBy);
     }
     
-    const targetPath = showPostTypeSelect ? postTypePath : (searchPath || pathname);
+    const targetPath = showPostTypeSelect ? postTypePath : pathname;
     router.push(`${targetPath}?${params.toString()}`);
     setIsSheetOpen(false);
   };
