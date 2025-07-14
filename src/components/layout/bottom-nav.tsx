@@ -17,35 +17,15 @@ const navItems = [
 
 function BottomNavContent() {
   const pathname = usePathname();
-  const [activeHref, setActiveHref] = useState('/');
-
-  useEffect(() => {
-    // Prioritize more specific paths first to ensure correct highlighting.
-    const sortedNavItems = navItems
-      .filter(item => item.href !== '/')
-      .sort((a, b) => b.href.length - a.href.length);
-      
-    const bestMatch = sortedNavItems.find(item => pathname.startsWith(item.href));
-
-    if (bestMatch) {
-      setActiveHref(bestMatch.href);
-    } else if (pathname === '/') {
-      setActiveHref('/');
-    } else if (pathname.startsWith('/jobs/')) {
-        // Fallback for detail pages, try to guess from history if possible
-        // This part is tricky, but we can default to /jobs if no other info is available
-        // A more robust solution might need state management
-        setActiveHref('/jobs');
-    } else {
-      setActiveHref(pathname); // Default to current path if no match
-    }
-  }, [pathname]);
-
-
+  
   return (
     <div className="relative flex items-center justify-around h-16 mx-4 bg-card border rounded-2xl shadow-lg">
       {navItems.map((item, index) => {
-        const isActive = item.href === activeHref;
+        // More specific paths should be checked first.
+        // /workers/[id] should match /workers, not /
+        const isActive = item.href === '/' 
+          ? pathname === '/' 
+          : pathname.startsWith(item.href);
 
         if (item.isFab) {
           return (

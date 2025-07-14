@@ -49,6 +49,7 @@ export function JobCard({ job }: JobCardProps) {
 
   const category = getCategoryById(job.categoryId || '');
   const isSeekingJob = job.postType === 'seeking_job';
+  const detailUrl = isSeekingJob ? `/workers/${job.id}` : `/jobs/${job.id}`;
 
   if (isSeekingJob) {
     const finalColor = category?.color || 'hsl(var(--destructive))';
@@ -58,7 +59,7 @@ export function JobCard({ job }: JobCardProps) {
        <Card 
           className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full"
         >
-        <Link href={`/jobs/${job.id}`} className="focus:outline-none absolute inset-0 z-10">
+        <Link href={detailUrl} className="focus:outline-none absolute inset-0 z-10">
           <span className="sr-only">عرض الملف الشخصي</span>
         </Link>
         
@@ -92,7 +93,7 @@ export function JobCard({ job }: JobCardProps) {
                 {job.createdAt && <time dateTime={job.createdAt.toDate().toISOString()} className="text-xs font-medium">{job.postedAt}</time>}
             </div>
             <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: finalColor }}>
-              <Link href={`/jobs/${job.id}`}>عرض الملف</Link>
+              <Link href={detailUrl}>عرض الملف</Link>
             </Button>
         </div>
       </Card>
@@ -108,7 +109,7 @@ export function JobCard({ job }: JobCardProps) {
         className="relative flex flex-col overflow-hidden rounded-2xl border-l-4 bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full"
         style={{ borderColor: finalColor }}
     >
-      <Link href={`/jobs/${job.id}`} className="focus:outline-none absolute inset-0 z-10">
+      <Link href={detailUrl} className="focus:outline-none absolute inset-0 z-10">
          <span className="sr-only">View Job</span>
       </Link>
 
@@ -152,7 +153,7 @@ export function JobCard({ job }: JobCardProps) {
             {job.createdAt && <time dateTime={job.createdAt.toDate().toISOString()} className="text-xs font-medium">{job.postedAt}</time>}
         </div>
         <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: finalColor }}>
-          <Link href={`/jobs/${job.id}`}>عرض التفاصيل</Link>
+          <Link href={detailUrl}>عرض التفاصيل</Link>
         </Button>
       </div>
     </Card>
