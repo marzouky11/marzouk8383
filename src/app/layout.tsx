@@ -20,12 +20,34 @@ const homePageDescription = 'توظيفك منصة التوظيف العربية
 const siteThumbnail = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
 
 export const metadata: Metadata = {
-  title: {
-    default: homePageTitle,
-    template: `%s | ${appName}`
-  },
-  description: homePageDescription,
+  title: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
+  description: "توظيفك منصة التوظيف العربية لنشر إعلانات البحث عن عمل وتوظيف العمال بسهولة. اكتشف فرص عمل في الوطن العربي، ونشر إعلانات توظيف للمؤسسات والشركات الباحثة عن الكفاءات.",
   metadataBase: new URL(baseUrl),
+  icons: {
+    icon: [
+      { url: "/favicon.ico", type: "image/x-icon" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      {
+        rel: "android-chrome-192x192.png",
+        url: "/android-chrome-192x192.png",
+        type: "image/png",
+        sizes: "192x192",
+      },
+      {
+        rel: "android-chrome-512x512.png",
+        url: "/android-chrome-512x512.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
   openGraph: {
     title: {
       default: homePageTitle,
@@ -85,10 +107,6 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7860245146219810" crossOrigin="anonymous"></script>
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2" />
-        <link rel="shortcut icon" href="/favicon.ico?v=2" />
-        <meta name="theme-color" content="#ffffff" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
