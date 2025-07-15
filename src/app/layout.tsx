@@ -15,13 +15,10 @@ const ptSans = PT_Sans({
 
 const baseUrl = 'https://www.tawzifak.com';
 const appName = 'توظيفك';
-const homePageTitle = 'توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل';
-const homePageDescription = 'توظيفك منصة التوظيف العربية لنشر إعلانات البحث عن عمل وتوظيف العمال بسهولة. اكتشف فرص عمل في الوطن العربي، ونشر إعلانات توظيف للمؤسسات والشركات الباحثة عن موظفين مؤهلين.';
-const siteThumbnail = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
 
 export const metadata: Metadata = {
   title: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
-  description: "توظيفك منصة التوظيف العربية لنشر إعلانات البحث عن عمل وتوظيف العمال بسهولة. اكتشف فرص عمل في الوطن العربي، ونشر إعلانات توظيف للمؤسسات والشركات الباحثة عن الكفاءات.",
+  description: "توظيفك منصة التوظيف العربية لنشر إعلانات البحث عن عمل وتوظيف العمال بسهولة. اكتشف فرص عمل في الوطن العربي، ونشر إعلانات توظيف للمؤسسات والشركات الباحثة عن كفاءات.",
   metadataBase: new URL(baseUrl),
   icons: {
     icon: [
@@ -50,15 +47,15 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   openGraph: {
     title: {
-      default: homePageTitle,
+      default: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
       template: `%s | ${appName}`
     },
-    description: homePageDescription,
+    description: "توظيفك منصة التوظيف العربية لنشر إعلانات البحث عن عمل وتوظيف العمال بسهولة. اكتشف فرص عمل في الوطن العربي، ونشر إعلانات توظيف للمؤسسات والشركات الباحثة عن الكفاءات.",
     url: baseUrl,
     siteName: appName,
     images: [
       {
-        url: siteThumbnail,
+        url: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
         width: 1200,
         height: 630,
         alt: appName,
@@ -69,13 +66,14 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: {
-      default: homePageTitle,
+      default: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
       template: `%s | ${appName}`
     },
-    description: homePageDescription,
-    images: [siteThumbnail],
+    description: "توظيفك منصة التوظيف العربية لنشر إعلانات البحث عن عمل وتوظيف العمال بسهولة. اكتشف فرص عمل في الوطن العربي، ونشر إعلانات توظيف للمؤسسات والشركات الباحثة عن الكفاءات.",
+    images: ['https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg'],
   },
 };
+
 
 export default function RootLayout({
   children,
@@ -87,7 +85,7 @@ export default function RootLayout({
     '@type': 'Organization',
     name: appName,
     url: baseUrl,
-    logo: siteThumbnail,
+    logo: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
   };
 
   const webSiteSchema = {
@@ -100,7 +98,7 @@ export default function RootLayout({
       target: `${baseUrl}/jobs?q={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
-    logo: siteThumbnail
+    logo: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg'
   };
   
   return (
