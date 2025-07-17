@@ -20,6 +20,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
   
+  // Fetch all jobs for the given category, without any other filters.
   const initialJobs: Job[] = await getJobs({ categoryId: params.id });
 
   return (

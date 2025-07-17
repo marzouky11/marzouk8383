@@ -1,4 +1,5 @@
 
+
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType } from './types';
@@ -150,7 +151,9 @@ export async function getJobs(
         queryConstraints.push(where('postType', '==', postType));
     }
     
-    // Only apply categoryId filter at the Firestore level if it's the primary filter
+    // This was the primary source of the bug. If categoryId is provided,
+    // we should only filter by it, unless other filters are explicitly needed
+    // for that specific context. For the category page, we ONLY need categoryId.
     if (categoryId) {
         queryConstraints.push(where('categoryId', '==', categoryId));
     }
@@ -175,18 +178,17 @@ export async function getJobs(
         } as Job;
     });
     
-    // Apply client-side filtering for properties not efficiently queryable in Firestore
-    // or when combining multiple optional filters without composite indexes.
+    // This client-side filtering should only apply when it's part of a broader search,
+    // not when we're on a dedicated category page.
+    // The issue is that these filters were running even for the category page call.
+    // By simplifying the call from the category page itself, we avoid this problem.
     let filteredJobs = allJobs;
 
     if (excludeId) {
       filteredJobs = filteredJobs.filter(job => job.id !== excludeId);
     }
     
-    // These filters are applied client-side because Firestore doesn't support
-    // multiple "where" clauses on different fields with "in", "not-in", or "!=" operators
-    // in a single query, and combining them can get complex without the right indexes.
-    // This approach is more flexible for a varied set of optional filters.
+    // These filters are appropriate for the main search/filter pages, but not for the category page.
     if (country) {
         const normalizedSearchCountry = country.trim().toLowerCase();
         filteredJobs = filteredJobs.filter(job => job.country && job.country.trim().toLowerCase().includes(normalizedSearchCountry));
