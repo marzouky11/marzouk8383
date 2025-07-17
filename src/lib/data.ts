@@ -134,6 +134,8 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
+    let q: any = adsRef;
+    
     const queryConstraints: any[] = [];
 
     if (postType) {
@@ -148,11 +150,13 @@ export async function getJobs(
     }
 
     if (count) {
-        // Fetch a bit more to have enough items after filtering out the excluded ID
         queryConstraints.push(limit(excludeId ? count + 1 : count));
     }
+    
+    if (queryConstraints.length > 0) {
+        q = query(adsRef, ...queryConstraints);
+    }
 
-    const q = query(adsRef, ...queryConstraints);
     const querySnapshot = await getDocs(q);
     
     const allJobs = querySnapshot.docs.map(doc => {
@@ -164,7 +168,7 @@ export async function getJobs(
         } as Job;
     });
     
-    // Apply client-side filtering
+    // Apply client-side filtering for properties not indexed in Firestore
     let filteredJobs = allJobs;
 
     if (excludeId) {
@@ -193,7 +197,7 @@ export async function getJobs(
         );
     }
 
-    if (count) {
+    if (count && !excludeId) { // If excludeId is present, the slicing was handled by the limit increase
         return filteredJobs.slice(0, count);
     }
 
