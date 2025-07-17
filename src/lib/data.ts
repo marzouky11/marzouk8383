@@ -141,8 +141,13 @@ export async function getJobs(
     const adsRef = collection(db, 'ads');
     let q: any;
     
-    const queryConstraints: any[] = [];
-
+    // Start with a base query ordered by date
+    const queryConstraints: any[] = [orderBy('createdAt', 'desc')];
+    
+    // IMPORTANT: Firestore requires that if you use a range filter (<, <=, >, >=) on a field,
+    // your first ordering must be on the same field.
+    // Since we don't have range filters, we can freely add `where` clauses.
+    
     if (postType) {
       queryConstraints.push(where('postType', '==', postType));
     }
@@ -150,19 +155,20 @@ export async function getJobs(
       queryConstraints.push(where('categoryId', '==', categoryId));
     }
     
-    if (sortBy === 'newest') {
-      queryConstraints.push(orderBy('createdAt', 'desc'));
-    }
+    // Note: We don't add other filters like country, city, workType to the Firestore query
+    // because Firestore has limitations on complex queries (e.g., you can't have multiple
+    // `where` clauses on different fields with inequality operators, and combining
+    // `where` with `orderBy` on different fields can be tricky without composite indexes).
+    // We will fetch a broader set of data and filter it client-side.
 
     if (count) {
-        queryConstraints.push(limit(excludeId ? count + 1 : count));
+        // Fetch a bit more if we have client-side filtering to do, to ensure we meet the count.
+        // This is a heuristic and might need adjustment based on data shape.
+        const fetchLimit = excludeId ? count + 1 : count;
+        queryConstraints.push(limit(fetchLimit));
     }
     
-    if (queryConstraints.length > 0) {
-        q = query(adsRef, ...queryConstraints);
-    } else {
-        q = query(adsRef, orderBy('createdAt', 'desc')); // Default sort if no other constraints
-    }
+    q = query(adsRef, ...queryConstraints);
 
     const querySnapshot = await getDocs(q);
     
@@ -175,7 +181,7 @@ export async function getJobs(
         } as Job;
     });
     
-    // Apply client-side filtering for properties not indexed in Firestore
+    // Apply client-side filtering for properties not indexed or for more complex logic
     let filteredJobs = allJobs;
 
     if (excludeId) {
@@ -200,20 +206,15 @@ export async function getJobs(
         const lowercasedQuery = searchQuery.trim().toLowerCase();
         filteredJobs = filteredJobs.filter(job => 
             job.title?.toLowerCase().includes(lowercasedQuery) ||
-            job.description?.toLowerCase().includes(lowercasedQuery)
+            job.description?.toLowerCase().includes(lowercasedQuery) ||
+            job.categoryName?.toLowerCase().includes(lowercasedQuery)
         );
     }
 
-    // Final count slice if necessary
+    // Final count slice after all filtering
     if (count) {
-      if (excludeId) {
-        // Since we fetched `count + 1`, we now slice to `count`
-        return filteredJobs.slice(0, count);
-      }
-      // If no excludeId, it's a direct slice
       return filteredJobs.slice(0, count);
     }
-
 
     return filteredJobs;
   } catch (error) {
