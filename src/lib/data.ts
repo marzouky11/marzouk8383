@@ -142,12 +142,15 @@ export async function getJobs(
     const adsRef = collection(db, 'ads');
     let queryConstraints: QueryConstraint[] = [];
 
+    // This is the crucial fix: Firestore does not allow `in` and `!=` on the same field in a single query.
+    // Also, it's more efficient to fetch and then filter in code for complex queries like this.
+    // We only apply the most selective filters in the query itself.
+
     if (categoryId) {
         queryConstraints.push(where('categoryId', '==', categoryId));
-    } else {
-        if (postType) {
-            queryConstraints.push(where('postType', '==', postType));
-        }
+    }
+    if (postType && !categoryId) { // Only filter by postType if no category is specified
+        queryConstraints.push(where('postType', '==', postType));
     }
     
     if (sortBy === 'newest') {
@@ -172,6 +175,7 @@ export async function getJobs(
         } as Job;
     });
     
+    // In-memory filtering for more complex criteria
     let filteredJobs = allJobs.filter(job => !excludeId || job.id !== excludeId);
     
     if (country) {
@@ -193,7 +197,8 @@ export async function getJobs(
         filteredJobs = filteredJobs.filter(job => 
             job.title?.toLowerCase().includes(lowercasedQuery) ||
             job.description?.toLowerCase().includes(lowercasedQuery) ||
-            job.categoryName?.toLowerCase().includes(lowercasedQuery)
+            job.categoryName?.toLowerCase().includes(lowercasedQuery) ||
+            job.ownerName?.toLowerCase().includes(lowercasedQuery)
         );
     }
 
