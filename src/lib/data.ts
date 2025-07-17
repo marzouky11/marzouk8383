@@ -141,16 +141,13 @@ export async function getJobs(
 
     const adsRef = collection(db, 'ads');
     let queryConstraints: QueryConstraint[] = [];
-
-    // This is the crucial fix: Firestore does not allow `in` and `!=` on the same field in a single query.
-    // Also, it's more efficient to fetch and then filter in code for complex queries like this.
-    // We only apply the most selective filters in the query itself.
-
+    
+    // The most selective filter first for better Firestore performance
+    if (postType) {
+        queryConstraints.push(where('postType', '==', postType));
+    }
     if (categoryId) {
         queryConstraints.push(where('categoryId', '==', categoryId));
-    }
-    if (postType && !categoryId) { // Only filter by postType if no category is specified
-        queryConstraints.push(where('postType', '==', postType));
     }
     
     if (sortBy === 'newest') {
@@ -158,12 +155,12 @@ export async function getJobs(
     }
 
     if (count) {
-        const fetchLimit = excludeId ? count + 1 : count;
+        // Fetch a bit more to account for in-memory filtering
+        const fetchLimit = excludeId ? count + 5 : count; 
         queryConstraints.push(limit(fetchLimit));
     }
     
     const q = query(adsRef, ...queryConstraints);
-
     const querySnapshot = await getDocs(q);
     
     const allJobs = querySnapshot.docs.map(doc => {
@@ -175,8 +172,12 @@ export async function getJobs(
         } as Job;
     });
     
-    // In-memory filtering for more complex criteria
-    let filteredJobs = allJobs.filter(job => !excludeId || job.id !== excludeId);
+    // Perform remaining filtering in-memory
+    let filteredJobs = allJobs;
+
+    if (excludeId) {
+        filteredJobs = filteredJobs.filter(job => job.id !== excludeId);
+    }
     
     if (country) {
         const normalizedSearchCountry = country.trim().toLowerCase();
@@ -212,6 +213,7 @@ export async function getJobs(
     return [];
   }
 }
+
 
 export async function getJobsByUserId(userId: string): Promise<Job[]> {
     try {
