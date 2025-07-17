@@ -140,27 +140,21 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
-    const queryConstraints: QueryConstraint[] = [];
+    let queryConstraints: QueryConstraint[] = [];
+
+    if (categoryId) {
+        queryConstraints.push(where('categoryId', '==', categoryId));
+    } else {
+        if (postType) {
+            queryConstraints.push(where('postType', '==', postType));
+        }
+    }
     
-    // Build Firestore query
     if (sortBy === 'newest') {
         queryConstraints.push(orderBy('createdAt', 'desc'));
     }
 
-    if (postType) {
-        queryConstraints.push(where('postType', '==', postType));
-    }
-    
-    // This was the primary source of the bug. If categoryId is provided,
-    // we should only filter by it, unless other filters are explicitly needed
-    // for that specific context. For the category page, we ONLY need categoryId.
-    if (categoryId) {
-        queryConstraints.push(where('categoryId', '==', categoryId));
-    }
-
-    // Apply limit if specified
     if (count) {
-        // Fetch a bit more if we have client-side filtering to do
         const fetchLimit = excludeId ? count + 1 : count;
         queryConstraints.push(limit(fetchLimit));
     }
@@ -178,17 +172,8 @@ export async function getJobs(
         } as Job;
     });
     
-    // This client-side filtering should only apply when it's part of a broader search,
-    // not when we're on a dedicated category page.
-    // The issue is that these filters were running even for the category page call.
-    // By simplifying the call from the category page itself, we avoid this problem.
-    let filteredJobs = allJobs;
-
-    if (excludeId) {
-      filteredJobs = filteredJobs.filter(job => job.id !== excludeId);
-    }
+    let filteredJobs = allJobs.filter(job => !excludeId || job.id !== excludeId);
     
-    // These filters are appropriate for the main search/filter pages, but not for the category page.
     if (country) {
         const normalizedSearchCountry = country.trim().toLowerCase();
         filteredJobs = filteredJobs.filter(job => job.country && job.country.trim().toLowerCase().includes(normalizedSearchCountry));
@@ -212,7 +197,6 @@ export async function getJobs(
         );
     }
 
-    // Final count slice after all filtering
     if (count) {
       return filteredJobs.slice(0, count);
     }
