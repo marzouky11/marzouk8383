@@ -90,7 +90,7 @@ export function JobCard({ job }: JobCardProps) {
         <div className="flex items-center justify-between pt-4 mt-auto">
             <div className="flex items-center gap-1 text-muted-foreground">
                 <CalendarDays className="h-4 w-4" />
-                {job.createdAt && <time dateTime={job.createdAt.toDate().toISOString()} className="text-xs font-medium">{job.postedAt}</time>}
+                {job.createdAt && <time dateTime={new Date(job.createdAt.seconds * 1000).toISOString()} className="text-xs font-medium">{job.postedAt}</time>}
             </div>
             <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: finalColor }}>
               <Link href={detailUrl}>عرض الملف</Link>
@@ -100,7 +100,7 @@ export function JobCard({ job }: JobCardProps) {
     )
   }
 
-  // Design for Job Offers - Reverted to original design with icon on the right
+  // Design for Job Offers
   const finalColor = category?.color || 'hsl(var(--primary))';
   const finalIconName = category?.iconName || 'Briefcase';
 
@@ -144,7 +144,7 @@ export function JobCard({ job }: JobCardProps) {
       <div className="flex items-center justify-between pt-4 mt-auto">
         <div className="flex items-center gap-1 text-muted-foreground">
             <CalendarDays className="h-4 w-4" />
-            {job.createdAt && <time dateTime={job.createdAt.toDate().toISOString()} className="text-xs font-medium">{job.postedAt}</time>}
+            {job.createdAt && <time dateTime={new Date(job.createdAt.seconds * 1000).toISOString()} className="text-xs font-medium">{job.postedAt}</time>}
         </div>
         <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: finalColor }}>
           <Link href={detailUrl}>عرض التفاصيل</Link>
