@@ -85,23 +85,28 @@ function formatTimeAgo(timestamp: any) {
 
   let interval = seconds / 31536000;
   if (interval > 1) {
-    return `قبل ${Math.floor(interval)} سنوات`;
+    const years = Math.floor(interval);
+    return years === 1 ? `قبل سنة` : `قبل ${years} سنوات`;
   }
   interval = seconds / 2592000;
   if (interval > 1) {
-    return `قبل ${Math.floor(interval)} أشهر`;
+    const months = Math.floor(interval);
+    return months === 1 ? `قبل شهر` : `قبل ${months} أشهر`;
   }
   interval = seconds / 86400;
   if (interval > 1) {
-    return `قبل ${Math.floor(interval)} أيام`;
+    const days = Math.floor(interval);
+    return days === 1 ? `قبل يوم` : `قبل ${days} أيام`;
   }
   interval = seconds / 3600;
   if (interval > 1) {
-    return `قبل ${Math.floor(interval)} ساعات`;
+    const hours = Math.floor(interval);
+    return hours === 1 ? `قبل ساعة` : `قبل ${hours} ساعات`;
   }
   interval = seconds / 60;
   if (interval > 1) {
-    return `قبل ${Math.floor(interval)} دقائق`;
+    const minutes = Math.floor(interval);
+    return minutes === 1 ? `قبل دقيقة` : `قبل ${minutes} دقائق`;
   }
   return 'الآن';
 }
@@ -134,7 +139,7 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
-    let q: any = adsRef;
+    let q: any;
     
     const queryConstraints: any[] = [];
 
@@ -155,6 +160,8 @@ export async function getJobs(
     
     if (queryConstraints.length > 0) {
         q = query(adsRef, ...queryConstraints);
+    } else {
+        q = query(adsRef, orderBy('createdAt', 'desc')); // Default sort if no other constraints
     }
 
     const querySnapshot = await getDocs(q);
@@ -197,9 +204,16 @@ export async function getJobs(
         );
     }
 
-    if (count && !excludeId) { // If excludeId is present, the slicing was handled by the limit increase
+    // Final count slice if necessary
+    if (count) {
+      if (excludeId) {
+        // Since we fetched `count + 1`, we now slice to `count`
         return filteredJobs.slice(0, count);
+      }
+      // If no excludeId, it's a direct slice
+      return filteredJobs.slice(0, count);
     }
+
 
     return filteredJobs;
   } catch (error) {

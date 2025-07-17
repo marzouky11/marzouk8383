@@ -1,4 +1,5 @@
 
+
 import { notFound } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
 import { getJobs, getCategoryById } from '@/lib/data';
