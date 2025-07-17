@@ -140,27 +140,9 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
-    let queryConstraints: QueryConstraint[] = [];
+    // Base query: always sort by newest first.
+    const q = query(adsRef, orderBy('createdAt', 'desc'));
     
-    // The most selective filter first for better Firestore performance
-    if (postType) {
-        queryConstraints.push(where('postType', '==', postType));
-    }
-    if (categoryId) {
-        queryConstraints.push(where('categoryId', '==', categoryId));
-    }
-    
-    if (sortBy === 'newest') {
-        queryConstraints.push(orderBy('createdAt', 'desc'));
-    }
-
-    if (count) {
-        // Fetch a bit more to account for in-memory filtering
-        const fetchLimit = excludeId ? count + 5 : count; 
-        queryConstraints.push(limit(fetchLimit));
-    }
-    
-    const q = query(adsRef, ...queryConstraints);
     const querySnapshot = await getDocs(q);
     
     const allJobs = querySnapshot.docs.map(doc => {
@@ -172,11 +154,19 @@ export async function getJobs(
         } as Job;
     });
     
-    // Perform remaining filtering in-memory
+    // Apply filtering in-memory
     let filteredJobs = allJobs;
 
     if (excludeId) {
-        filteredJobs = filteredJobs.filter(job => job.id !== excludeId);
+      filteredJobs = filteredJobs.filter(job => job.id !== excludeId);
+    }
+    
+    if (postType) {
+      filteredJobs = filteredJobs.filter(job => job.postType === postType);
+    }
+
+    if (categoryId) {
+      filteredJobs = filteredJobs.filter(job => job.categoryId === categoryId);
     }
     
     if (country) {

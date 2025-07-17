@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
 import { getJobs, getCategoryById } from '@/lib/data';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { CategoryIcon } from '@/components/icons';
 import { CategoryPageClient } from './category-page-client';
 import type { Job } from '@/lib/types';
