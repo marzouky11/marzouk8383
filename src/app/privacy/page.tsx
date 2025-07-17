@@ -4,6 +4,7 @@ import { AppLayout } from '@/components/layout/app-layout';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Shield } from 'lucide-react';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export default function PrivacyPolicyPage() {
   return (
@@ -11,15 +12,20 @@ export default function PrivacyPolicyPage() {
       <MobilePageHeader title="سياسة الخصوصية">
         <Shield className="h-5 w-5 text-primary" />
       </MobilePageHeader>
-      <div className="container mx-auto max-w-3xl px-4 py-8">
+      <DesktopPageHeader
+        icon={Shield}
+        title="سياسة الخصوصية"
+        description="نحن نهتم بخصوصيتك ونلتزم بحماية بياناتك الشخصية."
+      />
+      <div className="container mx-auto max-w-3xl px-4 pb-8">
         <Card>
-          <CardHeader>
+          <CardHeader className="md:hidden">
             <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2">
               <Shield className="h-6 w-6 text-primary" />
               سياسة الخصوصية
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-muted-foreground md:pt-6">
             <h3 className="font-bold text-foreground">1. المعلومات التي نجمعها</h3>
             <p>
               نحن نجمع المعلومات التي تقدمها مباشرة عند إنشاء حساب، مثل الاسم والبريد الإلكتروني. كما نجمع بيانات الإعلانات التي تنشرها، بما في ذلك تفاصيل الوظيفة أو المهارات ومعلومات الاتصال التي تختار مشاركتها.

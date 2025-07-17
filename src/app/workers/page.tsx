@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Users } from 'lucide-react';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export const metadata: Metadata = {
   title: 'ابحث عن عمال محترفين في بلدك - جميع التخصصات',
@@ -63,8 +64,12 @@ export default async function WorkersPage({
       <MobilePageHeader title="باحثون عن عمل">
         <Users className="h-5 w-5 text-primary" />
       </MobilePageHeader>
+      <DesktopPageHeader
+        icon={Users}
+        title="باحثون عن عمل"
+        description="استعرض ملفات الباحثين عن عمل واعثر على الكفاءات التي تحتاجها."
+      />
       <div className="container py-6">
-        <h1 className="sr-only">الباحثون عن عمل</h1>
         <div className="mb-6">
            <Suspense fallback={<JobFiltersSkeleton />}>
             <JobFilters categories={categories} showSort={true} />

@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PostJobForm } from './post-job-form';
 import { Loader2, PlusCircle } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 import type { Category, PostType } from '@/lib/types';
 
 interface PostJobClientPageProps {
@@ -30,26 +31,29 @@ export default function PostJobClientPage({ categories }: PostJobClientPageProps
   }, [user, loading, router, postType]);
 
   const pageTitle = postType === 'seeking_job' ? 'نشر طلب عمل' : 'نشر عرض عمل';
+  const pageDescription = postType === 'seeking_job' 
+    ? "املأ الحقول التالية لعرض مهاراتك وخبراتك للشركات." 
+    : "املأ الحقول التالية لنشر فرصة عمل جديدة في المنصة.";
 
   return (
     <AppLayout>
       <MobilePageHeader title={pageTitle}>
         <PlusCircle className="h-5 w-5 text-primary" />
       </MobilePageHeader>
+      <DesktopPageHeader
+        icon={PlusCircle}
+        title={pageTitle}
+        description={pageDescription}
+      />
       <div className="flex-grow">
         {loading || !user ? (
             <div className="flex h-full items-center justify-center p-8 min-h-[50vh]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
         ) : (
-            <div className="container mx-auto max-w-3xl px-4 py-8">
+            <div className="container mx-auto max-w-3xl px-4 pb-8">
                 <Card>
                 <CardContent className="pt-6">
-                    <p className="text-muted-foreground mb-6 text-center">
-                        {postType === 'seeking_job' 
-                            ? "املأ الحقول التالية لعرض مهاراتك وخبراتك للشركات." 
-                            : "املأ الحقول التالية لنشر فرصة عمل جديدة في المنصة."}
-                    </p>
                     {postType && <PostJobForm categories={categories} preselectedType={postType} />}
                 </CardContent>
                 </Card>

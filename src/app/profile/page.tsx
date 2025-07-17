@@ -14,6 +14,7 @@ import { getCategories } from '@/lib/data';
 import { UserAvatar } from '@/components/user-avatar';
 import { useToast } from '@/hooks/use-toast';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 import { ThemeToggleSwitch } from '@/components/theme-toggle';
 
 export default function SettingsPage() {
@@ -61,13 +62,18 @@ export default function SettingsPage() {
       <MobilePageHeader title="الإعدادات">
         <SettingsIcon className="h-5 w-5 text-primary" />
       </MobilePageHeader>
+      <DesktopPageHeader
+        icon={SettingsIcon}
+        title="الإعدادات والملف الشخصي"
+        description="تحكم في حسابك، عدّل معلوماتك، واستكشف روابط ومعلومات مهمة."
+      />
       <div className="flex-grow">
         {loading || !user || !userData ? (
           <div className="flex h-full items-center justify-center p-8 min-h-[50vh]">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="container mx-auto max-w-3xl px-4 py-8">
+          <div className="container mx-auto max-w-3xl px-4 pb-8">
             <div className="space-y-6">
               <Card>
                 <CardContent className="p-4 flex items-center gap-4">
@@ -155,7 +161,7 @@ export default function SettingsPage() {
                <Card>
                  <CardContent className="p-4">
                     <Button variant="destructive" className="w-full" onClick={handleLogout}>
-                      <LogOut className="ml-2 h-4 w-4" />
+                      <LogOut className="mr-2 h-4 w-4" />
                       تسجيل الخروج
                     </Button>
                  </CardContent>

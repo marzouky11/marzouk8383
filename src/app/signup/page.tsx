@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { Loader2, UserPlus, Mail, Lock, User, MapPin, Globe } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 
 export default function SignupPage() {
@@ -97,9 +98,14 @@ export default function SignupPage() {
       <MobilePageHeader title="إنشاء حساب جديد">
         <UserPlus className="h-5 w-5 text-primary" />
       </MobilePageHeader>
-      <div className="container mx-auto max-w-md py-8">
+      <DesktopPageHeader
+        icon={UserPlus}
+        title="👋 أهلاً بك في توظيفك!"
+        description="سجّل مجانًا لاكتشاف فرص العمل أو لعرض خدماتك والتواصل مع أصحاب المشاريع."
+      />
+      <div className="container mx-auto max-w-md pb-8">
         <Card className="shadow-lg">
-          <CardHeader className="text-center">
+          <CardHeader className="text-center md:hidden">
              <div className="mx-auto bg-primary/10 w-fit p-3 rounded-full mb-2">
                 <UserPlus className="h-8 w-8 text-primary" />
             </div>
@@ -108,7 +114,7 @@ export default function SignupPage() {
               سجّل مجانًا لاكتشاف فرص العمل أو لعرض خدماتك والتواصل مع أصحاب المشاريع.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-2">
+          <CardContent className="pt-2 md:pt-6">
             <form onSubmit={handleSignup} className="space-y-4">
                <div className="space-y-2">
                 <Label htmlFor="name" className="flex items-center gap-2">
@@ -205,7 +211,7 @@ export default function SignupPage() {
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? 'جاري إنشاء الحساب...' : 'إنشاء حساب'}
               </Button>
             </form>

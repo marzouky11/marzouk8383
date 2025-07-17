@@ -9,6 +9,7 @@ import { PostJobForm } from '@/app/post-job/post-job-form';
 import { getCategories, getJobById } from '@/lib/data';
 import { Loader2, Edit } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 import type { Job } from '@/lib/types';
 
 export default function EditJobPage() {
@@ -62,13 +63,15 @@ export default function EditJobPage() {
       <MobilePageHeader title="تعديل الإعلان">
         <Edit className="h-5 w-5 text-primary" />
       </MobilePageHeader>
+      <DesktopPageHeader
+        icon={Edit}
+        title="تعديل الإعلان"
+        description="قم بتحديث معلومات إعلانك لضمان وصوله للشخص المناسب."
+      />
       <div className="flex-grow">
-        <div className="container mx-auto max-w-3xl px-4 py-8">
+        <div className="container mx-auto max-w-3xl px-4 pb-8">
           <Card>
             <CardContent className="pt-6">
-              <p className="text-muted-foreground mb-6 text-center">
-                قم بتحديث معلومات إعلانك.
-              </p>
               <PostJobForm
                 categories={categories}
                 job={job}

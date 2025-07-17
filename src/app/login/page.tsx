@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Loader2, LogIn, Mail, Lock } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,16 +52,21 @@ export default function LoginPage() {
       <MobilePageHeader title="تسجيل الدخول">
         <LogIn className="h-5 w-5 text-primary" />
       </MobilePageHeader>
-      <div className="container mx-auto max-w-md py-8">
+      <DesktopPageHeader
+        icon={LogIn}
+        title="أهلاً بك مجدداً!"
+        description="سجّل دخولك للوصول إلى حسابك وإدارة إعلاناتك."
+      />
+      <div className="container mx-auto max-w-md pb-8">
         <Card className="shadow-lg">
-          <CardHeader className="text-center">
+          <CardHeader className="text-center md:hidden">
             <div className="mx-auto bg-primary/10 w-fit p-3 rounded-full mb-2">
                 <LogIn className="h-8 w-8 text-primary" />
             </div>
             <CardTitle className="text-2xl">أهلاً بك مجدداً!</CardTitle>
             <CardDescription>سجّل دخولك للوصول إلى حسابك وإدارة إعلاناتك.</CardDescription>
           </CardHeader>
-          <CardContent className="pt-2">
+          <CardContent className="pt-2 md:pt-6">
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2">
@@ -94,7 +100,7 @@ export default function LoginPage() {
                 </p>
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
               </Button>
             </form>

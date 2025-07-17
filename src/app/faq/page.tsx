@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/accordion';
 import { HelpCircle } from 'lucide-react';
 import type { Metadata } from 'next';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export const metadata: Metadata = {
   title: 'الأسئلة الشائعة',
@@ -44,15 +45,20 @@ export default function FaqPage() {
       <MobilePageHeader title="الأسئلة الشائعة">
         <HelpCircle className="h-5 w-5 text-primary" />
       </MobilePageHeader>
-      <div className="container mx-auto max-w-3xl px-4 py-8">
+      <DesktopPageHeader
+        icon={HelpCircle}
+        title="الأسئلة الشائعة"
+        description="هنا تجد إجابات على الأسئلة الأكثر شيوعًا حول استخدام المنصة."
+      />
+      <div className="container mx-auto max-w-3xl px-4 pb-8">
         <Card>
-          <CardHeader>
+          <CardHeader className="md:hidden">
             <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2">
               <HelpCircle className="h-6 w-6 text-primary" />
               الأسئلة الشائعة
             </h1>
           </CardHeader>
-          <CardContent>
+          <CardContent className="md:pt-6">
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>

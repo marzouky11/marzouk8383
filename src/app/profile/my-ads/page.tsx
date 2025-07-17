@@ -23,6 +23,7 @@ import { JobCard } from '@/components/job-card';
 import { useToast } from '@/hooks/use-toast';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export default function MyAdsPage() {
   const router = useRouter();
@@ -68,20 +69,19 @@ export default function MyAdsPage() {
       <MobilePageHeader title="إعلاناتي">
         <FileText className="h-5 w-5 text-primary" />
       </MobilePageHeader>
+       <DesktopPageHeader
+        icon={FileText}
+        title="إعلاناتي"
+        description="هنا يمكنك إدارة جميع إعلاناتك، تعديلها، أو حذفها."
+      />
       <div className="flex-grow">
         {authLoading ? (
           <div className="flex h-full items-center justify-center p-8 min-h-[50vh]">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="container mx-auto max-w-3xl px-4 py-8">
+          <div className="container mx-auto max-w-3xl px-4 pb-8">
             <Card>
-                <CardHeader className="hidden md:block">
-                    <CardTitle className="flex items-center gap-2">
-                        <FileText className="h-5 w-5 text-primary" />
-                        إعلاناتي
-                    </CardTitle>
-                </CardHeader>
                 <CardContent>
                     {adsLoading ? (
                         <div className="flex justify-center p-8">
@@ -95,12 +95,12 @@ export default function MyAdsPage() {
                                     <div className="flex gap-2">
                                         <Button asChild variant="outline" className="flex-1">
                                             <Link href={`/edit-job/${ad.id}`}>
-                                                <Edit className="ml-2 h-4 w-4" />
+                                                <Edit className="mr-2 h-4 w-4" />
                                                 تعديل
                                             </Link>
                                         </Button>
                                         <Button variant="destructive" className="flex-1" onClick={() => setAdToDelete(ad.id)}>
-                                            <Trash2 className="ml-2 h-4 w-4" />
+                                            <Trash2 className="mr-2 h-4 w-4" />
                                             حذف
                                         </Button>
                                     </div>

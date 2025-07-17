@@ -4,6 +4,7 @@ import { AppLayout } from '@/components/layout/app-layout';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { FileText } from 'lucide-react';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export default function TermsOfServicePage() {
   return (
@@ -11,15 +12,20 @@ export default function TermsOfServicePage() {
       <MobilePageHeader title="شروط الاستخدام">
         <FileText className="h-5 w-5 text-primary" />
       </MobilePageHeader>
-      <div className="container mx-auto max-w-3xl px-4 py-8">
+      <DesktopPageHeader
+        icon={FileText}
+        title="شروط الاستخدام"
+        description="يرجى قراءة شروط وأحكام استخدام منصتنا بعناية."
+      />
+      <div className="container mx-auto max-w-3xl px-4 pb-8">
         <Card>
-          <CardHeader>
+          <CardHeader className="md:hidden">
             <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2">
               <FileText className="h-6 w-6 text-primary" />
               شروط الاستخدام
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-muted-foreground md:pt-6">
             <h3 className="font-bold text-foreground">1. قبول الشروط</h3>
             <p>
               باستخدامك لمنصة "توظيفك"، فإنك توافق على الالتزام بشروط الاستخدام هذه. إذا كنت لا توافق على هذه الشروط، فيجب عليك عدم استخدام المنصة.

@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Briefcase } from 'lucide-react';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export const metadata: Metadata = {
   title: 'وظائف شاغرة في الوطن العربي - فرص عمل جديدة يوميًا',
@@ -62,8 +63,12 @@ export default async function JobsPage({
       <MobilePageHeader title="الوظائف">
         <Briefcase className="h-5 w-5 text-primary" />
       </MobilePageHeader>
+      <DesktopPageHeader
+        icon={Briefcase}
+        title="عروض العمل"
+        description="تصفح أحدث عروض العمل المتاحة في مختلف المجالات والقطاعات."
+      />
       <div className="container py-6">
-        <h1 className="sr-only">عروض العمل المتاحة</h1>
         <div className="mb-6">
           <Suspense fallback={<JobFiltersSkeleton />}>
             <JobFilters categories={categories} showSort={true} />

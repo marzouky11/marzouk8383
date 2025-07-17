@@ -4,6 +4,7 @@ import { AppLayout } from '@/components/layout/app-layout';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Info } from 'lucide-react';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export default function AboutUsPage() {
   return (
@@ -11,15 +12,20 @@ export default function AboutUsPage() {
       <MobilePageHeader title="من نحن">
         <Info className="h-5 w-5 text-primary" />
       </MobilePageHeader>
-      <div className="container mx-auto max-w-3xl px-4 py-8">
+      <DesktopPageHeader
+        icon={Info}
+        title="من نحن"
+        description="تعرف على رؤيتنا ومهمتنا في منصة توظيفك."
+      />
+      <div className="container mx-auto max-w-3xl px-4 pb-8">
         <Card>
-          <CardHeader>
+          <CardHeader className="md:hidden">
             <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2">
               <Info className="h-6 w-6 text-primary" />
               من نحن
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-muted-foreground md:pt-6">
             <p>
               "توظيفك" هي منصة رائدة تهدف إلى تسهيل التواصل بين أصحاب العمل والباحثين عن فرص في مختلف المجالات المهنية والحرفية في العالم العربي.
             </p>

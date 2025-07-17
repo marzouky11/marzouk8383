@@ -9,6 +9,7 @@ import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 
 export default function SelectPostTypePage() {
@@ -38,14 +39,12 @@ export default function SelectPostTypePage() {
       <MobilePageHeader title="نشر إعلان جديد">
         <PlusCircle className="h-5 w-5 text-primary" />
       </MobilePageHeader>
-      <div className="container mx-auto max-w-2xl px-4 py-8">
-        <Card className="text-center shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold">ما نوع الإعلان الذي تريد نشره؟</CardTitle>
-            <CardDescription>اختر نوع الإعلان لتتمكن من ملء النموذج المناسب.</CardDescription>
-          </CardHeader>
-        </Card>
-
+      <DesktopPageHeader
+        icon={PlusCircle}
+        title="نشر إعلان جديد"
+        description="اختر نوع الإعلان الذي تريد نشره لتتمكن من ملء النموذج المناسب."
+      />
+      <div className="container mx-auto max-w-2xl px-4 pb-8">
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <Link href="/post-job?type=seeking_worker">
             <Card className="p-6 text-center hover:shadow-xl hover:border-accent transition-all duration-300 cursor-pointer h-full flex flex-col justify-center items-center">

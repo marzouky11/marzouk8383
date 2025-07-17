@@ -9,6 +9,7 @@ import { ProfileForm } from '@/app/profile/profile-form';
 import { getCategories } from '@/lib/data';
 import { Loader2, User } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export default function EditProfilePage() {
   const { user, userData, loading } = useAuth();
@@ -27,24 +28,20 @@ export default function EditProfilePage() {
       <MobilePageHeader title="تعديل الملف الشخصي">
         <User className="h-5 w-5 text-primary" />
       </MobilePageHeader>
+      <DesktopPageHeader
+        icon={User}
+        title="تعديل الملف الشخصي"
+        description="حافظ على تحديث معلومات ملفك الشخصي لزيادة فرصك."
+      />
       <div className="flex-grow">
         {loading || !user || !userData ? (
             <div className="flex h-full items-center justify-center p-8 min-h-[50vh]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
         ) : (
-            <div className="container mx-auto max-w-3xl px-4 py-8">
+            <div className="container mx-auto max-w-3xl px-4 pb-8">
                 <Card>
-                    <CardHeader className="hidden md:block">
-                        <CardTitle className="flex items-center gap-2 text-2xl">
-                            <User className="h-6 w-6 text-primary" />
-                            تعديل الملف الشخصي
-                        </CardTitle>
-                    </CardHeader>
                     <CardContent className="pt-6">
-                        <p className="text-muted-foreground mb-6 text-center">
-                            قم بتحديث معلومات ملفك الشخصي.
-                        </p>
                         <ProfileForm categories={categories} user={userData} />
                     </CardContent>
                 </Card>
