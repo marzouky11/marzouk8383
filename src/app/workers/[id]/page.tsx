@@ -168,7 +168,7 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                 <UserIcon className="h-5 w-5" style={{ color: finalColor }} />
             </MobilePageHeader>
             <div className="container mx-auto max-w-4xl px-4 py-8 space-y-6">
-                <Card className="overflow-hidden shadow-lg border-t-4" style={{ borderColor: finalColor }}>
+                <Card className="overflow-hidden shadow-lg">
                     <CardHeader className="bg-muted/30 p-4 sm:p-6">
                        <div className="flex flex-col items-start gap-4">
                             <div className="flex items-center gap-3 w-full">
