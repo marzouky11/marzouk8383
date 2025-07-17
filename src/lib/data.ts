@@ -1,6 +1,6 @@
 
 import { db } from '@/lib/firebase';
-import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType } from './types';
 
 const categories: Category[] = [
@@ -139,36 +139,30 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
-    let q: any;
+    const queryConstraints: QueryConstraint[] = [];
     
-    // Start with a base query ordered by date
-    const queryConstraints: any[] = [orderBy('createdAt', 'desc')];
-    
-    // IMPORTANT: Firestore requires that if you use a range filter (<, <=, >, >=) on a field,
-    // your first ordering must be on the same field.
-    // Since we don't have range filters, we can freely add `where` clauses.
-    
-    if (postType) {
-      queryConstraints.push(where('postType', '==', postType));
+    // Build Firestore query
+    if (sortBy === 'newest') {
+        queryConstraints.push(orderBy('createdAt', 'desc'));
     }
-     if (categoryId) {
-      queryConstraints.push(where('categoryId', '==', categoryId));
-    }
-    
-    // Note: We don't add other filters like country, city, workType to the Firestore query
-    // because Firestore has limitations on complex queries (e.g., you can't have multiple
-    // `where` clauses on different fields with inequality operators, and combining
-    // `where` with `orderBy` on different fields can be tricky without composite indexes).
-    // We will fetch a broader set of data and filter it client-side.
 
+    if (postType) {
+        queryConstraints.push(where('postType', '==', postType));
+    }
+    
+    // Only apply categoryId filter at the Firestore level if it's the primary filter
+    if (categoryId) {
+        queryConstraints.push(where('categoryId', '==', categoryId));
+    }
+
+    // Apply limit if specified
     if (count) {
-        // Fetch a bit more if we have client-side filtering to do, to ensure we meet the count.
-        // This is a heuristic and might need adjustment based on data shape.
+        // Fetch a bit more if we have client-side filtering to do
         const fetchLimit = excludeId ? count + 1 : count;
         queryConstraints.push(limit(fetchLimit));
     }
     
-    q = query(adsRef, ...queryConstraints);
+    const q = query(adsRef, ...queryConstraints);
 
     const querySnapshot = await getDocs(q);
     
@@ -181,13 +175,18 @@ export async function getJobs(
         } as Job;
     });
     
-    // Apply client-side filtering for properties not indexed or for more complex logic
+    // Apply client-side filtering for properties not efficiently queryable in Firestore
+    // or when combining multiple optional filters without composite indexes.
     let filteredJobs = allJobs;
 
     if (excludeId) {
       filteredJobs = filteredJobs.filter(job => job.id !== excludeId);
     }
     
+    // These filters are applied client-side because Firestore doesn't support
+    // multiple "where" clauses on different fields with "in", "not-in", or "!=" operators
+    // in a single query, and combining them can get complex without the right indexes.
+    // This approach is more flexible for a varied set of optional filters.
     if (country) {
         const normalizedSearchCountry = country.trim().toLowerCase();
         filteredJobs = filteredJobs.filter(job => job.country && job.country.trim().toLowerCase().includes(normalizedSearchCountry));
