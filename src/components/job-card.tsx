@@ -106,7 +106,8 @@ export function JobCard({ job }: JobCardProps) {
 
   return (
     <Card 
-        className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full"
+        className="relative flex flex-col overflow-hidden rounded-2xl border-t-4 bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full"
+        style={{ borderColor: finalColor }}
     >
       <Link href={detailUrl} className="focus:outline-none absolute inset-0 z-10">
          <span className="sr-only">View Job</span>
