@@ -106,44 +106,37 @@ export function JobCard({ job }: JobCardProps) {
 
   return (
     <Card 
-        className="relative flex flex-col overflow-hidden rounded-2xl border-l-4 bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full"
-        style={{ borderColor: finalColor }}
+        className="relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full"
     >
       <Link href={detailUrl} className="focus:outline-none absolute inset-0 z-10">
          <span className="sr-only">View Job</span>
       </Link>
 
        <div className="flex-grow space-y-3">
-        <div className="flex justify-between items-start gap-3">
-          <div className="flex-grow overflow-hidden">
-            <Badge variant={'secondary'} className="mb-1 font-normal text-xs">{category?.name || job.categoryName}</Badge>
-            <h3 
-              className="font-bold text-lg leading-tight truncate"
-              style={{ color: finalColor }}
+        <div className="flex items-start gap-4">
+           <div 
+                className="flex-shrink-0 p-3 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: `${finalColor}1A` }}
             >
-                {job.title}
-            </h3>
-          </div>
-          <div 
-            className="flex-shrink-0 p-3 rounded-xl z-0"
-            style={{
-              backgroundColor: `${finalColor}1A`
-            }}
-          >
-            <CategoryIcon 
-              name={finalIconName} 
-              className="w-6 h-6"
-              style={{ color: finalColor }}
-            />
-          </div>
+                <CategoryIcon name={finalIconName} className="w-6 h-6" style={{ color: finalColor }} />
+            </div>
+            <div className="flex-grow overflow-hidden">
+                 <h3 
+                  className="font-bold text-base leading-tight"
+                  style={{ color: finalColor }}
+                >
+                    {job.title}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1 truncate">{category?.name || job.categoryName}</p>
+            </div>
         </div>
         
         <Separator />
 
         <div className="flex flex-col gap-2.5">
-          <div className="flex items-center gap-2 text-base text-muted-foreground"><MapPin className="h-4 w-4 flex-shrink-0" /><span>{job.country}, {job.city}</span></div>
-          {job.workType && <div className="flex items-center gap-2 text-base text-muted-foreground"><Clock className="h-4 w-4 flex-shrink-0" /><span>{workTypeTranslations[job.workType]}</span></div>}
-          <div className="flex items-center gap-2 text-base text-muted-foreground"><Wallet className="h-4 w-4 flex-shrink-0" /><span>{job.salary ? job.salary : 'عند الطلب'}</span></div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground"><MapPin className="h-4 w-4 flex-shrink-0" /><span>{job.country}, {job.city}</span></div>
+          {job.workType && <div className="flex items-center gap-2 text-sm text-muted-foreground"><Clock className="h-4 w-4 flex-shrink-0" /><span>{workTypeTranslations[job.workType]}</span></div>}
+          <div className="flex items-center gap-2 text-sm text-muted-foreground"><Wallet className="h-4 w-4 flex-shrink-0" /><span>{job.salary ? job.salary : 'عند الطلب'}</span></div>
         </div>
       </div>
       
