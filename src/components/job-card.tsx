@@ -100,7 +100,7 @@ export function JobCard({ job }: JobCardProps) {
     )
   }
 
-  // Design for Job Offers
+  // Design for Job Offers - Reverted to original design with icon on the right
   const finalColor = category?.color || 'hsl(var(--primary))';
   const finalIconName = category?.iconName || 'Briefcase';
 
@@ -114,7 +114,7 @@ export function JobCard({ job }: JobCardProps) {
 
        <div className="flex-grow space-y-3">
         <div className="flex items-start gap-4">
-           <div 
+            <div 
                 className="flex-shrink-0 p-3 rounded-xl flex items-center justify-center"
                 style={{ backgroundColor: `${finalColor}1A` }}
             >
@@ -122,7 +122,7 @@ export function JobCard({ job }: JobCardProps) {
             </div>
             <div className="flex-grow overflow-hidden">
                  <h3 
-                  className="font-bold text-base leading-tight"
+                  className="font-bold text-base leading-tight truncate"
                   style={{ color: finalColor }}
                 >
                     {job.title}
