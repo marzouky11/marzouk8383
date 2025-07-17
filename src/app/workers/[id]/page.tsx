@@ -280,4 +280,3 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
         </AppLayout>
     );
 }
-
