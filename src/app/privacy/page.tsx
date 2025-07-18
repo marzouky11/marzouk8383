@@ -30,9 +30,6 @@ export default function PrivacyPolicyPage() {
           <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-primary prose-a:text-primary">
             
             <p>
-              <strong>آخر تحديث: 18 يوليو 2024</strong>
-            </p>
-            <p>
               أهلاً بك في منصة "توظيفك". نحن ندرك أهمية الخصوصية وأمن المعلومات الشخصية لمستخدمينا. تهدف سياسة الخصوصية هذه إلى توضيح أنواع المعلومات التي نجمعها، وكيفية استخدامها وحمايتها، والخيارات المتاحة لك فيما يتعلق ببياناتك. باستخدامك لخدمات "توظيفك"، فإنك توافق على الممارسات الموضحة في هذه السياسة.
             </p>
             

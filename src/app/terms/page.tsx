@@ -30,9 +30,6 @@ export default function TermsOfServicePage() {
           <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-primary prose-a:text-primary">
             
             <p>
-                <strong>آخر تحديث: 18 يوليو 2024</strong>
-            </p>
-            <p>
                 مرحبًا بك في منصة "توظيفك". تمثل هذه الشروط والأحكام ("الشروط") اتفاقية قانونية ملزمة بينك (كمستخدم) وبين منصة "توظيفك" ("المنصة"، "نحن"). يرجى قراءة هذه الشروط بعناية قبل استخدام خدماتنا. من خلال الوصول إلى المنصة أو استخدامها، فإنك تقر بأنك قد قرأت وفهمت وتوافق على الالتزام بهذه الشروط.
             </p>
 
