@@ -1,6 +1,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import { AppLayout } from '@/components/layout/app-layout';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
