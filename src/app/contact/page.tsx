@@ -30,7 +30,7 @@ export default function ContactUsPage() {
               اتصل بنا
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-foreground prose-a:text-primary">
+          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-primary prose-a:text-primary">
             
             <p>
                 في "توظيفك"، نؤمن بأن التواصل الفعّال هو أساس بناء علاقة قوية ومستدامة مع مستخدمينا. سواء كنت صاحب عمل، أو باحثًا عن فرصة، أو مجرد زائر مهتم، فإن ملاحظاتك، استفساراتك، واقتراحاتك هي محركنا الأساسي للتطور والتحسين. نحن هنا لنستمع إليك ونقدم لك الدعم الذي تحتاجه في كل خطوة.

@@ -27,7 +27,7 @@ export default function PrivacyPolicyPage() {
               سياسة الخصوصية
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-foreground prose-a:text-primary">
+          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-primary prose-a:text-primary">
             
             <p>
               <strong>آخر تحديث: 18 يوليو 2024</strong>
