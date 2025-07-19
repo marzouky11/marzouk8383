@@ -25,6 +25,7 @@ import {
   GraduationCap,
   Mail,
   Flag,
+  LayoutGrid,
 } from 'lucide-react';
 import type { WorkType } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
@@ -167,6 +168,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     });
 
     const category = getCategoryById(job.categoryId || '');
+    const categoryName = category?.name || job.categoryName;
     
     const translatedWorkType = job.workType ? workTypeTranslations[job.workType] : undefined;
     const finalColor = category?.color || 'hsl(var(--primary))';
@@ -206,6 +208,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                     </CardHeader>
                     <CardContent className="p-4 sm:p-6 space-y-6">
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            <InfoItem icon={LayoutGrid} label="الفئة" value={categoryName} />
                             {translatedWorkType && <InfoItem icon={Clock} label="نوع الدوام" value={translatedWorkType} />}
                             <InfoItem icon={Wallet} label="الأجر" value={job.salary ? job.salary : 'عند الطلب'} />
                             <InfoItem icon={Award} label="الخبرة" value={job.experience || 'غير محدد'} />
