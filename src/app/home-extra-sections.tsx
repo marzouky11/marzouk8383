@@ -57,10 +57,10 @@ function StatsSection({ stats }: { stats: { jobs: number, seekers: number } }) {
             transition={{ duration: 0.5 }}
           >
             <Card className="p-8 text-center flex flex-col items-center gap-4 transition-transform hover:scale-105 hover:shadow-xl">
-              <div className="p-4 bg-primary/10 rounded-full">
-                <Briefcase className="h-10 w-10 text-primary" />
+              <div className="p-4 bg-accent/10 rounded-full">
+                <Briefcase className="h-10 w-10 text-accent" />
               </div>
-              <div className="text-5xl font-bold text-primary">
+              <div className="text-5xl font-bold text-accent">
                 <CountUp end={stats.jobs} />
               </div>
               <p className="text-lg font-semibold text-muted-foreground">عرض عمل منشور</p>
@@ -73,10 +73,10 @@ function StatsSection({ stats }: { stats: { jobs: number, seekers: number } }) {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Card className="p-8 text-center flex flex-col items-center gap-4 transition-transform hover:scale-105 hover:shadow-xl">
-               <div className="p-4 bg-accent/10 rounded-full">
-                <Users className="h-10 w-10 text-accent" />
+               <div className="p-4 bg-destructive/10 rounded-full">
+                <Users className="h-10 w-10 text-destructive" />
               </div>
-              <div className="text-5xl font-bold text-accent">
+              <div className="text-5xl font-bold text-destructive">
                 <CountUp end={stats.seekers} />
               </div>
               <p className="text-lg font-semibold text-muted-foreground">باحث عن عمل</p>
