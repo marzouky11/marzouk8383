@@ -77,10 +77,9 @@ export function JobCard({ job }: JobCardProps) {
                         {job.title}
                     </h3>
                     {categoryName && (
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1.5">
-                        <LayoutGrid className="h-3 w-3" style={{ color: finalColor }} />
-                        <span className="font-medium" style={{ color: finalColor }}>{categoryName}</span>
-                      </div>
+                      <p className="text-xs text-muted-foreground mt-1.5 font-medium" style={{ color: finalColor }}>
+                        {categoryName}
+                      </p>
                     )}
                 </div>
             </div>
@@ -88,14 +87,14 @@ export function JobCard({ job }: JobCardProps) {
             <Separator className="my-3" />
             
             <div className="space-y-2 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">{job.country}, {job.city}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                  <UserIcon className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate font-medium text-foreground/80">{job.ownerName}</span>
-              </div>
+                <div className="flex items-center gap-2">
+                    <UserIcon className="h-4 w-4 flex-shrink-0" />
+                    <span className="truncate">{job.ownerName}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 flex-shrink-0" />
+                    <span className="truncate">{job.country}, {job.city}</span>
+                </div>
             </div>
         </div>
 
