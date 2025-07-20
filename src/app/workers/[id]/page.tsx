@@ -1,5 +1,6 @@
 
 
+
 import { notFound } from 'next/navigation';
 import { getJobById, getCategoryById, getJobs } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -28,6 +29,7 @@ import { ShareButton } from '@/app/jobs/[id]/share-button';
 import { Separator } from '@/components/ui/separator';
 import { ReportAdDialog } from '@/app/jobs/[id]/report-ad-dialog';
 import { JobCard } from '@/components/job-card';
+import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 interface JobDetailPageProps {
   params: { id: string };
@@ -169,7 +171,12 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
             <MobilePageHeader title="ملف باحث عن عمل">
                 <UserIcon className="h-5 w-5" style={{ color: finalColor }} />
             </MobilePageHeader>
-            <div className="container mx-auto max-w-4xl px-4 py-8 space-y-6">
+            <DesktopPageHeader
+                icon={UserIcon}
+                title="ملف باحث عن عمل"
+                description="استعرض مهارات وخبرات هذا المرشح وتواصل معه مباشرة."
+            />
+            <div className="container mx-auto max-w-4xl px-4 pb-8 space-y-6">
                 <Card className="overflow-hidden shadow-lg">
                     <CardHeader className="bg-muted/30 p-4 sm:p-6">
                        <div className="flex flex-col items-start gap-4">
