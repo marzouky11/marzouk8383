@@ -13,6 +13,7 @@ import { JobFilters } from '@/components/job-filters';
 import { ThemeToggleButton } from '@/components/theme-toggle';
 import { HomeCarousel } from './home-carousel';
 import { CategorySection } from './category-section';
+import { HomeExtraSections } from './home-extra-sections';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -132,6 +133,8 @@ export default async function HomePage() {
           </section>
 
           <CategorySection categories={categories} />
+          
+          <HomeExtraSections />
       </div>
     </AppLayout>
   );
