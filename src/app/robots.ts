@@ -1,11 +1,12 @@
 import { MetadataRoute } from 'next'
  
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = 'https://www.tawzifak.com';
   return {
     rules: {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://www.tawzifak.com/sitemap.xml',
+    sitemap: `${baseUrl}/sitemap.xml`,
   }
 }
