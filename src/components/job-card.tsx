@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Clock, Wallet, CalendarDays, User as UserIcon, Briefcase } from 'lucide-react';
+import { MapPin, Clock, Wallet, CalendarDays, User as UserIcon, Briefcase, LayoutGrid } from 'lucide-react';
 import type { Job, WorkType } from '@/lib/types';
 import { getCategoryById } from '@/lib/data';
 import { CategoryIcon } from '@/components/icons';
@@ -50,6 +50,7 @@ export function JobCard({ job }: JobCardProps) {
   const category = getCategoryById(job.categoryId || '');
   const isSeekingJob = job.postType === 'seeking_job';
   const detailUrl = isSeekingJob ? `/workers/${job.id}` : `/jobs/${job.id}`;
+  const categoryName = category?.name || job.categoryName;
 
   if (isSeekingJob) {
     const finalColor = category?.color || 'hsl(var(--destructive))';
@@ -75,15 +76,26 @@ export function JobCard({ job }: JobCardProps) {
                     <h3 className="font-bold text-base leading-tight text-foreground truncate">
                         {job.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1 truncate">{job.ownerName}</p>
+                    {categoryName && (
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1.5">
+                        <LayoutGrid className="h-3 w-3" style={{ color: finalColor }} />
+                        <span className="font-medium" style={{ color: finalColor }}>{categoryName}</span>
+                      </div>
+                    )}
                 </div>
             </div>
 
             <Separator className="my-3" />
             
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4 flex-shrink-0" />
-                <span className="truncate">{job.country}, {job.city}</span>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">{job.country}, {job.city}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                  <UserIcon className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate font-medium text-foreground/80">{job.ownerName}</span>
+              </div>
             </div>
         </div>
 
@@ -128,7 +140,7 @@ export function JobCard({ job }: JobCardProps) {
                 >
                     {job.title}
                 </h3>
-                <p className="text-sm text-muted-foreground mt-1 truncate">{category?.name || job.categoryName}</p>
+                <p className="text-sm text-muted-foreground mt-1 truncate">{categoryName}</p>
             </div>
         </div>
         
