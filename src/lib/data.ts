@@ -1,8 +1,9 @@
 
 
+
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint } from 'firebase/firestore';
-import type { Job, Category, PostType, User, WorkType, Testimonial, Comment } from './types';
+import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
 
 const categories: Category[] = [
   { id: '1', name: 'نجار', iconName: 'Hammer', color: '#a16207' },
@@ -399,94 +400,6 @@ export async function deleteTestimonial(testimonialId: string) {
     }
 }
 
-// Comments Functions
-export async function getComments(adId: string): Promise<Comment[]> {
-    try {
-        const commentsRef = collection(db, 'comments');
-        const q = query(commentsRef, where('adId', '==', adId), orderBy('createdAt', 'asc'));
-        const querySnapshot = await getDocs(q);
-        
-        const comments = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-            postedAt: formatTimeAgo(doc.data().createdAt),
-        } as Comment));
-        
-        // Nest replies under their parents
-        const commentMap = new Map<string, Comment>();
-        const topLevelComments: Comment[] = [];
-
-        comments.forEach(comment => {
-            comment.replies = [];
-            commentMap.set(comment.id, comment);
-        });
-
-        comments.forEach(comment => {
-            if (comment.parentCommentId && commentMap.has(comment.parentCommentId)) {
-                commentMap.get(comment.parentCommentId)?.replies?.push(comment);
-            } else {
-                topLevelComments.push(comment);
-            }
-        });
-
-        return topLevelComments;
-    } catch (error) {
-        console.error("Error fetching comments: ", error);
-        return [];
-    }
-}
-
-export async function addComment(commentData: Omit<Comment, 'id' | 'createdAt' | 'postedAt' | 'replies'>): Promise<Comment> {
-    try {
-        const commentsCollection = collection(db, 'comments');
-        
-        const dataToSave = {
-            ...commentData,
-            createdAt: serverTimestamp(),
-        };
-
-        const newDocRef = await addDoc(commentsCollection, dataToSave);
-        
-        // Fetch the just-added document to return it with the server timestamp resolved
-        const newDocSnap = await getDoc(newDocRef);
-        const newComment = newDocSnap.data();
-
-        return {
-            id: newDocRef.id,
-            ...newComment,
-            postedAt: formatTimeAgo(newComment?.createdAt),
-        } as Comment;
-
-    } catch (e) {
-        console.error("Error adding comment: ", e);
-        throw new Error("Failed to add comment");
-    }
-}
-
-export async function updateComment(commentId: string, text: string) {
-    try {
-        const commentRef = doc(db, 'comments', commentId);
-        await updateDoc(commentRef, {
-            text: text,
-            updatedAt: serverTimestamp()
-        });
-    } catch (e) {
-        console.error("Error updating comment: ", e);
-        throw new Error("Failed to update comment");
-    }
-}
-
-export async function deleteComment(commentId: string) {
-    try {
-        // This is a simple delete. A more complex scenario would also delete all replies.
-        await deleteDoc(doc(db, 'comments', commentId));
-    } catch (e) {
-        console.error("Error deleting comment: ", e);
-        throw new Error("Failed to delete comment");
-    }
-}
-
-
 export async function hasUserLikedJob(jobId: string, userId: string): Promise<boolean> {
     const interestRef = doc(db, 'interests', `${userId}_${jobId}`);
     const interestDoc = await getDoc(interestRef);
@@ -499,4 +412,3 @@ export function getCategories() {
 
 export function getCategoryById(id: string) {
     return categories.find((cat) => cat.id === id);
-}

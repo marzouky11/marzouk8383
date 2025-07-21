@@ -1,5 +1,3 @@
-
-
 import type { Timestamp } from 'firebase/firestore';
 
 export interface Category {
@@ -66,19 +64,6 @@ export interface Testimonial {
     content: string;
     createdAt: Timestamp;
     postedAt: string;
-}
-
-export interface Comment {
-  id: string;
-  userId: string;
-  userName: string;
-  userAvatarColor?: string;
-  adId: string;
-  text: string;
-  parentCommentId?: string;
-  createdAt: Timestamp;
-  postedAt: string;
-  replies?: Comment[];
 }
 
 export interface Country {
