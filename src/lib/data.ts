@@ -1,6 +1,5 @@
 
 
-
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
@@ -323,10 +322,11 @@ export async function updateUserProfile(uid: string, profileData: Partial<User>)
 export async function addTestimonial(testimonialData: Omit<Testimonial, 'id' | 'createdAt' | 'postedAt'>): Promise<{ id: string }> {
     try {
         const testimonialsCollection = collection(db, 'testimonials');
-        const newDocRef = await addDoc(testimonialsCollection, {
+        const dataToSave = {
             ...testimonialData,
             createdAt: serverTimestamp(),
-        });
+        };
+        const newDocRef = await addDoc(testimonialsCollection, dataToSave);
         return { id: newDocRef.id };
     } catch (e) {
         console.error("Error adding testimonial: ", e);

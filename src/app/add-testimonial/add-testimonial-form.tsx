@@ -58,10 +58,11 @@ export function AddTestimonialForm() {
       });
       router.push('/');
     } catch (error) {
+      console.error("Failed to add testimonial:", error);
       toast({
         variant: "destructive",
-        title: "خطأ",
-        description: "حدث خطأ أثناء إرسال رأيك. يرجى المحاولة مرة أخرى.",
+        title: "خطأ في الإرسال",
+        description: "حدث خطأ غير متوقع أثناء إرسال رأيك. يرجى المحاولة مرة أخرى لاحقًا.",
       });
     } finally {
       setIsSubmitting(false);
