@@ -248,9 +248,6 @@ export async function getJobById(id: string): Promise<Job | null> {
 export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 'rating' | 'postedAt'>): Promise<{ id: string }> {
     try {
         const adsCollection = collection(db, 'ads');
-        const newDocRef = doc(adsCollection); // Create a new doc reference with a unique ID
-        const id = newDocRef.id;
-
         const newJob: { [key: string]: any } = {
             ...jobData,
             createdAt: serverTimestamp(),
@@ -265,8 +262,8 @@ export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 
             }
         });
 
-        await setDoc(newDocRef, newJob);
-        return { id };
+        const newDocRef = await addDoc(adsCollection, newJob);
+        return { id: newDocRef.id };
     } catch (e) {
         console.error("Error adding document: ", e);
         throw new Error("Failed to post job");
