@@ -1,6 +1,7 @@
 
 
 
+
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
@@ -412,3 +413,4 @@ export function getCategories() {
 
 export function getCategoryById(id: string) {
     return categories.find((cat) => cat.id === id);
+}
