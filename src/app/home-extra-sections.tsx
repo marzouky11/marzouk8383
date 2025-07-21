@@ -100,7 +100,6 @@ const INITIAL_DISPLAY_COUNT_DESKTOP = 2;
 function TestimonialsSection({ initialTestimonials }: { initialTestimonials: Testimonial[] }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-150px" });
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
   const [showAll, setShowAll] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -113,8 +112,8 @@ function TestimonialsSection({ initialTestimonials }: { initialTestimonials: Tes
   }, []);
 
   const initialCount = isMobile ? INITIAL_DISPLAY_COUNT_MOBILE : INITIAL_DISPLAY_COUNT_DESKTOP;
-  const displayedTestimonials = showAll ? testimonials : testimonials.slice(0, initialCount);
-  const hasMoreTestimonials = testimonials.length > initialCount;
+  const displayedTestimonials = showAll ? initialTestimonials : initialTestimonials.slice(0, initialCount);
+  const hasMoreTestimonials = initialTestimonials.length > initialCount;
 
   return (
     <section ref={ref} className="py-12">
@@ -124,7 +123,7 @@ function TestimonialsSection({ initialTestimonials }: { initialTestimonials: Tes
           <p className="text-muted-foreground mt-2">آراؤكم هي مصدر إلهامنا ووقودنا للتطور</p>
         </div>
         
-        {testimonials.length > 0 ? (
+        {initialTestimonials.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {displayedTestimonials.map((testimonial, index) => (
               <motion.div
@@ -168,29 +167,15 @@ function TestimonialsSection({ initialTestimonials }: { initialTestimonials: Tes
   );
 }
 
-// Main component to export
-export function HomeExtraSections() {
-    const [stats, setStats] = useState<{ jobs: number, seekers: number }>({ jobs: 0, seekers: 0 });
-    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+interface HomeExtraSectionsProps {
+  testimonials: Testimonial[];
+  jobOffersCount: number;
+  jobSeekersCount: number;
+}
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [jobOffers, jobSeekers, fetchedTestimonials] = await Promise.all([
-                    getJobs({ postType: 'seeking_worker' }),
-                    getJobs({ postType: 'seeking_job' }),
-                    getTestimonials(),
-                ]);
-                setStats({ jobs: jobOffers.length, seekers: jobSeekers.length });
-                setTestimonials(fetchedTestimonials);
-            } catch (error) {
-                console.error("Failed to fetch extra sections data:", error);
-                // Fallback to static numbers if fetching fails
-                setStats({ jobs: 1250, seekers: 2800 });
-            }
-        };
-        fetchData();
-    }, []);
+// Main component to export
+export function HomeExtraSections({ testimonials, jobOffersCount, jobSeekersCount }: HomeExtraSectionsProps) {
+    const stats = { jobs: jobOffersCount, seekers: jobSeekersCount };
 
     return (
         <div className="space-y-8">

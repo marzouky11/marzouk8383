@@ -70,6 +70,9 @@ export default async function HomePage() {
   const jobOffers = await getJobs({ postType: 'seeking_worker', count: 6 });
   const jobSeekers = await getJobs({ postType: 'seeking_job', count: 6 });
   const categories = getCategories();
+  const testimonials = await getTestimonials();
+  const allJobOffers = await getJobs({ postType: 'seeking_worker' });
+  const allJobSeekers = await getJobs({ postType: 'seeking_job' });
 
   return (
     <AppLayout>
@@ -136,7 +139,11 @@ export default async function HomePage() {
           <CategorySection categories={categories} />
           
           <Suspense>
-            <HomeExtraSections />
+            <HomeExtraSections 
+              testimonials={testimonials} 
+              jobOffersCount={allJobOffers.length}
+              jobSeekersCount={allJobSeekers.length}
+            />
           </Suspense>
       </div>
     </AppLayout>
