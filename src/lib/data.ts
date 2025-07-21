@@ -321,12 +321,12 @@ export async function updateUserProfile(uid: string, profileData: Partial<User>)
 
 export async function addTestimonial(testimonialData: Omit<Testimonial, 'id' | 'createdAt' | 'postedAt'>): Promise<{ id: string }> {
     try {
-        const testimonialsCollection = collection(db, 'testimonials');
+        const reviewsCollection = collection(db, 'reviews');
         const dataToSave = {
             ...testimonialData,
             createdAt: serverTimestamp(),
         };
-        const newDocRef = await addDoc(testimonialsCollection, dataToSave);
+        const newDocRef = await addDoc(reviewsCollection, dataToSave);
         return { id: newDocRef.id };
     } catch (e) {
         console.error("Error adding testimonial: ", e);
@@ -336,8 +336,8 @@ export async function addTestimonial(testimonialData: Omit<Testimonial, 'id' | '
 
 export async function getTestimonials(): Promise<Testimonial[]> {
     try {
-        const testimonialsRef = collection(db, 'testimonials');
-        const q = query(testimonialsRef, orderBy('createdAt', 'desc'));
+        const reviewsRef = collection(db, 'reviews');
+        const q = query(reviewsRef, orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
         return querySnapshot.docs.map(doc => {
             const data = doc.data();
