@@ -55,7 +55,7 @@ const authenticatedFirstSlide = {
     hint: "professional journey start",
     title: "ابدأ بنشر إعلانك الآن",
     description: "أنشئ عرض عمل أو اطلب وظيفة في ثوانٍ",
-    buttonText: "📢 أنشئ إعلانك الآن",
+    buttonText: "أنشئ إعلانك الآن",
     buttonLink: "/post-job/select-type",
     buttonClass: "bg-blue-600 hover:bg-blue-700"
 };

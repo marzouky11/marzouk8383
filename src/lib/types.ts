@@ -1,3 +1,4 @@
+
 import type { Timestamp } from 'firebase/firestore';
 
 export interface Category {
@@ -54,6 +55,16 @@ export interface User {
   description?: string;
   createdAt?: Timestamp;
   gender?: 'male' | 'female';
+}
+
+export interface Testimonial {
+    id: string;
+    userId: string;
+    userName: string;
+    userAvatarColor: string;
+    content: string;
+    createdAt: Timestamp;
+    postedAt: string;
 }
 
 export interface Country {

@@ -2,11 +2,14 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { getJobs } from '@/lib/data';
+import { getJobs, getTestimonials } from '@/lib/data';
 import { Card } from '@/components/ui/card';
-import { Briefcase, Star, Users } from 'lucide-react';
+import { Briefcase, Star, Users, MessageSquare } from 'lucide-react';
 import { UserAvatar } from '@/components/user-avatar';
 import { motion, useInView } from "framer-motion";
+import type { Testimonial } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 // CountUp component for animating numbers
 const CountUp = ({ end, duration = 2 }: { end: number, duration?: number }) => {  
@@ -90,30 +93,33 @@ function StatsSection({ stats }: { stats: { jobs: number, seekers: number } }) {
 
 
 // Testimonials Section Component
-const testimonials = [
-  {
-    name: 'أحمد المصري',
-    avatarColor: '#3b82f6',
-    rating: 5,
-    comment: 'منصة ممتازة! وجدت وظيفة كفني تبريد وتكييف في غضون أسبوع واحد فقط. واجهة سهلة والتواصل مع أصحاب العمل كان مباشرًا. شكرًا لكم!',
-  },
-  {
-    name: 'فاطمة الزهراء',
-    avatarColor: '#ec4899',
-    rating: 5,
-    comment: 'كمصممة أزياء، كنت أبحث عن منصة لعرض أعمالي. توظيفك ساعدني في الوصول لعملاء جدد وتوسيع مشروعي الصغير. أنصح بها بشدة.',
-  },
-  {
-    name: 'خالد السعودي',
-    avatarColor: '#10b981',
-    rating: 4,
-    comment: 'بصفتي صاحب شركة مقاولات، كنت أجد صعوبة في العثور على عمال ماهرين. الآن أجد كل ما أحتاجه من نجارين وسباكين بسهولة.',
-  },
-];
+const INITIAL_DISPLAY_COUNT_MOBILE = 2;
+const INITIAL_DISPLAY_COUNT_DESKTOP = 2;
 
 function TestimonialsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-150px" });
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [showAll, setShowAll] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      const fetchedTestimonials = await getTestimonials();
+      setTestimonials(fetchedTestimonials);
+    };
+    fetchTestimonials();
+
+    const checkIsMobile = () => window.innerWidth < 768;
+    setIsMobile(checkIsMobile());
+    const handleResize = () => setIsMobile(checkIsMobile());
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const initialCount = isMobile ? INITIAL_DISPLAY_COUNT_MOBILE : INITIAL_DISPLAY_COUNT_DESKTOP;
+  const displayedTestimonials = showAll ? testimonials : testimonials.slice(0, initialCount);
+  const hasMoreTestimonials = testimonials.length > initialCount;
 
   return (
     <section ref={ref} className="py-12">
@@ -122,31 +128,45 @@ function TestimonialsSection() {
           <h2 className="text-3xl font-bold tracking-tight">ماذا يقول مستخدمونا؟</h2>
           <p className="text-muted-foreground mt-2">آراؤكم هي مصدر إلهامنا ووقودنا للتطور</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-            >
-              <Card className="p-6 h-full flex flex-col items-center text-center shadow-lg hover:shadow-2xl transition-shadow">
-                <UserAvatar name={testimonial.name} color={testimonial.avatarColor} className="h-20 w-20 text-3xl mb-4" />
-                <h4 className="font-bold text-lg">{testimonial.name}</h4>
-                <div className="flex my-2">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                  ))}
-                  {[...Array(5 - testimonial.rating)].map((_, i) => (
-                     <Star key={i} className="h-5 w-5 text-muted-foreground/30 fill-current" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground text-sm leading-relaxed mt-2 flex-grow">
-                  &ldquo;{testimonial.comment}&rdquo;
-                </p>
-              </Card>
-            </motion.div>
-          ))}
+        
+        {testimonials.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {displayedTestimonials.map((testimonial, index) => (
+              <motion.div
+                key={testimonial.id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+              >
+                <Card className="p-6 h-full flex flex-col shadow-lg hover:shadow-2xl transition-shadow">
+                  <div className="flex items-center gap-4 mb-4">
+                    <UserAvatar name={testimonial.userName} color={testimonial.userAvatarColor} className="h-12 w-12 text-xl" />
+                    <div>
+                      <h4 className="font-bold text-lg">{testimonial.userName}</h4>
+                      <p className="text-xs text-muted-foreground">{testimonial.postedAt}</p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground text-sm leading-relaxed mt-2 flex-grow">
+                    &ldquo;{testimonial.content}&rdquo;
+                  </p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+           <div className="text-center text-muted-foreground p-8 flex flex-col items-center gap-4 border rounded-lg">
+                <MessageSquare className="w-16 h-16 text-muted-foreground/30" />
+                <p>كن أول من يشاركنا رأيه في المنصة!</p>
+            </div>
+        )}
+
+        <div className="mt-8 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
+          {hasMoreTestimonials && !showAll && (
+            <Button onClick={() => setShowAll(true)} variant="outline">عرض كل الآراء</Button>
+          )}
+          <Button asChild>
+            <Link href="/add-testimonial">أضف رأيك</Link>
+          </Button>
         </div>
       </div>
     </section>

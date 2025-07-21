@@ -1,8 +1,9 @@
 
 
+
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint } from 'firebase/firestore';
-import type { Job, Category, PostType, User, WorkType } from './types';
+import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
 
 const categories: Category[] = [
   { id: '1', name: 'نجار', iconName: 'Hammer', color: '#a16207' },
@@ -318,6 +319,40 @@ export async function updateUserProfile(uid: string, profileData: Partial<User>)
         throw new Error("Failed to update profile");
     }
 }
+
+export async function addTestimonial(testimonialData: Omit<Testimonial, 'id' | 'createdAt' | 'postedAt'>): Promise<{ id: string }> {
+    try {
+        const testimonialsCollection = collection(db, 'testimonials');
+        const newDocRef = await addDoc(testimonialsCollection, {
+            ...testimonialData,
+            createdAt: serverTimestamp(),
+        });
+        return { id: newDocRef.id };
+    } catch (e) {
+        console.error("Error adding testimonial: ", e);
+        throw new Error("Failed to add testimonial");
+    }
+}
+
+export async function getTestimonials(): Promise<Testimonial[]> {
+    try {
+        const testimonialsRef = collection(db, 'testimonials');
+        const q = query(testimonialsRef, orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+                postedAt: formatTimeAgo(data.createdAt),
+            } as Testimonial;
+        });
+    } catch (error) {
+        console.error("Error fetching testimonials: ", error);
+        return [];
+    }
+}
+
 
 export async function hasUserLikedJob(jobId: string, userId: string): Promise<boolean> {
     const interestRef = doc(db, 'interests', `${userId}_${jobId}`);
