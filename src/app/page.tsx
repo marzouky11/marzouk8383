@@ -1,11 +1,12 @@
 
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { getJobs, getCategories } from '@/lib/data';
+import { getJobs, getCategories, getTestimonials } from '@/lib/data';
 import React, { Suspense } from 'react';
 import { Handshake, Newspaper, LayoutGrid } from 'lucide-react';
 import { JobFilters } from '@/components/job-filters';
@@ -13,6 +14,7 @@ import { ThemeToggleButton } from '@/components/theme-toggle';
 import { HomeCarousel } from './home-carousel';
 import { CategorySection } from './category-section';
 import { HomeExtraSections } from './home-extra-sections';
+import { Testimonial } from '@/lib/types';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -133,7 +135,9 @@ export default async function HomePage() {
 
           <CategorySection categories={categories} />
           
-          <HomeExtraSections />
+          <Suspense>
+            <HomeExtraSections />
+          </Suspense>
       </div>
     </AppLayout>
   );

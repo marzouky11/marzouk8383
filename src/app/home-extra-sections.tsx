@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -96,20 +97,14 @@ function StatsSection({ stats }: { stats: { jobs: number, seekers: number } }) {
 const INITIAL_DISPLAY_COUNT_MOBILE = 2;
 const INITIAL_DISPLAY_COUNT_DESKTOP = 2;
 
-function TestimonialsSection() {
+function TestimonialsSection({ initialTestimonials }: { initialTestimonials: Testimonial[] }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-150px" });
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
   const [showAll, setShowAll] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const fetchTestimonials = async () => {
-      const fetchedTestimonials = await getTestimonials();
-      setTestimonials(fetchedTestimonials);
-    };
-    fetchTestimonials();
-
     const checkIsMobile = () => window.innerWidth < 768;
     setIsMobile(checkIsMobile());
     const handleResize = () => setIsMobile(checkIsMobile());
@@ -176,27 +171,31 @@ function TestimonialsSection() {
 // Main component to export
 export function HomeExtraSections() {
     const [stats, setStats] = useState<{ jobs: number, seekers: number }>({ jobs: 0, seekers: 0 });
-    
+    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
     useEffect(() => {
-        const fetchStats = async () => {
+        const fetchData = async () => {
             try {
-                // Fetch counts directly if possible, or get length of arrays
-                const jobOffers = await getJobs({ postType: 'seeking_worker' });
-                const jobSeekers = await getJobs({ postType: 'seeking_job' });
+                const [jobOffers, jobSeekers, fetchedTestimonials] = await Promise.all([
+                    getJobs({ postType: 'seeking_worker' }),
+                    getJobs({ postType: 'seeking_job' }),
+                    getTestimonials(),
+                ]);
                 setStats({ jobs: jobOffers.length, seekers: jobSeekers.length });
+                setTestimonials(fetchedTestimonials);
             } catch (error) {
-                console.error("Failed to fetch stats:", error);
-                // Fallback to static numbers if fetching fails to avoid showing 0
+                console.error("Failed to fetch extra sections data:", error);
+                // Fallback to static numbers if fetching fails
                 setStats({ jobs: 1250, seekers: 2800 });
             }
         };
-        fetchStats();
+        fetchData();
     }, []);
 
     return (
         <div className="space-y-8">
             <StatsSection stats={stats} />
-            <TestimonialsSection />
+            <TestimonialsSection initialTestimonials={testimonials} />
         </div>
     );
 }

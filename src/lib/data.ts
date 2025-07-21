@@ -322,8 +322,12 @@ export async function updateUserProfile(uid: string, profileData: Partial<User>)
 export async function addTestimonial(testimonialData: Omit<Testimonial, 'id' | 'createdAt' | 'postedAt'>): Promise<{ id: string }> {
     try {
         const reviewsCollection = collection(db, 'reviews');
+        // Match the field name 'text' from the Firestore rules
         const dataToSave = {
-            ...testimonialData,
+            userId: testimonialData.userId,
+            userName: testimonialData.userName,
+            userAvatarColor: testimonialData.userAvatarColor,
+            text: testimonialData.content, // Changed 'content' to 'text'
             createdAt: serverTimestamp(),
         };
         const newDocRef = await addDoc(reviewsCollection, dataToSave);
@@ -344,6 +348,8 @@ export async function getTestimonials(): Promise<Testimonial[]> {
             return {
                 id: doc.id,
                 ...data,
+                // The field is stored as 'text', but the app expects 'content'
+                content: data.text,
                 postedAt: formatTimeAgo(data.createdAt),
             } as Testimonial;
         });
