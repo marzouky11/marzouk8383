@@ -3,6 +3,7 @@
 
 
 
+
 import { notFound, redirect } from 'next/navigation';
 import { getJobById, getCategoryById, getJobs } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -311,4 +312,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                 
                 <div className="text-center pt-4">
                     <ReportAdDialog adId={job.id} />
-                
+                </div>
+            </div>
+        </AppLayout>
+    );
+}
