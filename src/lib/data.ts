@@ -2,7 +2,7 @@
 
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint } from 'firebase/firestore';
-import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
+import type { Job, Category, PostType, User, WorkType, Testimonial, Comment } from './types';
 
 const categories: Category[] = [
   { id: '1', name: 'نجار', iconName: 'Hammer', color: '#a16207' },
@@ -322,12 +322,11 @@ export async function updateUserProfile(uid: string, profileData: Partial<User>)
 export async function addTestimonial(testimonialData: Omit<Testimonial, 'id' | 'createdAt' | 'postedAt'>): Promise<{ id: string }> {
     try {
         const reviewsCollection = collection(db, 'reviews');
-        // Match the field name 'text' from the Firestore rules
         const dataToSave = {
             userId: testimonialData.userId,
             userName: testimonialData.userName,
             userAvatarColor: testimonialData.userAvatarColor,
-            text: testimonialData.content, // Changed 'content' to 'text'
+            text: testimonialData.content,
             createdAt: serverTimestamp(),
         };
         const newDocRef = await addDoc(reviewsCollection, dataToSave);
@@ -348,7 +347,6 @@ export async function getTestimonials(): Promise<Testimonial[]> {
             return {
                 id: doc.id,
                 ...data,
-                // The field is stored as 'text', but the app expects 'content'
                 content: data.text,
                 postedAt: formatTimeAgo(data.createdAt),
             } as Testimonial;
@@ -356,6 +354,138 @@ export async function getTestimonials(): Promise<Testimonial[]> {
     } catch (error) {
         console.error("Error fetching testimonials: ", error);
         return [];
+    }
+}
+
+
+export async function getTestimonialById(id: string): Promise<Testimonial | null> {
+  try {
+    const docRef = doc(db, 'reviews', id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return { 
+          id: docSnap.id, 
+          ...data,
+          content: data.text,
+          postedAt: formatTimeAgo(data.createdAt),
+     } as Testimonial;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching testimonial by ID: ", error);
+    return null;
+  }
+}
+
+export async function updateTestimonial(testimonialId: string, content: string) {
+    try {
+        const testimonialRef = doc(db, 'reviews', testimonialId);
+        await updateDoc(testimonialRef, {
+            text: content,
+            updatedAt: serverTimestamp()
+        });
+    } catch (e) {
+        console.error("Error updating testimonial: ", e);
+        throw new Error("Failed to update testimonial");
+    }
+}
+
+export async function deleteTestimonial(testimonialId: string) {
+    try {
+        await deleteDoc(doc(db, 'reviews', testimonialId));
+    } catch (e) {
+        console.error("Error deleting testimonial: ", e);
+        throw new Error("Failed to delete testimonial");
+    }
+}
+
+// Comments Functions
+export async function getComments(adId: string): Promise<Comment[]> {
+    try {
+        const commentsRef = collection(db, 'comments');
+        const q = query(commentsRef, where('adId', '==', adId), orderBy('createdAt', 'asc'));
+        const querySnapshot = await getDocs(q);
+        
+        const comments = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            postedAt: formatTimeAgo(doc.data().createdAt),
+        } as Comment));
+        
+        // Nest replies under their parents
+        const commentMap = new Map<string, Comment>();
+        const topLevelComments: Comment[] = [];
+
+        comments.forEach(comment => {
+            comment.replies = [];
+            commentMap.set(comment.id, comment);
+        });
+
+        comments.forEach(comment => {
+            if (comment.parentCommentId && commentMap.has(comment.parentCommentId)) {
+                commentMap.get(comment.parentCommentId)?.replies?.push(comment);
+            } else {
+                topLevelComments.push(comment);
+            }
+        });
+
+        return topLevelComments;
+    } catch (error) {
+        console.error("Error fetching comments: ", error);
+        return [];
+    }
+}
+
+export async function addComment(commentData: Omit<Comment, 'id' | 'createdAt' | 'postedAt' | 'replies'>): Promise<Comment> {
+    try {
+        const commentsCollection = collection(db, 'comments');
+        
+        const dataToSave = {
+            ...commentData,
+            createdAt: serverTimestamp(),
+        };
+
+        const newDocRef = await addDoc(commentsCollection, dataToSave);
+        
+        // Fetch the just-added document to return it with the server timestamp resolved
+        const newDocSnap = await getDoc(newDocRef);
+        const newComment = newDocSnap.data();
+
+        return {
+            id: newDocRef.id,
+            ...newComment,
+            postedAt: formatTimeAgo(newComment?.createdAt),
+        } as Comment;
+
+    } catch (e) {
+        console.error("Error adding comment: ", e);
+        throw new Error("Failed to add comment");
+    }
+}
+
+export async function updateComment(commentId: string, text: string) {
+    try {
+        const commentRef = doc(db, 'comments', commentId);
+        await updateDoc(commentRef, {
+            text: text,
+            updatedAt: serverTimestamp()
+        });
+    } catch (e) {
+        console.error("Error updating comment: ", e);
+        throw new Error("Failed to update comment");
+    }
+}
+
+export async function deleteComment(commentId: string) {
+    try {
+        // This is a simple delete. A more complex scenario would also delete all replies.
+        await deleteDoc(doc(db, 'comments', commentId));
+    } catch (e) {
+        console.error("Error deleting comment: ", e);
+        throw new Error("Failed to delete comment");
     }
 }
 

@@ -1,6 +1,7 @@
 
 
 
+
 import { notFound } from 'next/navigation';
 import { getJobById, getCategoryById, getJobs } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -30,6 +31,7 @@ import { Separator } from '@/components/ui/separator';
 import { ReportAdDialog } from '@/app/jobs/[id]/report-ad-dialog';
 import { JobCard } from '@/components/job-card';
 import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
+import { CommentsSection } from '@/components/comments/comments-section';
 
 interface JobDetailPageProps {
   params: { id: string };
@@ -271,6 +273,7 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                     </Card>
                 </div>
 
+                <CommentsSection adId={job.id} />
 
                 {similarJobs.length > 0 && (
                     <div className="space-y-4 pt-4">
