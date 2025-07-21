@@ -80,7 +80,7 @@ export function HomeCarousel() {
       plugins={[plugin.current]}
       className="w-full rounded-2xl overflow-hidden shadow-lg"
       onMouseEnter={plugin.current.stop}
-      onMouseLeave={plugin.current.play}
+      onMouseLeave={() => plugin.current.play()}
       opts={{
         loop: true,
         direction: 'rtl',
