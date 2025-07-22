@@ -134,11 +134,11 @@ const workTypeTranslations: { [key in WorkType]: string } = {
 const SeekerInfoItem = ({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | number | undefined; }) => {
     if (!value) return null;
     return (
-        <Card className="p-4 flex flex-col items-center justify-center text-center">
-            <Icon className="h-7 w-7 mb-2 text-primary" />
-            <dt className="text-sm font-semibold">{value}</dt>
-            <dd className="text-xs text-muted-foreground">{label}</dd>
-        </Card>
+       <div className="flex flex-col gap-1 p-3 bg-muted/50 rounded-lg text-center">
+        <Icon className="h-6 w-6 text-primary mx-auto mb-1" />
+        <dt className="text-xs text-muted-foreground">{label}</dt>
+        <dd className="font-semibold text-sm">{value}</dd>
+      </div>
     );
 };
 
@@ -178,22 +178,29 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                     <CardHeader className="bg-muted/30 p-4 sm:p-6">
                        <div className="flex flex-col items-start gap-4">
                             <div className="flex items-center gap-3 w-full">
-                                <div className="p-2 sm:p-3 rounded-xl flex-shrink-0" style={{ backgroundColor: `${finalColor}1A` }}>
-                                    <CategoryIcon name={finalIconName} className="w-6 h-6 sm:w-8 sm:h-8" style={{ color: finalColor }} />
-                                </div>
+                                <UserAvatar name={job.ownerName} color={job.ownerAvatarColor} className="h-16 w-16 text-2xl" />
                                 <div className="flex-grow">
                                     <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: finalColor }}>
                                         {job.title || 'عنوان غير متوفر'}
                                     </h1>
-                                    <p className="text-muted-foreground mt-1 text-lg">{job.ownerName || 'اسم غير متوفر'}</p>
+                                    <p className="text-muted-foreground mt-1 text-lg">{categoryName}</p>
                                 </div>
                            </div>
+                           <div className="flex items-center gap-4 text-muted-foreground mt-2 text-sm">
+                                <div className="flex items-center gap-1.5">
+                                    <MapPin className="h-4 w-4" />
+                                    <span>{job.country || 'دولة غير محددة'}, {job.city || 'مدينة غير محددة'}</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                    <CalendarDays className="h-4 w-4" />
+                                    <span>نُشر: {job.postedAt}</span>
+                                </div>
+                            </div>
                        </div>
                     </CardHeader>
                     <CardContent className="p-4 sm:p-6 space-y-6">
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                             <SeekerInfoItem icon={LayoutGrid} label="الفئة" value={categoryName} />
-                            <SeekerInfoItem icon={MapPin} label="الموقع" value={`${job.country}, ${job.city}`} />
                             {translatedWorkType && <SeekerInfoItem icon={Clock} label="نوع الدوام" value={translatedWorkType} />}
                             {job.experience && <SeekerInfoItem icon={Award} label="الخبرة" value={job.experience} />}
                             {job.qualifications && <SeekerInfoItem icon={GraduationCap} label="المؤهلات" value={job.qualifications} />}
@@ -204,7 +211,7 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                                 <Separator/>
                                 <div>
                                     <h3 className="text-xl font-bold flex items-center gap-2 mb-3" style={{ color: finalColor }}>
-                                        <UserIcon className="h-5 w-5" />
+                                        <Briefcase className="h-5 w-5" />
                                         وصف المهارات والخبرة
                                     </h3>
                                     <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
@@ -217,6 +224,19 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                 </Card>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-lg">
+                                <UserIcon className="h-5 w-5 text-primary" />
+                                صاحب الإعلان
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex items-center gap-4">
+                            <UserAvatar name={job.ownerName} color={job.ownerAvatarColor} className="h-16 w-16 text-2xl" />
+                            <p className="font-semibold text-lg">{job.ownerName || 'صاحب الإعلان'}</p>
+                        </CardContent>
+                    </Card>
+
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-lg">
@@ -254,22 +274,14 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                             <ShareButton title={job.title || ''} text={job.description || ''} />
                         </CardContent>
                     </Card>
-                     <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-lg">
-                                <UserIcon className="h-5 w-5 text-primary" />
-                                صاحب الإعلان
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex items-center gap-4">
-                            <UserAvatar name={job.ownerName} color={job.ownerAvatarColor} className="h-16 w-16 text-2xl" />
-                            <p className="font-semibold text-lg">{job.ownerName || 'صاحب الإعلان'}</p>
-                        </CardContent>
-                    </Card>
+                </div>
+
+                <div className="text-center pt-4">
+                    <ReportAdDialog adId={job.id} />
                 </div>
 
                 {similarJobs.length > 0 && (
-                    <div className="space-y-4 pt-4">
+                    <div className="space-y-4 pt-6 mt-6 border-t">
                         <h2 className="text-2xl font-bold">باحثون عن عمل مشابهون</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {similarJobs.map((similarJob) => (
@@ -278,10 +290,6 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                         </div>
                     </div>
                 )}
-                
-                <div className="text-center pt-4">
-                    <ReportAdDialog adId={job.id} />
-                </div>
             </div>
         </AppLayout>
     );

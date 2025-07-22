@@ -5,6 +5,7 @@
 
 
 
+
 import { notFound, redirect } from 'next/navigation';
 import { getJobById, getCategoryById, getJobs } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -246,19 +247,6 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-lg">
-                                <UserIcon className="h-5 w-5 text-primary" />
-                                صاحب الإعلان
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex items-center gap-4">
-                            <UserAvatar name={job.ownerName} color={job.ownerAvatarColor} className="h-16 w-16 text-2xl" />
-                            <p className="font-semibold text-lg">{job.ownerName || 'صاحب الإعلان'}</p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-lg">
                                 <Phone className="h-5 w-5 text-primary" />
                                 معلومات التواصل
                             </CardTitle>
@@ -298,10 +286,27 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                             <ShareButton title={job.title || ''} text={job.description || ''} />
                         </CardContent>
                     </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-lg">
+                                <UserIcon className="h-5 w-5 text-primary" />
+                                صاحب الإعلان
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex items-center gap-4">
+                            <UserAvatar name={job.ownerName} color={job.ownerAvatarColor} className="h-16 w-16 text-2xl" />
+                            <p className="font-semibold text-lg">{job.ownerName || 'صاحب الإعلان'}</p>
+                        </CardContent>
+                    </Card>
+                </div>
+                
+                <div className="text-center pt-4">
+                    <ReportAdDialog adId={job.id} />
                 </div>
                 
                  {similarJobs.length > 0 && (
-                    <div className="space-y-4 pt-4">
+                    <div className="space-y-4 pt-6 mt-6 border-t">
                         <h2 className="text-2xl font-bold">إعلانات مشابهة</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {similarJobs.map((similarJob) => (
@@ -310,10 +315,6 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                         </div>
                     </div>
                 )}
-                
-                <div className="text-center pt-4">
-                    <ReportAdDialog adId={job.id} />
-                </div>
             </div>
         </AppLayout>
     );
