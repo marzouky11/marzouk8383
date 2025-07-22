@@ -93,9 +93,10 @@ export function HomeCarousel() {
               <Image
                 src={slide.src}
                 alt={slide.alt}
-                fill
+                width={1200}
+                height={320}
                 priority={index === 0}
-                className="object-cover"
+                className="object-cover w-full h-full"
                 data-ai-hint={slide.hint}
                 sizes="(max-width: 768px) 100vw, 1200px"
               />
