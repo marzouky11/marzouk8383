@@ -158,7 +158,6 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
     });
 
     const category = getCategoryById(job.categoryId || '');
-    const categoryName = category?.name || job.categoryName;
     const translatedWorkType = job.workType ? workTypeTranslations[job.workType] : undefined;
     const finalColor = category?.color || 'hsl(var(--destructive))';
     const finalIconName = category?.iconName || 'Users';
@@ -201,8 +200,7 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                     </CardHeader>
                     <CardContent className="p-4 sm:p-6 space-y-6">
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                            <SeekerInfoItem icon={LayoutGrid} label="الفئة" value={categoryName} />
-                            {translatedWorkType && <SeekerInfoItem icon={Clock} label="نوع الدوام" value={translatedWorkType} />}
+                            {job.workType && <SeekerInfoItem icon={Clock} label="نوع الدوام" value={translatedWorkType} />}
                             {job.experience && <SeekerInfoItem icon={Award} label="الخبرة" value={job.experience} />}
                             {job.qualifications && <SeekerInfoItem icon={GraduationCap} label="المؤهلات" value={job.qualifications} />}
                         </div>
