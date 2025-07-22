@@ -14,7 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const commonSlides = [
     {
         key: 'explore-jobs',
-        src: "https://i.postimg.cc/Y28zQY3T/1753193854855.jpg",
+        src: "https://i.postimg.cc/BnSJz81W/2149300698-1-1.jpg",
         alt: "وظائف مميزة",
         hint: "job opportunities",
         title: "وظائف مميزة بانتظارك",
@@ -25,7 +25,7 @@ const commonSlides = [
     },
     {
         key: 'explore-workers',
-        src: "https://i.postimg.cc/MTq1QpjW/1753193867830.jpg",
+        src: "https://i.postimg.cc/XvTSnXXY/2150995045-1-1.jpg",
         alt: "عامل محترف",
         hint: "professional worker",
         title: "عمّال محترفون في جميع المجالات",
@@ -38,7 +38,7 @@ const commonSlides = [
 
 const unauthenticatedFirstSlide = {
     key: 'register',
-    src: "https://i.postimg.cc/T3skggRT/1753193839382.jpg",
+    src: "https://i.postimg.cc/SKZRd6Zt/2147923447-2-2.jpg",
     alt: "شخص يبدأ رحلته المهنية",
     hint: "professional journey start",
     title: "وظائف مميزة بانتظارك",
@@ -50,7 +50,7 @@ const unauthenticatedFirstSlide = {
 
 const authenticatedFirstSlide = {
     key: 'post-ad',
-    src: "https://i.postimg.cc/T3skggRT/1753193839382.jpg",
+    src: "https://i.postimg.cc/SKZRd6Zt/2147923447-2-2.jpg",
     alt: "شخص يبدأ رحلته المهنية",
     hint: "professional journey start",
     title: "ابدأ بنشر إعلانك الآن",
