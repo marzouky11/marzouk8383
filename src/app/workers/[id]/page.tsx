@@ -174,11 +174,13 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                 description="استعرض مهارات وخبرات هذا المرشح وتواصل معه مباشرة."
             />
             <div className="container mx-auto max-w-4xl px-4 pb-8 space-y-6">
-                <Card className="overflow-hidden shadow-lg">
+                <Card className="overflow-hidden shadow-lg border-t-4" style={{ borderColor: finalColor }}>
                     <CardHeader className="bg-muted/30 p-4 sm:p-6">
                        <div className="flex flex-col items-start gap-4">
                             <div className="flex items-center gap-3 w-full">
-                                <UserAvatar name={job.ownerName} color={job.ownerAvatarColor} className="h-16 w-16 text-2xl" />
+                                <div className="p-2 sm:p-3 rounded-xl flex-shrink-0" style={{ backgroundColor: `${finalColor}1A` }}>
+                                    <CategoryIcon name={finalIconName} className="w-6 h-6 sm:w-8 sm:h-8" style={{ color: finalColor }} />
+                                </div>
                                 <div className="flex-grow">
                                     <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: finalColor }}>
                                         {job.title || 'عنوان غير متوفر'}
