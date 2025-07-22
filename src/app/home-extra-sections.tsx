@@ -155,8 +155,10 @@ function TestimonialsSection({ initialTestimonials }: { initialTestimonials: Tes
         )}
 
         <div className="mt-8 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
-          {hasMoreTestimonials && !showAll && (
-            <Button onClick={() => setShowAll(true)} variant="outline">عرض كل الآراء</Button>
+          {hasMoreTestimonials && (
+             <Button onClick={() => setShowAll(prev => !prev)} variant="outline">
+              {showAll ? 'عرض أقل' : 'عرض كل الآراء'}
+            </Button>
           )}
           <Button asChild>
             <Link href="/add-testimonial">أضف رأيك</Link>

@@ -131,11 +131,11 @@ const workTypeTranslations: { [key in WorkType]: string } = {
   remote: 'عن بعد',
 };
 
-const SeekerInfoItem = ({ icon: Icon, label, value, color }: { icon: React.ElementType; label: string; value: string | number | undefined; color: string }) => {
+const SeekerInfoItem = ({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | number | undefined; }) => {
     if (!value) return null;
     return (
         <Card className="p-4 flex flex-col items-center justify-center text-center">
-            <Icon className="h-7 w-7 mb-2" style={{ color }} />
+            <Icon className="h-7 w-7 mb-2 text-primary" />
             <dt className="text-sm font-semibold">{value}</dt>
             <dd className="text-xs text-muted-foreground">{label}</dd>
         </Card>
@@ -192,19 +192,19 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                     </CardHeader>
                     <CardContent className="p-4 sm:p-6 space-y-6">
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                            <SeekerInfoItem icon={LayoutGrid} label="الفئة" value={categoryName} color={finalColor} />
-                            <SeekerInfoItem icon={MapPin} label="الموقع" value={`${job.country}, ${job.city}`} color={finalColor} />
-                            {translatedWorkType && <SeekerInfoItem icon={Clock} label="نوع الدوام" value={translatedWorkType} color={finalColor} />}
-                            {job.experience && <SeekerInfoItem icon={Award} label="الخبرة" value={job.experience} color={finalColor} />}
-                            {job.qualifications && <SeekerInfoItem icon={GraduationCap} label="المؤهلات" value={job.qualifications} color={finalColor} />}
+                            <SeekerInfoItem icon={LayoutGrid} label="الفئة" value={categoryName} />
+                            <SeekerInfoItem icon={MapPin} label="الموقع" value={`${job.country}, ${job.city}`} />
+                            {translatedWorkType && <SeekerInfoItem icon={Clock} label="نوع الدوام" value={translatedWorkType} />}
+                            {job.experience && <SeekerInfoItem icon={Award} label="الخبرة" value={job.experience} />}
+                            {job.qualifications && <SeekerInfoItem icon={GraduationCap} label="المؤهلات" value={job.qualifications} />}
                         </div>
 
                          {job.description && (
                             <>
                                 <Separator/>
                                 <div>
-                                    <h3 className="text-xl font-bold flex items-center gap-2 mb-3">
-                                        <UserIcon className="h-5 w-5" style={{ color: finalColor }} />
+                                    <h3 className="text-xl font-bold flex items-center gap-2 mb-3" style={{ color: finalColor }}>
+                                        <UserIcon className="h-5 w-5" />
                                         وصف المهارات والخبرة
                                     </h3>
                                     <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">

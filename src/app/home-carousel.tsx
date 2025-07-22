@@ -98,7 +98,7 @@ export function HomeCarousel() {
                 loading={index === 0 ? 'eager' : 'lazy'}
                 className="object-cover"
                 data-ai-hint={slide.hint}
-                sizes="(max-width: 768px) 100vw, 100vw"
+                sizes="(max-width: 768px) 100vw, 1200px"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent flex items-center p-6 md:p-12">
                 <div className="max-w-md md:max-w-lg text-white space-y-4">
