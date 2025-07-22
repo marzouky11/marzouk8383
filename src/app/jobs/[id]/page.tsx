@@ -6,6 +6,7 @@
 
 
 
+
 import { notFound, redirect } from 'next/navigation';
 import { getJobById, getCategoryById, getJobs } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';

@@ -185,7 +185,6 @@ export default async function WorkerDetailPage({ params }: JobDetailPageProps) {
                                     <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: finalColor }}>
                                         {job.title || 'عنوان غير متوفر'}
                                     </h1>
-                                    <p className="text-muted-foreground mt-1 text-lg">{categoryName}</p>
                                 </div>
                            </div>
                            <div className="flex items-center gap-4 text-muted-foreground mt-2 text-sm">

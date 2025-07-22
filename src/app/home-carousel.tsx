@@ -95,7 +95,6 @@ export function HomeCarousel() {
                 alt={slide.alt}
                 fill
                 priority={index === 0}
-                loading={index === 0 ? 'eager' : 'lazy'}
                 className="object-cover"
                 data-ai-hint={slide.hint}
                 sizes="(max-width: 768px) 100vw, 1200px"
