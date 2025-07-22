@@ -30,7 +30,7 @@ const commonSlides = [
         hint: "professional worker",
         title: "عمّال محترفون في جميع المجالات",
         description: "من البناء إلى التقنية – الجميع هنا",
-        buttonText: "استكشف العمال",
+        buttonText: "استكشف الآن",
         buttonLink: "/workers",
         buttonClass: "bg-destructive hover:bg-destructive/90"
     }
