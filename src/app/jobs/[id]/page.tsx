@@ -8,6 +8,7 @@
 
 
 
+
 import { notFound, redirect } from 'next/navigation';
 import { getJobById, getCategoryById, getJobs } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -230,6 +231,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                             {job.qualifications && <InfoItem icon={GraduationCap} label="المؤهلات" value={job.qualifications} />}
                             {job.companyName && <InfoItem icon={Building2} label="الشركة" value={job.companyName} />}
                             {job.openPositions && <InfoItem icon={Users2} label="شواغر" value={job.openPositions} />}
+                            {job.conditions && <InfoItem icon={ClipboardList} label="الشروط" value={job.conditions} />}
                         </div>
                         
                         <Separator />
@@ -246,17 +248,6 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                             </div>
                         )}
 
-                        {job.conditions && (
-                            <div>
-                                <h3 className="text-xl font-bold flex items-center gap-2 mb-3" style={{ color: finalColor }}>
-                                    <ClipboardList className="h-5 w-5" />
-                                    الشروط
-                                </h3>
-                                <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
-                                    {job.conditions}
-                                </p>
-                            </div>
-                        )}
                     </CardContent>
                 </Card>
 
