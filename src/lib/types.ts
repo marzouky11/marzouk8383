@@ -37,6 +37,7 @@ export interface Job {
   ownerAvatarColor?: string;
   applyUrl?: string;
   qualifications?: string;
+  conditions?: string;
   education?: string;
 }
 

@@ -17,7 +17,8 @@ import { useRouter } from 'next/navigation';
 import { 
   Loader2, Briefcase, Users, FileText, FileSignature, 
   LayoutGrid, Globe, MapPin, Wallet, Phone, MessageSquare, Mail,
-  Building2, Award, Users2, Info, Instagram, GraduationCap, Link as LinkIcon
+  Building2, Award, Users2, Info, Instagram, GraduationCap, Link as LinkIcon,
+  ClipboardList
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -37,6 +38,7 @@ const formSchema = z.object({
   qualifications: z.string().optional(),
   openPositions: z.coerce.number().int().positive().optional(),
   description: z.string().optional(),
+  conditions: z.string().optional(),
   phone: z.string().optional(),
   whatsapp: z.string().optional(),
   email: z.string().email({ message: "الرجاء إدخال بريد إلكتروني صحيح." }).optional().or(z.literal('')),
@@ -77,6 +79,7 @@ export function PostJobForm({ categories, job, preselectedType }: PostJobFormPro
       companyName: job?.companyName || '',
       openPositions: job?.openPositions || undefined,
       description: job?.description || '',
+      conditions: job?.conditions || '',
       phone: job?.phone || '',
       whatsapp: job?.whatsapp || '',
       email: job?.email || '',
@@ -156,6 +159,7 @@ export function PostJobForm({ categories, job, preselectedType }: PostJobFormPro
           salary: values.salary,
           experience: values.experience,
           qualifications: values.qualifications,
+          conditions: values.conditions,
           openPositions: values.openPositions,
           description: values.description,
           phone: values.phone,
@@ -357,9 +361,15 @@ export function PostJobForm({ categories, job, preselectedType }: PostJobFormPro
           </div>
           
           <FormField control={form.control} name="description" render={({ field }) => (
-            <FormItem><FormLabelIcon icon={FileSignature} label={postType === 'seeking_job' ? "وصف المهارات والخبرة" : "معلومات إضافية (اختياري)"}/><FormControl><Textarea placeholder={postType === 'seeking_job' ? "اكتب تفاصيل عن مهاراتك وخبراتك..." : "اكتب تفاصيل إضافية عن الوظيفة، المتطلبات، إلخ."} {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabelIcon icon={FileSignature} label={postType === 'seeking_job' ? "وصف المهارات والخبرة" : "وصف الوظيفة (اختياري)"}/><FormControl><Textarea placeholder={postType === 'seeking_job' ? "اكتب تفاصيل عن مهاراتك وخبراتك..." : "اكتب تفاصيل إضافية عن الوظيفة، المتطلبات، إلخ."} {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
           )} />
           
+          {postType === 'seeking_worker' && (
+            <FormField control={form.control} name="conditions" render={({ field }) => (
+              <FormItem><FormLabelIcon icon={ClipboardList} label="الشروط (اختياري)" /><FormControl><Textarea placeholder="اكتب الشروط الإضافية هنا، مثل: العمر، توفر وسيلة نقل، أوقات العمل..." {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
+            )} />
+          )}
+
           <div className="border p-4 rounded-lg space-y-4">
             <h3 className="font-semibold flex items-center gap-2"><Info className="h-5 w-5" style={{color: getThemeColor()}} />طرق التواصل</h3>
             <FormField control={form.control} name="phone" render={({ field }) => (

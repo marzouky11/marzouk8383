@@ -7,6 +7,7 @@
 
 
 
+
 import { notFound, redirect } from 'next/navigation';
 import { getJobById, getCategoryById, getJobs } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -33,6 +34,7 @@ import {
   Mail,
   Flag,
   LayoutGrid,
+  ClipboardList,
 } from 'lucide-react';
 import type { WorkType } from '@/lib/types';
 import { CategoryIcon } from '@/components/icons';
@@ -232,15 +234,29 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                         
                         <Separator />
 
-                        <div>
-                            <h3 className="text-xl font-bold flex items-center gap-2 mb-3" style={{ color: finalColor }}>
-                                <Briefcase className="h-5 w-5" />
-                                وصف الوظيفة
-                            </h3>
-                            <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
-                                {job.description || 'لا يوجد وصف متاح.'}
-                            </p>
-                        </div>
+                        {job.description && (
+                            <div>
+                                <h3 className="text-xl font-bold flex items-center gap-2 mb-3" style={{ color: finalColor }}>
+                                    <Briefcase className="h-5 w-5" />
+                                    وصف الوظيفة
+                                </h3>
+                                <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
+                                    {job.description}
+                                </p>
+                            </div>
+                        )}
+
+                        {job.conditions && (
+                            <div>
+                                <h3 className="text-xl font-bold flex items-center gap-2 mb-3" style={{ color: finalColor }}>
+                                    <ClipboardList className="h-5 w-5" />
+                                    الشروط
+                                </h3>
+                                <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
+                                    {job.conditions}
+                                </p>
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
 
