@@ -14,7 +14,6 @@ import { HomeCarousel } from './home-carousel';
 import { CategorySection } from './category-section';
 import { HomeExtraSections } from './home-extra-sections';
 import { Testimonial } from '@/lib/types';
-import type { Job } from '@/lib/types';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -46,12 +45,6 @@ function JobSectionSkeleton() {
         </div>
     );
 }
-
-// Helper to chunk the jobs array for the 2x2 grid slider
-const chunk = (arr: Job[], size: number) =>
-  Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-    arr.slice(i * size, i * size + size)
-  );
 
 function HomeHeaderMobile() {
   return (
@@ -86,9 +79,6 @@ export default async function HomePage() {
   const testimonials = await getTestimonials();
   const allJobOffers = await getJobs({ postType: 'seeking_worker' });
   const allJobSeekers = await getJobs({ postType: 'seeking_job' });
-  
-  const jobOffersChunks = chunk(jobOffers, 4);
-  const jobSeekersChunks = chunk(jobSeekers, 4);
 
   return (
     <AppLayout>
@@ -122,23 +112,12 @@ export default async function HomePage() {
               </Button>
               </div>
               <Suspense fallback={<JobSectionSkeleton />}>
-                {/* Mobile Slider View (2x2 grid) */}
-                <div className="md:hidden flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 snap-x snap-mandatory">
-                  {jobOffersChunks.map((chunk, index) => (
-                    <div key={`chunk-${index}`} className="flex-shrink-0 w-[85vw] snap-center">
-                      <div className="grid grid-cols-2 gap-3">
-                        {chunk.map(job => (
-                          <JobCard key={job.id} job={job} />
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                {/* Desktop Grid View */}
-                <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {jobOffers.slice(0, 4).map(job => (
-                    <JobCard key={job.id} job={job} />
-                  ))}
+                <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0 snap-x snap-mandatory">
+                    {jobOffers.slice(0, 4).map(job => (
+                        <div key={job.id} className="w-[85vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
+                            <JobCard job={job} />
+                        </div>
+                    ))}
                 </div>
               </Suspense>
           </section>
@@ -153,23 +132,12 @@ export default async function HomePage() {
               </Button>
               </div>
               <Suspense fallback={<JobSectionSkeleton />}>
-                {/* Mobile Slider View (2x2 grid) */}
-                <div className="md:hidden flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 snap-x snap-mandatory">
-                   {jobSeekersChunks.map((chunk, index) => (
-                    <div key={`chunk-${index}`} className="flex-shrink-0 w-[85vw] snap-center">
-                      <div className="grid grid-cols-2 gap-3">
-                        {chunk.map(job => (
-                          <JobCard key={job.id} job={job} />
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                 {/* Desktop Grid View */}
-                <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-4">
-                   {jobSeekers.slice(0, 4).map(job => (
-                    <JobCard key={job.id} job={job} />
-                  ))}
+                <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0 snap-x snap-mandatory">
+                    {jobSeekers.slice(0, 4).map(job => (
+                        <div key={job.id} className="w-[85vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
+                            <JobCard job={job} />
+                        </div>
+                    ))}
                 </div>
               </Suspense>
           </section>
