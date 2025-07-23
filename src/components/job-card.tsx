@@ -1,5 +1,6 @@
 
 
+
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,7 @@ const workTypeTranslations: { [key in WorkType]: string } = {
 export function JobCard({ job }: JobCardProps) {
   if (!job) {
     return (
-      <Card className="p-4 space-y-3 h-full">
+      <Card className="p-3 space-y-2 h-full">
         <div className="flex justify-between items-start gap-3">
           <div className="flex-grow space-y-2">
             <Skeleton className="h-4 w-1/4" />
@@ -38,7 +39,6 @@ export function JobCard({ job }: JobCardProps) {
         <div className="space-y-2">
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-5/6" />
-          <Skeleton className="h-4 w-2/3" />
         </div>
         <div className="flex items-center justify-between pt-2">
           <Skeleton className="h-4 w-12" />
@@ -88,7 +88,7 @@ export function JobCard({ job }: JobCardProps) {
                 >
                     {job.title}
                 </h3>
-                <p className="text-base text-muted-foreground mt-1 truncate">{isSeekingJob ? (categoryName || 'باحث عن عمل') : (job.companyName || categoryName)}</p>
+                <p className="text-base text-muted-foreground mt-1 truncate">{categoryName || (isSeekingJob ? 'باحث عن عمل' : 'عرض عمل')}</p>
             </div>
         </div>
         
