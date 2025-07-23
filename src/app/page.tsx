@@ -1,5 +1,4 @@
 
-
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -17,6 +16,14 @@ import { HomeExtraSections } from './home-extra-sections';
 import { Testimonial } from '@/lib/types';
 
 export const revalidate = 60; // Revalidate every 60 seconds
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
+
+export const metadata: Metadata = {
+  alternates: {
+      canonical: baseUrl,
+  },
+};
 
 function JobFiltersSkeleton() {
     return (
