@@ -63,48 +63,52 @@ export function JobCard({ job }: JobCardProps) {
 
   return (
     <Card 
-        className="relative flex flex-col overflow-hidden rounded-2xl border-t-4 bg-card shadow-sm h-full p-4 transition-shadow hover:shadow-lg w-full"
-        style={{ borderColor: finalColor }}
+        className={cn(
+            "relative flex flex-col overflow-hidden rounded-2xl bg-card shadow-sm h-full p-3 transition-shadow hover:shadow-lg w-full",
+            !isSeekingJob && "border-t-4"
+        )}
+        style={{ borderColor: !isSeekingJob ? finalColor : 'hsl(var(--border))' }}
     >
       <Link href={detailUrl} className="focus:outline-none absolute inset-0 z-10">
          <span className="sr-only">View Details</span>
       </Link>
 
-       <div className="flex-grow flex flex-col space-y-3">
+       <div className="flex-grow flex flex-col space-y-2">
         <div className="flex items-start gap-3">
             <div 
                 className="flex-shrink-0 p-3 rounded-xl flex items-center justify-center"
                 style={{ backgroundColor: `${finalColor}1A` }}
             >
-                <CategoryIcon name={finalIconName} className="w-6 h-6" style={{ color: finalColor }} />
+                <CategoryIcon name={finalIconName} className="w-7 h-7" style={{ color: finalColor }} />
             </div>
             <div className="flex-grow overflow-hidden">
                  <h3 
-                  className="font-bold text-base leading-tight truncate"
+                  className="font-bold text-lg leading-tight truncate"
                   style={{ color: finalColor }}
                 >
                     {job.title}
                 </h3>
-                <p className="text-sm text-muted-foreground mt-1 truncate">{isSeekingJob ? job.ownerName : (categoryName || job.companyName)}</p>
+                <p className="text-base text-muted-foreground mt-1 truncate">{isSeekingJob ? (categoryName || 'باحث عن عمل') : (job.companyName || categoryName)}</p>
             </div>
         </div>
         
         <Separator />
 
-        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2"><MapPin className="h-4 w-4 flex-shrink-0" /><span>{job.country}, {job.city}</span></div>
-          {job.workType && <div className="flex items-center gap-2"><Clock className="h-4 w-4 flex-shrink-0" /><span>{workTypeTranslations[job.workType]}</span></div>}
-          {!isSeekingJob && <div className="flex items-center gap-2"><Wallet className="h-4 w-4 flex-shrink-0" /><span>{job.salary ? job.salary : 'عند الطلب'}</span></div>}
+        <div className="flex flex-col gap-2 text-base text-muted-foreground min-h-[5rem]">
+          <div className="flex items-center gap-2"><MapPin className="h-5 w-5 flex-shrink-0" /><span>{job.country}, {job.city}</span></div>
+          {!isSeekingJob && <div className="flex items-center gap-2"><Clock className="h-5 w-5 flex-shrink-0" /><span>{workTypeTranslations[job.workType]}</span></div>}
+          {isSeekingJob && <div className="flex items-center gap-2"><UserIcon className="h-5 w-5 flex-shrink-0" /><span>{job.ownerName}</span></div>}
+          {!isSeekingJob && <div className="flex items-center gap-2"><Wallet className="h-5 w-5 flex-shrink-0" /><span>{job.salary ? job.salary : 'عند الطلب'}</span></div>}
         </div>
       </div>
       
-      <div className="flex items-center justify-between pt-4 mt-auto">
+      <div className="flex items-center justify-between pt-2 mt-auto">
         <div className="flex items-center gap-1.5 text-muted-foreground">
             <CalendarDays className="h-4 w-4" />
-            {job.createdAt && <time dateTime={new Date(job.createdAt.seconds * 1000).toISOString()} className="text-xs font-medium">{job.postedAt}</time>}
+            {job.createdAt && <time dateTime={new Date(job.createdAt.seconds * 1000).toISOString()} className="text-sm font-medium">{job.postedAt}</time>}
         </div>
         <Button asChild size="sm" className="h-9 text-sm rounded-lg px-4 z-20 relative text-primary-foreground" style={{ backgroundColor: finalColor }}>
-          <Link href={detailUrl}>{isSeekingJob ? 'عرض الملف' : 'التفاصيل'}</Link>
+          <Link href={detailUrl}>{isSeekingJob ? 'عرض الملف' : 'عرض التفاصيل'}</Link>
         </Button>
       </div>
     </Card>

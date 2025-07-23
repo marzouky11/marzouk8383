@@ -37,7 +37,7 @@ function JobFiltersSkeleton() {
 function JobSectionSkeleton() {
     return (
         <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 md:p-0 md:m-0">
-            {Array.from({ length: 3 }).map((_, i) => (
+            {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="w-[85vw] sm:w-[45vw] md:w-auto flex-shrink-0">
                     <JobCard job={null} />
                 </div>
@@ -73,8 +73,8 @@ function HomeHeaderMobile() {
 }
 
 export default async function HomePage() {
-  const jobOffers = await getJobs({ postType: 'seeking_worker', count: 8 });
-  const jobSeekers = await getJobs({ postType: 'seeking_job', count: 8 });
+  const jobOffers = await getJobs({ postType: 'seeking_worker', count: 6 });
+  const jobSeekers = await getJobs({ postType: 'seeking_job', count: 6 });
   const categories = getCategories();
   const testimonials = await getTestimonials();
   const allJobOffers = await getJobs({ postType: 'seeking_worker' });
@@ -112,8 +112,8 @@ export default async function HomePage() {
               </Button>
               </div>
               <Suspense fallback={<JobSectionSkeleton />}>
-                <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0 snap-x snap-mandatory">
-                    {jobOffers.slice(0, 4).map(job => (
+                <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-3 md:p-0 md:m-0 snap-x snap-mandatory">
+                    {jobOffers.map(job => (
                         <div key={job.id} className="w-[85vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
                             <JobCard job={job} />
                         </div>
@@ -132,8 +132,8 @@ export default async function HomePage() {
               </Button>
               </div>
               <Suspense fallback={<JobSectionSkeleton />}>
-                <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:p-0 md:m-0 snap-x snap-mandatory">
-                    {jobSeekers.slice(0, 4).map(job => (
+                <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-3 md:p-0 md:m-0 snap-x snap-mandatory">
+                    {jobSeekers.map(job => (
                         <div key={job.id} className="w-[85vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
                             <JobCard job={job} />
                         </div>
