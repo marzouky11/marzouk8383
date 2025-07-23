@@ -88,7 +88,7 @@ export function HomeCarousel() {
                   alt={slide.alt!}
                   width={1200}
                   height={320}
-                  priority={isFirstSlide}
+                  priority={index === 0}
                   className="object-cover w-full h-full"
                   data-ai-hint={slide.hint}
                   sizes="(max-width: 768px) 100vw, 1200px"
