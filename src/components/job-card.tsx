@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,11 +22,12 @@ const workTypeTranslations: { [key in WorkType]: string } = {
   remote: 'عن بعد',
 };
 
-const InfoBadge = ({ icon: Icon, text, className }: { icon: React.ElementType, text: string, className?: string }) => {
+const InfoBadge = ({ icon: Icon, text, className }: { icon: React.ElementType, text: string | undefined, className?: string }) => {
+  if (!text) return null;
   return (
     <Badge variant="secondary" className={cn("flex-shrink-0 font-normal text-xs py-1", className)}>
       <Icon className="h-4 w-4 ml-1" />
-      <span>{text}</span>
+      <span className="truncate">{text}</span>
     </Badge>
   );
 };
@@ -62,39 +64,48 @@ export function JobCard({ job }: JobCardProps) {
   return (
     <Card 
         className={cn(
-            "flex flex-col rounded-lg bg-card shadow-sm h-full transition-shadow hover:shadow-lg w-full border-t-4",
-            !isSeekingJob && "border-t-4"
+            "flex flex-col rounded-lg bg-card shadow-sm h-full transition-shadow hover:shadow-lg w-full border-l-4",
+            !isSeekingJob && "border-l-4"
         )}
-        style={{ borderColor: !isSeekingJob ? categoryColor : 'transparent' }}
+        style={{ borderColor: categoryColor }}
     >
        <CardHeader className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-grow">
-            <h3 className="font-bold text-base leading-tight text-foreground line-clamp-2">
-                {job.title}
-            </h3>
-            <div className="flex items-center gap-2 mt-1.5">
-              <CategoryIcon name={categoryIcon} className="w-4 h-4" style={{ color: categoryColor }} />
-              <p className="text-sm font-medium" style={{ color: categoryColor }}>
+             <div className="flex items-center gap-2 mb-2">
+                 <CategoryIcon name={categoryIcon} className="w-5 h-5 flex-shrink-0" style={{ color: categoryColor }} />
+                 <h3 className="font-bold text-base leading-tight text-foreground line-clamp-2">
+                    {job.title}
+                </h3>
+            </div>
+             <p className="text-sm font-medium mr-7" style={{ color: categoryColor }}>
                 {categoryName}
               </p>
-            </div>
           </div>
-          <div className="text-xs text-muted-foreground pt-1">{job.postedAt}</div>
+          <div className="text-xs text-muted-foreground pt-1 flex-shrink-0">{job.postedAt}</div>
         </div>
       </CardHeader>
       
       <Separator />
 
       <CardContent className="p-4 flex-grow space-y-3">
-        <InfoBadge
-            icon={MapPin}
-            text={`${job.city}, ${job.country}`}
-            className="bg-red-100/60 text-red-700 dark:bg-red-900/40 dark:text-red-300"
-        />
+        <div className="flex flex-wrap items-center gap-2">
+            <InfoBadge
+                icon={MapPin}
+                text={`${job.country}, ${job.city}`}
+                className="bg-red-100/60 text-red-700 dark:bg-red-900/40 dark:text-red-300"
+            />
+            {isSeekingJob && (
+                <InfoBadge
+                    icon={UserIcon}
+                    text={job.ownerName}
+                    className="bg-purple-100/60 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
+                />
+            )}
+        </div>
 
         <div className="flex flex-wrap items-center gap-2">
-            {!isSeekingJob && workTypeText && (
+            {workTypeText && (
                  <InfoBadge 
                     icon={Clock} 
                     text={workTypeText} 
@@ -111,7 +122,7 @@ export function JobCard({ job }: JobCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="p-4 pt-0 mt-auto">
          <Button asChild size="sm" className="w-full text-sm rounded-lg" variant="secondary">
           <Link href={detailUrl}>{isSeekingJob ? 'عرض الملف' : 'عرض التفاصيل'}</Link>
         </Button>
