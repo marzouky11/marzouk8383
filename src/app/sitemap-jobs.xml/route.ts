@@ -23,6 +23,8 @@ function generateSitemap(jobs: any[]) {
  `;
 }
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const jobs = await getJobs({ postType: 'seeking_worker' });
   const sitemap = generateSitemap(jobs);
