@@ -64,10 +64,10 @@ export function JobCard({ job }: JobCardProps) {
   return (
     <Card 
         className={cn(
-            "flex flex-col rounded-lg bg-card shadow-sm h-full transition-shadow hover:shadow-lg w-full border-l-4",
+            "flex flex-col rounded-lg bg-card shadow-sm h-full transition-shadow hover:shadow-lg w-full",
             !isSeekingJob && "border-l-4"
         )}
-        style={{ borderColor: categoryColor }}
+        style={{ borderColor: !isSeekingJob ? categoryColor : 'transparent' }}
     >
        <CardHeader className="p-4">
         <div className="flex items-start justify-between gap-3">
@@ -105,7 +105,7 @@ export function JobCard({ job }: JobCardProps) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-            {workTypeText && (
+            {!isSeekingJob && workTypeText && (
                  <InfoBadge 
                     icon={Clock} 
                     text={workTypeText} 
