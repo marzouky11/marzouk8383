@@ -98,7 +98,6 @@ export default function RootLayout({
       target: `${baseUrl}/jobs?q={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
-    logo: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg'
   };
   
   return (

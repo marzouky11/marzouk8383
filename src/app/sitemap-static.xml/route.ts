@@ -4,7 +4,7 @@ const staticPages = [
   { url: '/', priority: 1.0, changeFrequency: 'daily' },
   { url: '/jobs', priority: 0.9, changeFrequency: 'daily' },
   { url: '/workers', priority: 0.9, changeFrequency: 'daily' },
-  { url: '/articles', priority: 0.7, changeFrequency: 'monthly' },
+  { url: '/articles', priority: 0.7, changeFrequency: 'weekly' },
   { url: '/about', priority: 0.5, changeFrequency: 'yearly' },
   { url: '/contact', priority: 0.5, changeFrequency: 'yearly' },
   { url: '/privacy', priority: 0.3, changeFrequency: 'yearly' },
