@@ -7,13 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getJobs, getCategories, getTestimonials } from '@/lib/data';
 import React, { Suspense } from 'react';
-import { Handshake, Newspaper, LayoutGrid } from 'lucide-react';
+import { Handshake, Newspaper, Briefcase, Users, ArrowLeft } from 'lucide-react';
 import { JobFilters } from '@/components/job-filters';
 import { ThemeToggleButton } from '@/components/theme-toggle';
 import { HomeCarousel } from './home-carousel';
 import { CategorySection } from './category-section';
 import { HomeExtraSections } from './home-extra-sections';
-import { Testimonial } from '@/lib/types';
+import { Separator } from '@/components/ui/separator';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -36,11 +36,9 @@ function JobFiltersSkeleton() {
 
 function JobSectionSkeleton() {
     return (
-        <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 md:p-0 md:m-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="w-[85vw] sm:w-[45vw] md:w-auto flex-shrink-0">
-                    <JobCard job={null} />
-                </div>
+                <JobCard key={i} job={null} />
             ))}
         </div>
     );
@@ -72,6 +70,35 @@ function HomeHeaderMobile() {
   );
 }
 
+interface SectionHeaderProps {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  href: string;
+}
+
+function SectionHeader({ icon: Icon, title, description, href }: SectionHeaderProps) {
+  return (
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <div className="flex items-center gap-4">
+        <div className="p-3 bg-primary/10 rounded-full">
+            <Icon className="h-8 w-8 text-primary" />
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold text-foreground">{title}</h2>
+          <p className="text-muted-foreground">{description}</p>
+        </div>
+      </div>
+      <Button asChild variant="outline" className="shrink-0">
+        <Link href={href}>
+          عرض الكل
+          <ArrowLeft className="mr-2 h-4 w-4" />
+        </Link>
+      </Button>
+    </div>
+  );
+}
+
 export default async function HomePage() {
   const jobOffers = await getJobs({ postType: 'seeking_worker', count: 6 });
   const jobSeekers = await getJobs({ postType: 'seeking_job', count: 6 });
@@ -84,7 +111,6 @@ export default async function HomePage() {
     <AppLayout>
       <HomeHeaderMobile />
       
-      {/* Search filters for mobile, outside the header */}
       <div className="md:hidden container mt-4">
         <Suspense fallback={<JobFiltersSkeleton />}>
           <JobFilters categories={categories} showPostTypeSelect={true} />
@@ -99,51 +125,49 @@ export default async function HomePage() {
         </Card>
       </div>
       
-      <div className="container space-y-8 mt-4 md:mt-6">
+      <div className="container space-y-12 mt-6 md:mt-8">
           <HomeCarousel />
 
           <section>
-              <div className="flex justify-between items-baseline mb-4">
-              <h2 className="text-xl font-bold">عروض العمل</h2>
-              <Button variant="link" asChild className="text-primary">
-                  <Link href="/jobs">
-                  عرض الكل &gt;
-                  </Link>
-              </Button>
+            <SectionHeader 
+              icon={Briefcase}
+              title="أحدث عروض العمل"
+              description="اكتشف آخر فرص الشغل التي أضافها أصحاب العمل في مختلف المجالات."
+              href="/jobs"
+            />
+            <Suspense fallback={<JobSectionSkeleton />}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {jobOffers.map(job => (
+                      <JobCard key={job.id} job={job} />
+                  ))}
               </div>
-              <Suspense fallback={<JobSectionSkeleton />}>
-                <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-3 md:p-0 md:m-0 snap-x snap-mandatory">
-                    {jobOffers.map(job => (
-                        <div key={job.id} className="w-[85vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
-                            <JobCard job={job} />
-                        </div>
-                    ))}
-                </div>
-              </Suspense>
+            </Suspense>
           </section>
 
+          <Separator />
+
           <section>
-              <div className="flex justify-between items-baseline mb-4">
-              <h2 className="text-xl font-bold">باحثون عن عمل</h2>
-              <Button variant="link" asChild className="text-primary">
-                  <Link href="/workers">
-                  عرض الكل &gt;
-                  </Link>
-              </Button>
+            <SectionHeader
+              icon={Users}
+              title="باحثون عن عمل"
+              description="تصفح ملفات المرشحين والمهنيين المستعدين للانضمام إلى فريقك."
+              href="/workers"
+            />
+            <Suspense fallback={<JobSectionSkeleton />}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {jobSeekers.map(job => (
+                      <JobCard key={job.id} job={job} />
+                  ))}
               </div>
-              <Suspense fallback={<JobSectionSkeleton />}>
-                <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:grid md:grid-cols-3 lg:grid-cols-3 md:p-0 md:m-0 snap-x snap-mandatory">
-                    {jobSeekers.map(job => (
-                        <div key={job.id} className="w-[85vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
-                            <JobCard job={job} />
-                        </div>
-                    ))}
-                </div>
-              </Suspense>
+            </Suspense>
           </section>
+
+          <Separator />
 
           <CategorySection categories={categories} />
           
+          <Separator />
+
           <Suspense>
             <HomeExtraSections 
               testimonials={testimonials} 
