@@ -36,6 +36,10 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/site.webmanifest",
+   alternates: {
+    canonical: baseUrl,
+    sitemap: `${baseUrl}/sitemap.xml`,
+  },
   openGraph: {
     title: {
       default: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
