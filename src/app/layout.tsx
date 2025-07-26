@@ -15,36 +15,24 @@ const ptSans = PT_Sans({
 
 const baseUrl = 'https://www.tawzifak.com';
 const appName = 'توظيفك';
+const appDescription = "توظيفك - منصتك الأولى للعثور على فرص عمل موثوقة في العالم العربي. وظائف يومية في السعودية، المغرب، مصر، الإمارات، الجزائر، تونس وغيرها. سجل مجانًا وابدأ العمل الآن.";
+const appOgImage = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
   title: {
     default: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
     template: `%s | ${appName}`
   },
-  description: "توظيفك - منصتك الأولى للعثور على فرص عمل موثوقة في العالم العربي. وظائف يومية في السعودية، المغرب، مصر، الإمارات، الجزائر، تونس وغيرها. سجل مجانًا وابدأ العمل الآن.",
-  metadataBase: new URL(baseUrl),
+  description: appDescription,
   icons: {
     icon: [
-      { url: "/favicon.ico", type: "image/x-icon" },
+      { url: "/favicon.ico", type: "image/x-icon", sizes: "any" },
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
     apple: [
       { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-    other: [
-      {
-        rel: "android-chrome-192x192.png",
-        url: "/android-chrome-192x192.png",
-        type: "image/png",
-        sizes: "192x192",
-      },
-      {
-        rel: "android-chrome-512x512.png",
-        url: "/android-chrome-512x512.png",
-        type: "image/png",
-        sizes: "512x512",
-      },
     ],
   },
   manifest: "/site.webmanifest",
@@ -53,12 +41,12 @@ export const metadata: Metadata = {
       default: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
       template: `%s | ${appName}`
     },
-    description: "توظيفك - منصتك الأولى للعثور على فرص عمل موثوقة في العالم العربي. وظائف يومية في السعودية، المغرب، مصر، الإمارات، الجزائر، تونس وغيرها. سجل مجانًا وابدأ العمل الآن.",
+    description: appDescription,
     url: baseUrl,
     siteName: appName,
     images: [
       {
-        url: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
+        url: appOgImage,
         width: 1200,
         height: 630,
         alt: appName,
@@ -72,8 +60,8 @@ export const metadata: Metadata = {
       default: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
       template: `%s | ${appName}`
     },
-    description: "توظيفك - منصتك الأولى للعثور على فرص عمل موثوقة في العالم العربي. وظائف يومية في السعودية، المغرب، مصر، الإمارات، الجزائر، تونس وغيرها. سجل مجانًا وابدأ العمل الآن.",
-    images: ['https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg'],
+    description: appDescription,
+    images: [appOgImage],
   },
 };
 
@@ -88,7 +76,7 @@ export default function RootLayout({
     '@type': 'Organization',
     name: appName,
     url: baseUrl,
-    logo: 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg',
+    logo: appOgImage,
   };
 
   const webSiteSchema = {
