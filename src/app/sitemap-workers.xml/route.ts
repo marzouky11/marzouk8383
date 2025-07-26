@@ -1,6 +1,6 @@
 import { getJobs } from '@/lib/data';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
+const baseUrl = 'https://www.tawzifak.com';
 
 function generateSitemap(workers: any[]) {
   return `<?xml version="1.0" encoding="UTF-8"?>

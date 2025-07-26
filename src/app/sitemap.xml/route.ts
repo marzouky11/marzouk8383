@@ -1,4 +1,4 @@
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
+const baseUrl = 'https://www.tawzifak.com';
 
 function generateSitemapIndex() {
     const sitemaps = [

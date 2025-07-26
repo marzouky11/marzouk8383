@@ -1,5 +1,5 @@
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
+const baseUrl = 'https://www.tawzifak.com';
 
 const staticPages = [
   { url: '/jobs', priority: 0.9, changeFrequency: 'daily' },

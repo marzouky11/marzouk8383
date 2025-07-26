@@ -9,6 +9,7 @@
 
 
 
+
 import { notFound, redirect } from 'next/navigation';
 import { getJobById, getCategoryById, getJobs } from '@/lib/data';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -51,7 +52,7 @@ interface JobDetailPageProps {
 
 export async function generateMetadata({ params }: JobDetailPageProps): Promise<Metadata> {
   const job = await getJobById(params.id);
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
+  const baseUrl = 'https://www.tawzifak.com';
   const siteThumbnail = 'https://i.postimg.cc/YCz0LvMj/Screenshot-20250704-173231.jpg';
   
   if (!job) {

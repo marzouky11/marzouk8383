@@ -1,5 +1,5 @@
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
+const baseUrl = 'https://www.tawzifak.com';
 
 function generateHomepageSitemap() {
   const lastmod = '2025-07-26'; // A recent, specific date

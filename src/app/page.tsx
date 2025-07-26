@@ -17,7 +17,7 @@ import { Separator } from '@/components/ui/separator';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
+const baseUrl = 'https://www.tawzifak.com';
 
 export const metadata: Metadata = {
   alternates: {

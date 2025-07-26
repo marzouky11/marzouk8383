@@ -1,6 +1,6 @@
 import { getArticles } from '@/lib/articles';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
+const baseUrl = 'https://www.tawzifak.com';
 
 function generateSitemap(articles: any[]) {
   return `<?xml version="1.0" encoding="UTF-8"?>
