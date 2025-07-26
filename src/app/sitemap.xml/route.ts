@@ -2,6 +2,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
 
 function generateSitemapIndex() {
     const sitemaps = [
+        'sitemap-home.xml',
         'sitemap-static.xml',
         'sitemap-jobs.xml',
         'sitemap-workers.xml',

@@ -2,7 +2,6 @@
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tawzifak.com';
 
 const staticPages = [
-  { url: '/', priority: 1.0, changeFrequency: 'daily' },
   { url: '/jobs', priority: 0.9, changeFrequency: 'daily' },
   { url: '/workers', priority: 0.9, changeFrequency: 'daily' },
   { url: '/articles', priority: 0.7, changeFrequency: 'weekly' },
