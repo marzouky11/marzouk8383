@@ -64,21 +64,21 @@ export function JobCard({ job }: JobCardProps) {
   return (
     <Card 
         className={cn(
-            "flex flex-col rounded-lg bg-card shadow-sm h-full transition-shadow hover:shadow-lg w-full",
+            "flex flex-col rounded-lg bg-card shadow-sm h-full transition-shadow hover:shadow-lg w-full overflow-hidden",
             isSeekingJob ? "border border-dashed" : "border-t-4"
         )}
         style={{ borderColor: categoryColor }}
     >
        <CardHeader className="p-4">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex-grow">
+          <div className="flex-grow min-w-0">
              <div className="flex items-center gap-2 mb-2">
                  <CategoryIcon name={categoryIcon} className="w-5 h-5 flex-shrink-0" style={{ color: categoryColor }} />
                  <h3 className="font-bold text-base leading-tight text-foreground line-clamp-2">
                     {job.title}
                 </h3>
             </div>
-             <p className="text-sm font-medium mr-7" style={{ color: categoryColor }}>
+             <p className="text-sm font-medium mr-7 truncate" style={{ color: categoryColor }}>
                 {categoryName}
               </p>
           </div>
