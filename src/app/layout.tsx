@@ -17,7 +17,10 @@ const baseUrl = 'https://www.tawzifak.com';
 const appName = 'توظيفك';
 
 export const metadata: Metadata = {
-  title: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
+  title: {
+    default: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
+    template: `%s | ${appName}`
+  },
   description: "توظيفك - منصتك الأولى للعثور على فرص عمل موثوقة في العالم العربي. وظائف يومية في السعودية، المغرب، مصر، الإمارات، الجزائر، تونس وغيرها. سجل مجانًا وابدأ العمل الآن.",
   metadataBase: new URL(baseUrl),
   icons: {
