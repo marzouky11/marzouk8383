@@ -37,10 +37,10 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
    alternates: {
-    canonical: baseUrl,
+    canonical: '/',
     sitemaps: [
       {
-        url: `${baseUrl}/sitemap.xml`,
+        url: '/sitemap.xml',
         title: 'Sitemap',
       },
     ],
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
       template: `%s | ${appName}`
     },
     description: appDescription,
-    url: baseUrl,
+    url: '/',
     siteName: appName,
     images: [
       {

@@ -17,11 +17,9 @@ import { Separator } from '@/components/ui/separator';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-const baseUrl = 'https://www.tawzifak.com';
-
 export const metadata: Metadata = {
   alternates: {
-      canonical: baseUrl,
+      canonical: '/',
   },
 };
 
