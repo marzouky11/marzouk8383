@@ -65,7 +65,7 @@ export function JobCard({ job }: JobCardProps) {
     <Card 
         className={cn(
             "flex flex-col rounded-lg bg-card shadow-sm h-full transition-shadow hover:shadow-lg w-full",
-            isSeekingJob ? "border border-dashed" : "border-l-4"
+            isSeekingJob ? "border border-dashed" : "border-t-4"
         )}
         style={{ borderColor: categoryColor }}
     >
