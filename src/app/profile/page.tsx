@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useEffect } from 'react';
@@ -9,7 +10,7 @@ import { useAuth } from '@/context/auth-context';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Newspaper, HelpCircle, Info, Mail, Shield, FileText } from 'lucide-react';
+import { User, LogOut, ChevronLeft, Loader2, Settings as SettingsIcon, Newspaper, HelpCircle, Info, Mail, Shield, FileText, Facebook } from 'lucide-react';
 import { getCategories } from '@/lib/data';
 import { UserAvatar } from '@/components/user-avatar';
 import { useToast } from '@/hooks/use-toast';
@@ -52,7 +53,7 @@ export default function SettingsPage() {
     );
     return (
         <li className="flex items-center w-full">
-            {href ? <Link href={href} className="w-full">{content}</Link> : content}
+            {href ? <Link href={href} target={href.startsWith('http') ? '_blank' : '_self'} rel={href.startsWith('http') ? 'noopener noreferrer' : ''} className="w-full">{content}</Link> : content}
         </li>
     )
   };
@@ -124,6 +125,11 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="p-0">
                   <ul className="divide-y divide-border">
+                     <SettingItem
+                        icon={Facebook}
+                        label="تابعنا على فيسبوك"
+                        href="https://www.facebook.com/profile.php?id=61578748771269"
+                    />
                      <SettingItem
                         icon={Newspaper}
                         label="مقالات"
