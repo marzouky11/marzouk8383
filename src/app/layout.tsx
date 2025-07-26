@@ -38,12 +38,6 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
    alternates: {
     canonical: '/',
-    sitemaps: [
-      {
-        url: '/sitemap.xml',
-        title: 'Sitemap',
-      },
-    ],
   },
   openGraph: {
     title: {
