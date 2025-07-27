@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint, and } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
 
 const categories: Category[] = [
@@ -140,27 +140,36 @@ export async function getJobs(
     const adsRef = collection(db, 'ads');
     const queryConstraints: QueryConstraint[] = [];
 
+    // Base query sorting
     if (sortBy === 'newest') {
-        queryConstraints.push(orderBy('createdAt', 'desc'));
+      queryConstraints.push(orderBy('createdAt', 'desc'));
     }
 
+    // Build filter conditions
+    const filters = [];
     if (postType) {
-        queryConstraints.push(where('postType', '==', postType));
+      filters.push(where('postType', '==', postType));
     }
     if (categoryId) {
-        queryConstraints.push(where('categoryId', '==', categoryId));
+      filters.push(where('categoryId', '==', categoryId));
     }
     if (workType) {
-        queryConstraints.push(where('workType', '==', workType));
+      filters.push(where('workType', '==', workType));
     }
     if (country) {
-        queryConstraints.push(where('country', '==', country));
+      filters.push(where('country', '==', country));
     }
     if (city) {
-        queryConstraints.push(where('city', '==', city));
+      filters.push(where('city', '==', city));
     }
+    
+    // Combine filters if any exist
+    if (filters.length > 0) {
+      queryConstraints.push(and(...filters));
+    }
+
     if (count) {
-        queryConstraints.push(limit(count));
+      queryConstraints.push(limit(count));
     }
 
     const q = query(adsRef, ...queryConstraints);
