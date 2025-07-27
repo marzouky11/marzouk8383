@@ -2,6 +2,7 @@
 
 
 
+
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
@@ -142,66 +143,67 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
-    // Base query: always sort by newest first.
-    const q = query(adsRef, orderBy('createdAt', 'desc'));
-    
-    const querySnapshot = await getDocs(q);
-    
-    const allJobs = querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-            id: doc.id,
-            ...data,
-            postedAt: formatTimeAgo(data.createdAt),
-        } as Job;
-    });
-    
-    // Apply filtering in-memory
-    let filteredJobs = allJobs;
+    const queryConstraints: QueryConstraint[] = [];
 
-    if (excludeId) {
-      filteredJobs = filteredJobs.filter(job => job.id !== excludeId);
+    // Always sort by newest first.
+    if (sortBy === 'newest') {
+        queryConstraints.push(orderBy('createdAt', 'desc'));
     }
-    
+
     if (postType) {
-      filteredJobs = filteredJobs.filter(job => job.postType === postType);
+        queryConstraints.push(where('postType', '==', postType));
+    }
+    if (categoryId) {
+        queryConstraints.push(where('categoryId', '==', categoryId));
+    }
+    if (workType) {
+        queryConstraints.push(where('workType', '==', workType));
+    }
+    if (country) {
+        // Firestore doesn't support partial string matches directly in queries like SQL's LIKE.
+        // We will filter by country after fetching. This is a limitation if not using a full-text search service.
+        // For now, let's assume an exact match is needed for query efficiency.
+        queryConstraints.push(where('country', '==', country));
+    }
+    if (city) {
+        queryConstraints.push(where('city', '==', city));
+    }
+    if (count) {
+        queryConstraints.push(limit(count));
     }
 
-    if (categoryId) {
-      filteredJobs = filteredJobs.filter(job => job.categoryId === categoryId);
-    }
-    
-    if (country) {
-        const normalizedSearchCountry = country.trim().toLowerCase();
-        filteredJobs = filteredJobs.filter(job => job.country && job.country.trim().toLowerCase().includes(normalizedSearchCountry));
-    }
-    
-    if (city) {
-        const normalizedSearchCity = city.trim().toLowerCase();
-        filteredJobs = filteredJobs.filter(job => job.city && job.city.trim().toLowerCase().includes(normalizedSearchCity));
-    }
-    
-    if (workType) {
-        filteredJobs = filteredJobs.filter(job => job.workType === workType);
-    }
-    
+    const q = query(adsRef, ...queryConstraints);
+    const querySnapshot = await getDocs(q);
+
+    let jobs = querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        postedAt: formatTimeAgo(data.createdAt),
+      } as Job;
+    });
+
+    // Post-query filtering for search query and excludeId
     if (searchQuery) {
         const lowercasedQuery = searchQuery.trim().toLowerCase();
-        filteredJobs = filteredJobs.filter(job => 
+        jobs = jobs.filter(job => 
             job.title?.toLowerCase().includes(lowercasedQuery) ||
             job.description?.toLowerCase().includes(lowercasedQuery) ||
             job.categoryName?.toLowerCase().includes(lowercasedQuery) ||
             job.ownerName?.toLowerCase().includes(lowercasedQuery)
         );
     }
-
-    if (count) {
-      return filteredJobs.slice(0, count);
+    
+    if (excludeId) {
+        jobs = jobs.filter(job => job.id !== excludeId);
     }
 
-    return filteredJobs;
+    return jobs;
   } catch (error) {
     console.error("Error fetching jobs: ", error);
+    // It's better to return an empty array than to crash the app.
+    // The calling component can then display a "No jobs found" message.
     return [];
   }
 }

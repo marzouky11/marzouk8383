@@ -42,6 +42,43 @@ function JobSectionSkeleton() {
     );
 }
 
+async function JobOffersSection() {
+    const jobOffers = await getJobs({ postType: 'seeking_worker', count: 6 });
+    return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {jobOffers.map(job => (
+                <JobCard key={job.id} job={job} />
+            ))}
+        </div>
+    );
+}
+
+async function JobSeekersSection() {
+    const jobSeekers = await getJobs({ postType: 'seeking_job', count: 6 });
+    return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {jobSeekers.map(job => (
+                <JobCard key={job.id} job={job} />
+            ))}
+        </div>
+    );
+}
+
+async function ExtraSections() {
+    const testimonials = await getTestimonials();
+    const jobOffersCount = (await getJobs({ postType: 'seeking_worker', count: 9999 })).length;
+    const jobSeekersCount = (await getJobs({ postType: 'seeking_job', count: 9999 })).length;
+
+    return (
+        <HomeExtraSections
+            testimonials={testimonials}
+            jobOffersCount={jobOffersCount}
+            jobSeekersCount={jobSeekersCount}
+        />
+    );
+}
+
+
 function HomeHeaderMobile() {
   return (
       <div className="md:hidden bg-primary text-primary-foreground p-4 rounded-b-3xl shadow-md">
@@ -98,13 +135,8 @@ function SectionHeader({ icon: Icon, title, description, href }: SectionHeaderPr
 }
 
 export default async function HomePage() {
-  const jobOffers = await getJobs({ postType: 'seeking_worker', count: 6 });
-  const jobSeekers = await getJobs({ postType: 'seeking_job', count: 6 });
   const categories = getCategories();
-  const testimonials = await getTestimonials();
-  const allJobOffers = await getJobs({ postType: 'seeking_worker' });
-  const allJobSeekers = await getJobs({ postType: 'seeking_job' });
-
+  
   return (
     <AppLayout>
       <HomeHeaderMobile />
@@ -134,11 +166,7 @@ export default async function HomePage() {
               href="/jobs"
             />
             <Suspense fallback={<JobSectionSkeleton />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {jobOffers.map(job => (
-                      <JobCard key={job.id} job={job} />
-                  ))}
-              </div>
+              <JobOffersSection />
             </Suspense>
           </section>
 
@@ -152,11 +180,7 @@ export default async function HomePage() {
               href="/workers"
             />
             <Suspense fallback={<JobSectionSkeleton />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {jobSeekers.map(job => (
-                      <JobCard key={job.id} job={job} />
-                  ))}
-              </div>
+              <JobSeekersSection />
             </Suspense>
           </section>
 
@@ -167,11 +191,7 @@ export default async function HomePage() {
           <Separator />
 
           <Suspense>
-            <HomeExtraSections 
-              testimonials={testimonials} 
-              jobOffersCount={allJobOffers.length}
-              jobSeekersCount={allJobSeekers.length}
-            />
+            <ExtraSections />
           </Suspense>
       </div>
     </AppLayout>
