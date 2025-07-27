@@ -1,4 +1,3 @@
-
 import { getJobs } from '@/lib/data';
 
 const baseUrl = 'https://www.tawzifak.com';

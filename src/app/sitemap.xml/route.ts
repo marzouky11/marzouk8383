@@ -1,4 +1,3 @@
-
 const baseUrl = 'https://www.tawzifak.com';
 
 function generateSitemapIndex() {

@@ -1,4 +1,3 @@
-
 import { getArticles } from '@/lib/articles';
 
 const baseUrl = 'https://www.tawzifak.com';
