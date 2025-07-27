@@ -155,7 +155,13 @@ export async function getJobs(
     if (city) {
       filterConstraints.push(where('city', '==', city));
     }
+    
+    // Create the base query with filters
+    const intermediateQuery = filterConstraints.length > 0
+      ? query(adsRef, and(...filterConstraints))
+      : query(adsRef);
 
+    // Prepare non-filter constraints
     const otherConstraints: QueryConstraint[] = [];
     if (sortBy === 'newest') {
       otherConstraints.push(orderBy('createdAt', 'desc'));
@@ -164,12 +170,8 @@ export async function getJobs(
       otherConstraints.push(limit(count));
     }
     
-    let finalQuery;
-    if (filterConstraints.length > 0) {
-        finalQuery = query(adsRef, and(...filterConstraints), ...otherConstraints);
-    } else {
-        finalQuery = query(adsRef, ...otherConstraints);
-    }
+    // Apply non-filter constraints to the base query
+    const finalQuery = query(intermediateQuery, ...otherConstraints);
 
     const querySnapshot = await getDocs(finalQuery);
 
