@@ -140,6 +140,7 @@ export async function getJobs(
 
     const adsRef = collection(db, 'ads');
     const filterConstraints: QueryFilterConstraint[] = [];
+    const textSearchFields = [];
 
     if (postType) {
       filterConstraints.push(where('postType', '==', postType));
@@ -150,11 +151,15 @@ export async function getJobs(
     if (workType) {
       filterConstraints.push(where('workType', '==', workType));
     }
+    
+    if (searchQuery) {
+        textSearchFields.push({ name: 'mainQuery', value: searchQuery, keys: ['title', 'description', 'categoryName', 'ownerName'] });
+    }
     if (country) {
-      filterConstraints.push(where('country', '==', country));
+        textSearchFields.push({ name: 'country', value: country, keys: ['country'] });
     }
     if (city) {
-      filterConstraints.push(where('city', '==', city));
+        textSearchFields.push({ name: 'city', value: city, keys: ['city'] });
     }
     
     const otherConstraints: QueryConstraint[] = [];
@@ -162,16 +167,15 @@ export async function getJobs(
         otherConstraints.push(orderBy('createdAt', 'desc'));
     }
     
-    // Don't limit if there's a search query, we'll filter and limit later
-    if (count && !searchQuery) {
+    // If we are doing a text-based search, we fetch all and then filter.
+    // Otherwise, we can limit the initial fetch.
+    if (count && textSearchFields.length === 0) {
         otherConstraints.push(limit(count));
     }
 
-    const intermediateQuery = filterConstraints.length > 0
-      ? query(adsRef, and(...filterConstraints))
-      : query(adsRef);
-      
-    const finalQuery = query(intermediateQuery, ...otherConstraints);
+    const finalQuery = filterConstraints.length > 0
+      ? query(adsRef, and(...filterConstraints), ...otherConstraints)
+      : query(adsRef, ...otherConstraints);
 
     const querySnapshot = await getDocs(finalQuery);
 
@@ -184,29 +188,36 @@ export async function getJobs(
       } as Job;
     });
 
-    if (searchQuery) {
-        const fuseOptions = {
-            includeScore: true,
-            threshold: 0.4, // Adjust for more or less strictness
-            keys: ['title', 'description', 'categoryName', 'country', 'city']
-        };
-        const fuse = new Fuse(jobs, fuseOptions);
-        const results = fuse.search(searchQuery);
-        jobs = results.map(result => result.item);
-
-        if (count) {
-            jobs = jobs.slice(0, count);
+    // Apply fuzzy search if any text search field is used
+    if (textSearchFields.length > 0) {
+        let filteredJobs = jobs;
+        
+        for (const field of textSearchFields) {
+            const fuseOptions = {
+                includeScore: true,
+                threshold: 0.4, // Adjust for more or less strictness
+                keys: field.keys,
+            };
+            const fuse = new Fuse(filteredJobs, fuseOptions);
+            const results = fuse.search(field.value);
+            filteredJobs = results.map(result => result.item);
         }
+        jobs = filteredJobs;
     }
     
     if (excludeId) {
         jobs = jobs.filter(job => job.id !== excludeId);
     }
+    
+    // Apply limit after text search filtering
+    if (count && textSearchFields.length > 0) {
+        jobs = jobs.slice(0, count);
+    }
 
     return jobs;
   } catch (error) {
     console.error("Error fetching jobs: ", error);
-    throw error;
+    return [];
   }
 }
 
