@@ -2,15 +2,16 @@ import { getJobs } from '@/lib/data';
 
 const baseUrl = 'https://www.tawzifak.com';
 
-function generateSitemap(workers: any[]) {
+function generateSitemap(jobs: any[]) {
   return `<?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-     ${workers
+     ${jobs
        .map(({ id, createdAt }) => {
+         // createdAt could be a Firestore Timestamp
          const lastModified = createdAt?.toDate ? createdAt.toDate() : new Date();
          return `
        <url>
-           <loc>${`${baseUrl}/workers/${id}`}</loc>
+           <loc>${`${baseUrl}/jobs/${id}`}</loc>
            <lastmod>${lastModified.toISOString().split('T')[0]}</lastmod>
            <changefreq>weekly</changefreq>
            <priority>0.8</priority>
@@ -26,8 +27,8 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const workers = await getJobs({ postType: 'seeking_job' });
-    const sitemap = generateSitemap(workers);
+    const jobs = await getJobs({ postType: 'seeking_worker' });
+    const sitemap = generateSitemap(jobs);
 
     return new Response(sitemap, {
       headers: {
@@ -35,6 +36,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    return new Response('Error generating sitemap', { status: 500 });
+    console.error("Error generating jobs sitemap:", error);
+    return new Response('Error generating jobs sitemap', { status: 500 });
   }
 }

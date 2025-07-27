@@ -2,11 +2,11 @@ const baseUrl = 'https://www.tawzifak.com';
 
 function generateSitemapIndex() {
     const sitemaps = [
-        'sitemap-home.xml',
-        'sitemap-static.xml',
-        'sitemap-jobs.xml',
-        'sitemap-workers.xml',
-        'sitemap-articles.xml',
+        'sitemaps/home.xml',
+        'sitemaps/static.xml',
+        'sitemaps/jobs.xml',
+        'sitemaps/workers.xml',
+        'sitemaps/articles.xml',
     ];
 
     return `<?xml version="1.0" encoding="UTF-8"?>

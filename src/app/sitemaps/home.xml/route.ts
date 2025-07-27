@@ -1,7 +1,7 @@
 const baseUrl = 'https://www.tawzifak.com';
 
 function generateHomepageSitemap() {
-  const lastmod = '2025-07-26'; // A recent, specific date
+  const lastmod = '2025-07-26';
   
   return `<?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
