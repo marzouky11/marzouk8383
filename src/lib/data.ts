@@ -138,10 +138,8 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
-    let queryConstraints: QueryConstraint[] = [];
-    
-    // Filtering constraints
     const filterConstraints: QueryConstraint[] = [];
+
     if (postType) {
       filterConstraints.push(where('postType', '==', postType));
     }
@@ -157,21 +155,23 @@ export async function getJobs(
     if (city) {
       filterConstraints.push(where('city', '==', city));
     }
-    if(filterConstraints.length > 0) {
-        queryConstraints.push(and(...filterConstraints));
+
+    const otherConstraints: QueryConstraint[] = [];
+    if (sortBy === 'newest') {
+      otherConstraints.push(orderBy('createdAt', 'desc'));
+    }
+    if (count && !searchQuery) {
+      otherConstraints.push(limit(count));
     }
     
-
-    // Sorting and limiting constraints
-    if (sortBy === 'newest') {
-      queryConstraints.push(orderBy('createdAt', 'desc'));
-    }
-    if (count && !searchQuery) { // Apply limit only if not searching
-      queryConstraints.push(limit(count));
+    let finalQuery;
+    if (filterConstraints.length > 0) {
+        finalQuery = query(adsRef, and(...filterConstraints), ...otherConstraints);
+    } else {
+        finalQuery = query(adsRef, ...otherConstraints);
     }
 
-    const q = query(adsRef, ...queryConstraints);
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await getDocs(finalQuery);
 
     let jobs = querySnapshot.docs.map(doc => {
       const data = doc.data();
@@ -182,7 +182,6 @@ export async function getJobs(
       } as Job;
     });
 
-    // Apply search query filtering in-memory on the filtered results
     if (searchQuery) {
         const lowercasedQuery = searchQuery.trim().toLowerCase();
         jobs = jobs.filter(job => 
