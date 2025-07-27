@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -16,7 +17,14 @@ import { Loader2, UserPlus, Mail, Lock, User, MapPin, Globe } from 'lucide-react
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
+import type { Metadata } from 'next';
 
+// Although this is a client component, we can export metadata from it.
+// Next.js will handle it correctly during the build process.
+export const metadata: Metadata = {
+  title: 'أنشئ حسابك الآن – وانضم لأكبر منصة وظائف عربية',
+  description: 'سجّل كمستخدم أو صاحب عمل وابدأ في نشر الوظائف أو التقديم عليها في كل من السعودية، مصر، المغرب، الإمارات، وباقي الدول.',
+};
 
 export default function SignupPage() {
   const router = useRouter();
@@ -227,3 +235,4 @@ export default function SignupPage() {
     </AppLayout>
   );
 }
+

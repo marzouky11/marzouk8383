@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
@@ -12,8 +13,8 @@ import { Users } from 'lucide-react';
 import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export const metadata: Metadata = {
-  title: 'ابحث عن عمال محترفين في بلدك - جميع التخصصات',
-  description: 'توفر لك منصة توظيفك قاعدة بيانات كبيرة للعمال المؤهلين في الدول العربية. ابحث حسب المجال أو المدينة.',
+  title: 'باحثون عن عمل من جميع الدول العربية – سِيَر ذاتية جاهزة للتوظيف',
+  description: 'تصفح ملفات الباحثين عن العمل في مجالات متنوعة من السعودية، المغرب، مصر، الجزائر، العراق، وأكثر. تواصل مباشرة مع أصحاب الكفاءات.',
 };
 
 
@@ -83,3 +84,4 @@ export default async function WorkersPage({
     </AppLayout>
   );
 }
+

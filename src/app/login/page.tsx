@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -14,6 +15,12 @@ import Link from 'next/link';
 import { Loader2, LogIn, Mail, Lock } from 'lucide-react';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'تسجيل الدخول إلى حسابك – منصة التوظيف العربية',
+  description: 'تصفح إعلاناتك أو قدم على وظائف بسهولة بعد تسجيل الدخول. كل ما تحتاجه للتوظيف في منصة واحدة عربية.',
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -116,3 +123,4 @@ export default function LoginPage() {
     </AppLayout>
   );
 }
+

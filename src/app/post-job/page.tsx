@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { getCategories } from '@/lib/data';
 import PostJobClientPage from './post-job-client-page';
@@ -6,8 +7,8 @@ import { AppLayout } from '@/components/layout/app-layout';
 import { Loader2 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'أنشر إعلانك مجانًا - عروض عمل أو طلب وظيفة',
-  description: 'أنشر إعلان توظيف أو ابحث عن عمل في دقائق. منصة سهلة الاستخدام للمعلنين والباحثين عن فرص شغل.',
+  title: 'أنشر إعلان وظيفة مجانًا في الوطن العربي – استقطب موظفين بسرعة',
+  description: 'سواء كنت شركة أو فرد، أنشر إعلانك الوظيفي مجاناً على منصتنا ووصل لملايين الباحثين عن عمل في الدول العربية.',
 };
 
 function PostJobPageFallback() {
@@ -28,3 +29,4 @@ export default function PostJobPage() {
         </Suspense>
     );
 }
+
