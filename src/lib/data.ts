@@ -1,6 +1,7 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint, and, or, queryEqual, QueryFilterConstraint } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint, and, or, QueryFilterConstraint } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
+import Fuse from 'fuse.js';
 
 const categories: Category[] = [
   { id: '1', name: 'نجار', iconName: 'Hammer', color: '#a16207' },
@@ -156,21 +157,20 @@ export async function getJobs(
       filterConstraints.push(where('city', '==', city));
     }
     
-    // Create the base query with filters
+    const otherConstraints: QueryConstraint[] = [];
+    if (sortBy === 'newest') {
+        otherConstraints.push(orderBy('createdAt', 'desc'));
+    }
+    
+    // Don't limit if there's a search query, we'll filter and limit later
+    if (count && !searchQuery) {
+        otherConstraints.push(limit(count));
+    }
+
     const intermediateQuery = filterConstraints.length > 0
       ? query(adsRef, and(...filterConstraints))
       : query(adsRef);
-
-    // Prepare non-filter constraints
-    const otherConstraints: QueryConstraint[] = [];
-    if (sortBy === 'newest') {
-      otherConstraints.push(orderBy('createdAt', 'desc'));
-    }
-    if (count && !searchQuery) {
-      otherConstraints.push(limit(count));
-    }
-    
-    // Apply non-filter constraints to the base query
+      
     const finalQuery = query(intermediateQuery, ...otherConstraints);
 
     const querySnapshot = await getDocs(finalQuery);
@@ -185,14 +185,16 @@ export async function getJobs(
     });
 
     if (searchQuery) {
-        const lowercasedQuery = searchQuery.trim().toLowerCase();
-        jobs = jobs.filter(job => 
-            job.title?.toLowerCase().includes(lowercasedQuery) ||
-            job.description?.toLowerCase().includes(lowercasedQuery) ||
-            job.categoryName?.toLowerCase().includes(lowercasedQuery) ||
-            job.ownerName?.toLowerCase().includes(lowercasedQuery)
-        );
-         if (count) {
+        const fuseOptions = {
+            includeScore: true,
+            threshold: 0.4, // Adjust for more or less strictness
+            keys: ['title', 'description', 'categoryName', 'country', 'city']
+        };
+        const fuse = new Fuse(jobs, fuseOptions);
+        const results = fuse.search(searchQuery);
+        jobs = results.map(result => result.item);
+
+        if (count) {
             jobs = jobs.slice(0, count);
         }
     }
