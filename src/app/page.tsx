@@ -17,12 +17,6 @@ import { Separator } from '@/components/ui/separator';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export const metadata: Metadata = {
-  alternates: {
-      canonical: '/',
-  },
-};
-
 function JobFiltersSkeleton() {
     return (
         <div className="flex gap-2 items-center">
