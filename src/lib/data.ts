@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint, and, or, queryEqual } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint, and, or, queryEqual, QueryFilterConstraint } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
 
 const categories: Category[] = [
@@ -138,7 +138,7 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
-    const filterConstraints: QueryConstraint[] = [];
+    const filterConstraints: QueryFilterConstraint[] = [];
 
     if (postType) {
       filterConstraints.push(where('postType', '==', postType));
