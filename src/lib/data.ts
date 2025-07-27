@@ -138,18 +138,10 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
-    const otherConstraints: QueryConstraint[] = [];
-    const filterConstraints: QueryConstraint[] = [];
-
-    // Sorting and limiting constraints
-    if (sortBy === 'newest') {
-      otherConstraints.push(orderBy('createdAt', 'desc'));
-    }
-    if (count) {
-      otherConstraints.push(limit(count));
-    }
-
+    let queryConstraints: QueryConstraint[] = [];
+    
     // Filtering constraints
+    const filterConstraints: QueryConstraint[] = [];
     if (postType) {
       filterConstraints.push(where('postType', '==', postType));
     }
@@ -165,15 +157,20 @@ export async function getJobs(
     if (city) {
       filterConstraints.push(where('city', '==', city));
     }
-
-    // Combine all constraints
-    const allConstraints: QueryConstraint[] = [];
-    if (filterConstraints.length > 0) {
-      allConstraints.push(and(...filterConstraints));
+    if(filterConstraints.length > 0) {
+        queryConstraints.push(and(...filterConstraints));
     }
-    allConstraints.push(...otherConstraints);
+    
 
-    const q = query(adsRef, ...allConstraints);
+    // Sorting and limiting constraints
+    if (sortBy === 'newest') {
+      queryConstraints.push(orderBy('createdAt', 'desc'));
+    }
+    if (count && !searchQuery) { // Apply limit only if not searching
+      queryConstraints.push(limit(count));
+    }
+
+    const q = query(adsRef, ...queryConstraints);
     const querySnapshot = await getDocs(q);
 
     let jobs = querySnapshot.docs.map(doc => {
@@ -185,6 +182,7 @@ export async function getJobs(
       } as Job;
     });
 
+    // Apply search query filtering in-memory on the filtered results
     if (searchQuery) {
         const lowercasedQuery = searchQuery.trim().toLowerCase();
         jobs = jobs.filter(job => 
@@ -193,6 +191,9 @@ export async function getJobs(
             job.categoryName?.toLowerCase().includes(lowercasedQuery) ||
             job.ownerName?.toLowerCase().includes(lowercasedQuery)
         );
+         if (count) {
+            jobs = jobs.slice(0, count);
+        }
     }
     
     if (excludeId) {

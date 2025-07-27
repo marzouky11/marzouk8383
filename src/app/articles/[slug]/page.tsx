@@ -135,15 +135,21 @@ export default function ArticlePage({ params }: Props) {
               </div>
 
               <div className="prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-foreground prose-a:text-primary">
-                {article.content.split('\n').filter(p => p.trim() !== '').map((paragraph, index) => {
-                    if (paragraph.startsWith('### ')) {
-                        return <h3 key={index} className="text-xl font-semibold mt-6 mb-3 text-foreground">{paragraph.replace('### ', '')}</h3>
+                {article.content.split('\n\n').map((paragraph, index) => {
+                    const trimmedParagraph = paragraph.trim();
+                    if (trimmedParagraph.startsWith('### ')) {
+                        return <h3 key={index} className="text-xl font-semibold mt-6 mb-3 text-foreground">{trimmedParagraph.replace('### ', '')}</h3>
                     }
-                     // Handle bold text like **المميزات:**
-                    if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
-                        return <p key={index} className="mb-4 font-bold">{paragraph.slice(2, -2)}</p>;
+                    if (trimmedParagraph.startsWith('**') && trimmedParagraph.endsWith('**')) {
+                        return <p key={index} className="mb-4 font-bold">{trimmedParagraph.slice(2, -2)}</p>;
                     }
-                    return <p key={index} className="mb-4">{paragraph}</p>;
+                     if (trimmedParagraph.startsWith('1.') || trimmedParagraph.startsWith('2.') || trimmedParagraph.startsWith('3.') || trimmedParagraph.startsWith('4.') || trimmedParagraph.startsWith('5.') || trimmedParagraph.startsWith('6.') || trimmedParagraph.startsWith('7.') || trimmedParagraph.startsWith('8.') || trimmedParagraph.startsWith('9.') || trimmedParagraph.startsWith('10.')) {
+                        return <p key={index} className="mb-4 font-semibold">{trimmedParagraph}</p>;
+                    }
+                    if (trimmedParagraph.length > 0) {
+                        return <p key={index} className="mb-4">{trimmedParagraph}</p>;
+                    }
+                    return null;
                 })}
               </div>
             </CardContent>

@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
@@ -30,7 +31,17 @@ function JobListSkeleton() {
   );
 }
 
-function JobList({ jobs }: { jobs: Awaited<ReturnType<typeof getJobs>> }) {
+async function JobList({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
+  const jobs = await getJobs({
+      postType: 'seeking_worker',
+      searchQuery: typeof searchParams?.q === 'string' ? searchParams.q : undefined,
+      country: typeof searchParams?.country === 'string' ? searchParams.country : undefined,
+      city: typeof searchParams?.city === 'string' ? searchParams.city : undefined,
+      categoryId: typeof searchParams?.category === 'string' ? searchParams.category : undefined,
+      workType: typeof searchParams?.workType === 'string' ? searchParams.workType as WorkType : undefined,
+      sortBy: typeof searchParams?.sortBy === 'string' ? searchParams.sortBy as 'newest' : 'newest',
+  });
+
   if (jobs.length > 0) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -47,16 +58,6 @@ export default async function JobsPage({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const categories = getCategories();
-
-  const jobs = await getJobs({
-      postType: 'seeking_worker',
-      searchQuery: typeof searchParams?.q === 'string' ? searchParams.q : undefined,
-      country: typeof searchParams?.country === 'string' ? searchParams.country : undefined,
-      city: typeof searchParams?.city === 'string' ? searchParams.city : undefined,
-      categoryId: typeof searchParams?.category === 'string' ? searchParams.category : undefined,
-      workType: typeof searchParams?.workType === 'string' ? searchParams.workType as WorkType : undefined,
-      sortBy: typeof searchParams?.sortBy === 'string' ? searchParams.sortBy as 'newest' : 'newest',
-  });
 
   return (
     <AppLayout>
@@ -76,7 +77,7 @@ export default async function JobsPage({
         </div>
         
         <Suspense fallback={<JobListSkeleton />}>
-          <JobList jobs={jobs} />
+          <JobList searchParams={searchParams} />
         </Suspense>
       </div>
     </AppLayout>
