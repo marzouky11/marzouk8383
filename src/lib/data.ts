@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint, and } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint, and, or, queryEqual } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
 
 const categories: Category[] = [
@@ -138,41 +138,42 @@ export async function getJobs(
     } = options;
 
     const adsRef = collection(db, 'ads');
-    const queryConstraints: QueryConstraint[] = [];
+    const otherConstraints: QueryConstraint[] = [];
+    const filterConstraints: QueryConstraint[] = [];
 
-    // Base query sorting
+    // Sorting and limiting constraints
     if (sortBy === 'newest') {
-      queryConstraints.push(orderBy('createdAt', 'desc'));
+      otherConstraints.push(orderBy('createdAt', 'desc'));
+    }
+    if (count) {
+      otherConstraints.push(limit(count));
     }
 
-    // Build filter conditions
-    const filters = [];
+    // Filtering constraints
     if (postType) {
-      filters.push(where('postType', '==', postType));
+      filterConstraints.push(where('postType', '==', postType));
     }
     if (categoryId) {
-      filters.push(where('categoryId', '==', categoryId));
+      filterConstraints.push(where('categoryId', '==', categoryId));
     }
     if (workType) {
-      filters.push(where('workType', '==', workType));
+      filterConstraints.push(where('workType', '==', workType));
     }
     if (country) {
-      filters.push(where('country', '==', country));
+      filterConstraints.push(where('country', '==', country));
     }
     if (city) {
-      filters.push(where('city', '==', city));
-    }
-    
-    // Combine filters if any exist
-    if (filters.length > 0) {
-      queryConstraints.push(and(...filters));
+      filterConstraints.push(where('city', '==', city));
     }
 
-    if (count) {
-      queryConstraints.push(limit(count));
+    // Combine all constraints
+    const allConstraints: QueryConstraint[] = [];
+    if (filterConstraints.length > 0) {
+      allConstraints.push(and(...filterConstraints));
     }
+    allConstraints.push(...otherConstraints);
 
-    const q = query(adsRef, ...queryConstraints);
+    const q = query(adsRef, ...allConstraints);
     const querySnapshot = await getDocs(q);
 
     let jobs = querySnapshot.docs.map(doc => {
