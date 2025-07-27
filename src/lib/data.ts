@@ -140,7 +140,9 @@ export async function getJobs(
 
     const adsRef = collection(db, 'ads');
     const filterConstraints: QueryFilterConstraint[] = [];
-    const textSearchFields = [];
+    
+    // Determine if we need to fetch all documents for client-side fuzzy searching
+    const useFuzzySearch = !!searchQuery || !!country || !!city;
 
     if (postType) {
       filterConstraints.push(where('postType', '==', postType));
@@ -152,30 +154,21 @@ export async function getJobs(
       filterConstraints.push(where('workType', '==', workType));
     }
     
-    if (searchQuery) {
-        textSearchFields.push({ name: 'mainQuery', value: searchQuery, keys: ['title', 'description', 'categoryName', 'ownerName'] });
-    }
-    if (country) {
-        textSearchFields.push({ name: 'country', value: country, keys: ['country'] });
-    }
-    if (city) {
-        textSearchFields.push({ name: 'city', value: city, keys: ['city'] });
-    }
-    
     const otherConstraints: QueryConstraint[] = [];
     if (sortBy === 'newest') {
         otherConstraints.push(orderBy('createdAt', 'desc'));
     }
     
-    // If we are doing a text-based search, we fetch all and then filter.
-    // Otherwise, we can limit the initial fetch.
-    if (count && textSearchFields.length === 0) {
+    if (count && !useFuzzySearch) {
         otherConstraints.push(limit(count));
     }
 
-    const finalQuery = filterConstraints.length > 0
-      ? query(adsRef, and(...filterConstraints), ...otherConstraints)
-      : query(adsRef, ...otherConstraints);
+    // Build the query
+    const baseQuery = filterConstraints.length > 0
+      ? query(adsRef, and(...filterConstraints))
+      : query(adsRef);
+      
+    const finalQuery = query(baseQuery, ...otherConstraints);
 
     const querySnapshot = await getDocs(finalQuery);
 
@@ -188,29 +181,30 @@ export async function getJobs(
       } as Job;
     });
 
-    // Apply fuzzy search if any text search field is used
-    if (textSearchFields.length > 0) {
-        let filteredJobs = jobs;
+    if (useFuzzySearch) {
+        const fuseOptions = {
+            includeScore: true,
+            threshold: 0.4,
+            keys: ['title', 'description', 'categoryName', 'ownerName', 'country', 'city'],
+        };
         
-        for (const field of textSearchFields) {
-            const fuseOptions = {
-                includeScore: true,
-                threshold: 0.4, // Adjust for more or less strictness
-                keys: field.keys,
-            };
-            const fuse = new Fuse(filteredJobs, fuseOptions);
-            const results = fuse.search(field.value);
-            filteredJobs = results.map(result => result.item);
-        }
-        jobs = filteredJobs;
+        let searchTerms = [];
+        if (searchQuery) searchTerms.push({ $or: [{ title: searchQuery }, { description: searchQuery }, { categoryName: searchQuery }, { ownerName: searchQuery }] });
+        if (country) searchTerms.push({ country: country });
+        if (city) searchTerms.push({ city: city });
+
+        const fuse = new Fuse(jobs, fuseOptions);
+        
+        // Fuse.js v6+ supports extended search with logical operators
+        const results = fuse.search({ $and: searchTerms });
+        jobs = results.map(result => result.item);
     }
     
     if (excludeId) {
         jobs = jobs.filter(job => job.id !== excludeId);
     }
     
-    // Apply limit after text search filtering
-    if (count && textSearchFields.length > 0) {
+    if (count && useFuzzySearch) {
         jobs = jobs.slice(0, count);
     }
 
