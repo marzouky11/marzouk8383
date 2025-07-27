@@ -3,6 +3,7 @@
 
 
 
+
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, addDoc, serverTimestamp, updateDoc, deleteDoc, setDoc, QueryConstraint } from 'firebase/firestore';
 import type { Job, Category, PostType, User, WorkType, Testimonial } from './types';
@@ -145,7 +146,6 @@ export async function getJobs(
     const adsRef = collection(db, 'ads');
     const queryConstraints: QueryConstraint[] = [];
 
-    // Always sort by newest first.
     if (sortBy === 'newest') {
         queryConstraints.push(orderBy('createdAt', 'desc'));
     }
@@ -160,9 +160,6 @@ export async function getJobs(
         queryConstraints.push(where('workType', '==', workType));
     }
     if (country) {
-        // Firestore doesn't support partial string matches directly in queries like SQL's LIKE.
-        // We will filter by country after fetching. This is a limitation if not using a full-text search service.
-        // For now, let's assume an exact match is needed for query efficiency.
         queryConstraints.push(where('country', '==', country));
     }
     if (city) {
@@ -184,7 +181,6 @@ export async function getJobs(
       } as Job;
     });
 
-    // Post-query filtering for search query and excludeId
     if (searchQuery) {
         const lowercasedQuery = searchQuery.trim().toLowerCase();
         jobs = jobs.filter(job => 
@@ -202,9 +198,7 @@ export async function getJobs(
     return jobs;
   } catch (error) {
     console.error("Error fetching jobs: ", error);
-    // It's better to return an empty array than to crash the app.
-    // The calling component can then display a "No jobs found" message.
-    return [];
+    throw error;
   }
 }
 
@@ -248,7 +242,6 @@ export async function getJobById(id: string): Promise<Job | null> {
   }
 }
 
-// Post a new job to Firestore
 export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 'rating' | 'postedAt'>): Promise<{ id: string }> {
     try {
         const adsCollection = collection(db, 'ads');
@@ -259,7 +252,6 @@ export async function postJob(jobData: Omit<Job, 'id' | 'createdAt' | 'likes' | 
             rating: parseFloat((Math.random() * (5.0 - 3.5) + 3.5).toFixed(1)),
         };
         
-        // Clean the object from undefined values before sending to Firestore
         Object.keys(newJob).forEach(key => {
             if (newJob[key] === undefined || newJob[key] === '') {
                 delete newJob[key];
@@ -283,7 +275,6 @@ export async function updateAd(adId: string, adData: Partial<Job>) {
             updatedAt: serverTimestamp()
         };
         
-        // Clean the object from undefined values before sending to Firestore
         Object.keys(dataToUpdate).forEach(key => {
             if (dataToUpdate[key] === undefined) {
                 delete dataToUpdate[key];

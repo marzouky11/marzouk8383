@@ -25,12 +25,16 @@ function generateSitemap(workers: any[]) {
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const workers = await getJobs({ postType: 'seeking_job' });
-  const sitemap = generateSitemap(workers);
+  try {
+    const workers = await getJobs({ postType: 'seeking_job' });
+    const sitemap = generateSitemap(workers);
 
-  return new Response(sitemap, {
-    headers: {
-      'Content-Type': 'application/xml',
-    },
-  });
+    return new Response(sitemap, {
+      headers: {
+        'Content-Type': 'application/xml',
+      },
+    });
+  } catch (error) {
+    return new Response('Error generating sitemap', { status: 500 });
+  }
 }
