@@ -41,8 +41,8 @@ export function JobFilters({ categories, showSort = false, className, showPostTy
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
+  // Local state for the inputs inside the sheet/form
   const [searchQuery, setSearchQuery] = useState('');
-  
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
@@ -54,7 +54,7 @@ export function JobFilters({ categories, showSort = false, className, showPostTy
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   
   useEffect(() => {
-    // Set initial values from URL params
+    // Set initial values from URL params on component mount and param change
     setSearchQuery(searchParams.get('q') || '');
     setSelectedCategory(searchParams.get('category') || 'all');
     setSelectedCountry(searchParams.get('country') || '');
