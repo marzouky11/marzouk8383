@@ -11,7 +11,6 @@ import { Handshake, Newspaper, Briefcase, Users, ArrowLeft } from 'lucide-react'
 import { JobFilters } from '@/components/job-filters';
 import { ThemeToggleButton } from '@/components/theme-toggle';
 import { HomeCarousel } from './home-carousel';
-import { CategorySection } from './category-section';
 import { HomeExtraSections } from './home-extra-sections';
 import { Separator } from '@/components/ui/separator';
 
@@ -177,10 +176,6 @@ export default async function HomePage() {
               <JobSeekersSection />
             </Suspense>
           </section>
-
-          <Separator />
-
-          <CategorySection categories={categories} />
           
           <Separator />
 

@@ -97,6 +97,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
+        <meta name="monetag" content="35418beec259eacf49de0a8063e11f80" />
         <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7860245146219810" crossOrigin="anonymous"></script>
         <script
