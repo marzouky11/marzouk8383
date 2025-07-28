@@ -22,12 +22,12 @@ export default function PrivacyPolicyPage() {
       <div className="container mx-auto max-w-3xl px-4 pb-8">
         <Card>
           <CardHeader className="md:hidden">
-            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2">
-              <Shield className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-red-600">
+              <Shield className="h-6 w-6 text-red-600" />
               سياسة الخصوصية
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-primary prose-a:text-primary">
+          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-green-600 prose-a:text-primary">
             
             <p>
               أهلاً بك في منصة "توظيفك". نحن ندرك أهمية الخصوصية وأمن المعلومات الشخصية لمستخدمينا. تهدف سياسة الخصوصية هذه إلى توضيح أنواع المعلومات التي نجمعها، وكيفية استخدامها وحمايتها، والخيارات المتاحة لك فيما يتعلق ببياناتك. باستخدامك لخدمات "توظيفك"، فإنك توافق على الممارسات الموضحة في هذه السياسة.

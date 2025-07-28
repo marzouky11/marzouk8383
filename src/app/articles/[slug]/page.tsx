@@ -94,6 +94,8 @@ export default function ArticlePage({ params }: Props) {
   if (!article) {
     notFound();
   }
+  
+  const contentBlocks = article.content.split('\n\n').map(paragraph => paragraph.trim()).filter(p => p.length > 0);
 
   return (
     <AppLayout>
@@ -105,7 +107,7 @@ export default function ArticlePage({ params }: Props) {
           <Card>
             <CardContent className="p-4 md:p-8">
               <header className="mb-6">
-                <h1 className="text-3xl md:text-4xl font-bold leading-tight text-primary mb-4">
+                <h1 className="text-3xl md:text-4xl font-bold leading-tight text-red-600 dark:text-red-500 mb-4">
                   {article.title}
                 </h1>
                 <div className="flex items-center space-x-4 space-x-reverse text-sm text-muted-foreground">
@@ -113,12 +115,6 @@ export default function ArticlePage({ params }: Props) {
                     <User className="h-4 w-4" />
                     <span>{article.author}</span>
                   </div>
-                  {/*
-                  <div className="flex items-center gap-2">
-                    <CalendarDays className="h-4 w-4" />
-                    <time dateTime={article.date}>{new Date(article.date).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
-                  </div>
-                  */}
                 </div>
               </header>
 
@@ -134,22 +130,25 @@ export default function ArticlePage({ params }: Props) {
                 />
               </div>
 
-              <div className="prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-foreground prose-a:text-primary">
-                {article.content.split('\n\n').map((paragraph, index) => {
-                    const trimmedParagraph = paragraph.trim();
-                    if (trimmedParagraph.startsWith('### ')) {
-                        return <h3 key={index} className="text-xl font-semibold mt-6 mb-3 text-foreground">{trimmedParagraph.replace('### ', '')}</h3>
+              <div className="prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-green-600 prose-a:text-primary">
+                {contentBlocks.map((block, index) => {
+                    if (block.startsWith('### ')) {
+                        return <h3 key={index} className="text-2xl font-bold mt-6 mb-3">{block.replace('### ', '')}</h3>;
                     }
-                    if (trimmedParagraph.startsWith('**') && trimmedParagraph.endsWith('**')) {
-                        return <p key={index} className="mb-4 font-bold">{trimmedParagraph.slice(2, -2)}</p>;
+                    if (block.startsWith('**') && block.endsWith('**')) {
+                        return <p key={index} className="font-bold">{block.slice(2, -2)}</p>;
                     }
-                     if (trimmedParagraph.startsWith('1.') || trimmedParagraph.startsWith('2.') || trimmedParagraph.startsWith('3.') || trimmedParagraph.startsWith('4.') || trimmedParagraph.startsWith('5.') || trimmedParagraph.startsWith('6.') || trimmedParagraph.startsWith('7.') || trimmedParagraph.startsWith('8.') || trimmedParagraph.startsWith('9.') || trimmedParagraph.startsWith('10.')) {
-                        return <p key={index} className="mb-4 font-semibold">{trimmedParagraph}</p>;
+                    if (/^\d+\./.test(block) || /^-/.test(block) || /^\*/.test(block)) {
+                        const listItems = block.split('\n').map(item => item.trim().replace(/^\d+\.\s*|^- \s*|^\* \s*/, ''));
+                        const isOrdered = /^\d+\./.test(block);
+                        const ListTag = isOrdered ? 'ol' : 'ul';
+                        return (
+                            <ListTag key={index} className={isOrdered ? 'list-decimal pr-5' : 'list-disc pr-5'}>
+                                {listItems.map((item, i) => <li key={i}>{item}</li>)}
+                            </ListTag>
+                        );
                     }
-                    if (trimmedParagraph.length > 0) {
-                        return <p key={index} className="mb-4">{trimmedParagraph}</p>;
-                    }
-                    return null;
+                    return <p key={index}>{block}</p>;
                 })}
               </div>
             </CardContent>

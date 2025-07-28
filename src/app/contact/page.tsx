@@ -6,7 +6,7 @@ import { AppLayout } from '@/components/layout/app-layout';
 import { MobilePageHeader } from '@/components/layout/mobile-page-header';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Mail, HelpCircle, MessageSquare } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { DesktopPageHeader } from '@/components/layout/desktop-page-header';
 
 export default function ContactUsPage() {
@@ -25,12 +25,12 @@ export default function ContactUsPage() {
       <div className="container mx-auto max-w-3xl px-4 pb-8">
         <Card>
           <CardHeader className="md:hidden">
-            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2">
-              <Mail className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-red-600">
+              <Mail className="h-6 w-6 text-red-600" />
               اتصل بنا
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-primary prose-a:text-primary">
+          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-green-600 prose-a:text-primary">
             
             <p>
                 في "توظيفك"، نؤمن بأن التواصل الفعّال هو أساس بناء علاقة قوية ومستدامة مع مستخدمينا. سواء كنت صاحب عمل، أو باحثًا عن فرصة، أو مجرد زائر مهتم، فإن ملاحظاتك، استفساراتك، واقتراحاتك هي محركنا الأساسي للتطور والتحسين. نحن هنا لنستمع إليك ونقدم لك الدعم الذي تحتاجه في كل خطوة.

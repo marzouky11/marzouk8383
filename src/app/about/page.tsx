@@ -21,12 +21,12 @@ export default function AboutUsPage() {
       <div className="container mx-auto max-w-3xl px-4 pb-8">
         <Card>
           <CardHeader className="md:hidden">
-            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2">
-              <Info className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-red-600">
+              <Info className="h-6 w-6 text-red-600" />
               من نحن
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-primary prose-a:text-primary">
+          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-green-600 prose-a:text-primary">
             
             <p>
               أهلاً بك في منصة "توظيفك"، الجسر الرقمي الذي يربط بين الطموحات والفرص في قلب العالم العربي. نحن لسنا مجرد موقع إعلانات وظائف، بل مجتمع مهني متكامل يسعى لتمكين كل فرد من تحقيق ذاته، وكل شركة من العثور على الكفاءات التي تدفعها نحو النجاح.

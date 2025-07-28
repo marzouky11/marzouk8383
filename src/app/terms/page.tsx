@@ -22,12 +22,12 @@ export default function TermsOfServicePage() {
       <div className="container mx-auto max-w-3xl px-4 pb-8">
         <Card>
           <CardHeader className="md:hidden">
-            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2">
-              <FileText className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-red-600">
+              <FileText className="h-6 w-6 text-red-600" />
               شروط الاستخدام
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-primary prose-a:text-primary">
+          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-green-600 prose-a:text-primary">
             
             <p>
                 مرحبًا بك في منصة "توظيفك". تمثل هذه الشروط والأحكام ("الشروط") اتفاقية قانونية ملزمة بينك (كمستخدم) وبين منصة "توظيفك" ("المنصة"، "نحن"). يرجى قراءة هذه الشروط بعناية قبل استخدام خدماتنا. من خلال الوصول إلى المنصة أو استخدامها، فإنك تقر بأنك قد قرأت وفهمت وتوافق على الالتزام بهذه الشروط.
