@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const slidesData = [
   {
     key: 'main',
-    src: "/slide1.webp",
+    src: "/slide1.webp",  // الصور من مجلد public مباشرة
     alt: "شخص يبدأ رحلته المهنية",
     hint: "professional journey start",
     authTitle: "ابدأ بنشر إعلانك الآن",
@@ -108,4 +108,4 @@ export function HomeCarousel() {
       </CarouselContent>
     </Carousel>
   );
-        }
+    }
