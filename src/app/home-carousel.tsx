@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -27,7 +26,7 @@ const slidesData = [
     guestButtonLink: "/signup",
     buttonClass: "bg-blue-600 hover:bg-blue-700"
   },
-   {
+  {
     key: 'explore-jobs',
     src: "https://i.postimg.cc/VkgxknRj/2150995045-1-1.webp",
     alt: "وظائف مميزة",
@@ -87,8 +86,8 @@ export function HomeCarousel() {
                   src={slide.src}
                   alt={slide.alt!}
                   fill
-                  priority={index === 0}
-                  loading={index === 0 ? 'eager' : 'lazy'}
+                  priority={isFirstSlide}  // تحميل فوري للصورة الأولى فقط
+                  loading={isFirstSlide ? 'eager' : 'lazy'}  // تحميل فوري للصورة الأولى
                   className="object-cover w-full h-full"
                   data-ai-hint={slide.hint}
                   sizes="(max-width: 768px) 100vw, 1200px"
@@ -109,4 +108,4 @@ export function HomeCarousel() {
       </CarouselContent>
     </Carousel>
   );
-}
+    }
