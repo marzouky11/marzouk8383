@@ -4,7 +4,7 @@ import * as React from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
 import Link from 'next/link';
-import Head from 'next/head'; // ✅ مهم لتحسين تحميل الصور
+import Head from 'next/head'; // ✅ استيراد Head لإضافة preload
 
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const slidesData = [
   {
     key: 'main',
-    src: "https://i.postimg.cc/WpDTYW7x/2147923447-2-2-1.webp", // ✅ هذه هي الصورة الأولى
+    src: "https://i.postimg.cc/WpDTYW7x/2147923447-2-2-1.webp",
     alt: "شخص يبدأ رحلته المهنية",
     hint: "professional journey start",
     authTitle: "ابدأ بنشر إعلانك الآن",
@@ -64,7 +64,7 @@ export function HomeCarousel() {
 
   return (
     <>
-      {/* ✅ تحسين التحميل - preload أول صورة */}
+      {/* ✅ تحميل مسبق للصورة الأولى */}
       <Head>
         <link
           rel="preload"
@@ -99,8 +99,8 @@ export function HomeCarousel() {
                     src={slide.src}
                     alt={slide.alt!}
                     fill
-                    priority={isFirstSlide} // ✅ أولوية للصورة الأولى
-                    loading={isFirstSlide ? 'eager' : 'lazy'} // ✅ eager للأولى فقط
+                    priority={isFirstSlide}
+                    loading={isFirstSlide ? 'eager' : 'lazy'}
                     className="object-cover w-full h-full"
                     data-ai-hint={slide.hint}
                     sizes="(max-width: 768px) 100vw, 1200px"
