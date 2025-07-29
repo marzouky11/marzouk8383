@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const slidesData = [
   {
     key: 'main',
-    src: "https://i.postimg.cc/WpDTYW7x/2147923447-2-2-1.webp",
+    src: "/slide1.webp", // ✅ الصورة الأولى
     alt: "شخص يبدأ رحلته المهنية",
     hint: "professional journey start",
     authTitle: "ابدأ بنشر إعلانك الآن",
@@ -28,25 +28,25 @@ const slidesData = [
   },
   {
     key: 'explore-jobs',
-    src: "https://i.postimg.cc/NMKqVFRR/2149300698-1-1-2.webp",
+    src: "/slide2.webp", // ✅ الصورة الثانية
     alt: "وظائف مميزة",
     hint: "job opportunities",
     title: "وظائف مميزة بانتظارك",
     description: "استكشف الفرص المناسبة لمهاراتك واهتماماتك",
     buttonText: "استكشف الآن",
     buttonLink: "/jobs",
-    buttonClass: "bg-green-600 hover:bg-green-700" // ✅ أخضر
+    buttonClass: "bg-green-600 hover:bg-green-700"
   },
   {
     key: 'explore-workers',
-    src: "https://i.postimg.cc/VkgxknRj/2150995045-1-1.webp",
+    src: "/slide3.webp", // ✅ الصورة الثالثة
     alt: "عامل محترف",
     hint: "professional worker",
     title: "عمّال محترفون في جميع المجالات",
     description: "من البناء إلى التقنية – الجميع هنا",
     buttonText: "استكشف الآن",
     buttonLink: "/workers",
-    buttonClass: "bg-destructive hover:bg-destructive/90" // ✅ أحمر
+    buttonClass: "bg-destructive hover:bg-destructive/90"
   }
 ];
 
@@ -84,7 +84,7 @@ export function HomeCarousel() {
               <div className="relative h-64 md:h-80">
                 <Image
                   src={slide.src}
-                  alt={slide.alt!}
+                  alt={slide.alt}
                   fill
                   priority={index === 0}
                   loading={index === 0 ? 'eager' : 'lazy'}
@@ -97,7 +97,7 @@ export function HomeCarousel() {
                     <h2 className="text-3xl md:text-5xl font-bold leading-tight drop-shadow-md">{title}</h2>
                     <p className="text-base md:text-lg text-white/90 drop-shadow-sm">{description}</p>
                     <Button asChild size="lg" className={cn("text-white font-semibold transition-transform hover:scale-105", slide.buttonClass)}>
-                      <Link href={buttonLink!}>{buttonText}</Link>
+                      <Link href={buttonLink}>{buttonText}</Link>
                     </Button>
                   </div>
                 </div>
@@ -108,4 +108,4 @@ export function HomeCarousel() {
       </CarouselContent>
     </Carousel>
   );
-        }
+  
