@@ -1,4 +1,6 @@
 
+'use client';
+
 import Link from 'next/link';
 import { 
     Facebook, 
@@ -19,10 +21,11 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/context/auth-context';
 
 const importantLinks = [
-    { label: 'تسجيل الدخول', href: '/login', icon: LogIn },
-    { label: 'إنشاء حساب', href: '/signup', icon: UserPlus },
+    { label: 'تسجيل الدخول', href: '/login', icon: LogIn, guestOnly: true },
+    { label: 'إنشاء حساب', href: '/signup', icon: UserPlus, guestOnly: true },
     { label: 'الوظائف', href: '/jobs', icon: Briefcase },
     { label: 'العمال', href: '/workers', icon: Users },
     { label: 'نشر إعلان', href: '/post-job/select-type', icon: PlusCircle },
@@ -58,6 +61,9 @@ const FooterLinkItem = ({ href, icon: Icon, label }: { href: string; icon: React
 
 
 export function Footer() {
+  const { user } = useAuth();
+  const filteredImportantLinks = importantLinks.filter(link => !link.guestOnly || !user);
+  
   return (
     <>
       {/* Mobile Footer */}
@@ -66,7 +72,7 @@ export function Footer() {
             <div>
                 <h3 className="font-bold text-lg mb-3 px-2">روابط مهمة</h3>
                 <div className="space-y-1">
-                    {importantLinks.map((link) => <FooterLinkItem key={link.href} {...link} />)}
+                    {filteredImportantLinks.map((link) => <FooterLinkItem key={link.href} {...link} />)}
                 </div>
             </div>
             
