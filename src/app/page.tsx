@@ -5,7 +5,7 @@ import { AppLayout } from '@/components/layout/app-layout';
 import { JobCard } from '@/components/job-card';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { getJobs, getCategories, getTestimonials } from '@/lib/data';
+import { getJobs, getTestimonials } from '@/lib/data';
 import React, { Suspense } from 'react';
 import { Handshake, Newspaper, Briefcase, Users, ArrowLeft } from 'lucide-react';
 import { JobFilters } from '@/components/job-filters';
@@ -13,8 +13,34 @@ import { ThemeToggleButton } from '@/components/theme-toggle';
 import { HomeCarousel } from './home-carousel';
 import { HomeExtraSections } from './home-extra-sections';
 import { Separator } from '@/components/ui/separator';
+import { getCategories } from '@/lib/data';
 
 export const revalidate = 60; // Revalidate every 60 seconds
+
+const appName = 'توظيفك';
+const appDescription = "توظيفك - منصتك الأولى للعثور على فرص عمل موثوقة في العالم العربي. وظائف يومية في السعودية، المغرب، مصر، الإمارات، الجزائر، تونس وغيرها. سجل مجانًا وابدأ العمل الآن.";
+
+export const metadata: Metadata = {
+  title: {
+    default: "توظيفك - منصة التوظيف العربية للباحثين عن عمل وأصحاب العمل",
+    template: `%s | ${appName}`
+  },
+  description: appDescription,
+  alternates: {
+    canonical: '/',
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", type: "image/x-icon", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+};
+
 
 function JobFiltersSkeleton() {
     return (
