@@ -1,19 +1,19 @@
 'use client';
 
-import * as React from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRef } from 'react';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { useAuth } from '@/context/auth-context';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/lib/hooks/use-auth';
+import { cn } from '@/lib/utils';
 
 const slidesData = [
   {
     key: 'main',
-    src: "/slide1.webp",  // الصور من مجلد public مباشرة
+    src: "/slide1.webp",
     alt: "شخص يبدأ رحلته المهنية",
     hint: "professional journey start",
     authTitle: "ابدأ بنشر إعلانك الآن",
@@ -46,60 +46,53 @@ const slidesData = [
     description: "من البناء إلى التقنية – الجميع هنا",
     buttonText: "استكشف الآن",
     buttonLink: "/workers",
-    buttonClass: "bg-red-600 hover:bg-red-700"
+    buttonClass: "bg-destructive hover:bg-destructive/90"
   }
 ];
 
 export function HomeCarousel() {
+  const plugin = useRef(Autoplay({ delay: 6000 }));
   const { user, loading: authLoading } = useAuth();
-  const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: true, playOnInit: true })
-  );
 
   if (authLoading) {
-    return <Skeleton className="w-full h-64 md:h-80 rounded-2xl" />;
+    return <Skeleton className="h-64 md:h-80 w-full rounded-xl" />;
   }
 
   return (
     <Carousel
+      opts={{ loop: true, direction: 'rtl' }}
       plugins={[plugin.current]}
-      className="w-full rounded-2xl overflow-hidden shadow-lg"
+      className="w-full overflow-hidden rounded-xl"
       onMouseEnter={plugin.current.stop}
-      onMouseLeave={() => plugin.current.play(true)}
-      opts={{
-        loop: true,
-        direction: 'rtl',
-      }}
+      onMouseLeave={plugin.current.reset}
     >
       <CarouselContent>
-        {slidesData.map((slide, index) => {
-          const isFirstSlide = index === 0;
-          const title = isFirstSlide ? (user ? slide.authTitle : slide.guestTitle) : slide.title;
-          const description = isFirstSlide ? (user ? slide.authDescription : slide.guestDescription) : slide.description;
-          const buttonText = isFirstSlide ? (user ? slide.authButtonText : slide.guestButtonText) : slide.buttonText;
-          const buttonLink = isFirstSlide ? (user ? slide.authButtonLink : slide.guestButtonLink) : slide.buttonLink;
+        {slidesData.map((slide) => {
+          const isAuthSlide = slide.key === 'main';
+          const title = isAuthSlide ? (user ? slide.authTitle : slide.guestTitle) : slide.title;
+          const description = isAuthSlide ? (user ? slide.authDescription : slide.guestDescription) : slide.description;
+          const buttonText = isAuthSlide ? (user ? slide.authButtonText : slide.guestButtonText) : slide.buttonText;
+          const buttonLink = isAuthSlide ? (user ? slide.authButtonLink : slide.guestButtonLink) : slide.buttonLink;
 
           return (
             <CarouselItem key={slide.key}>
-              <div className="relative h-64 md:h-80">
+              <div className="relative h-64 md:h-80 w-full">
                 <Image
                   src={slide.src}
                   alt={slide.alt}
                   fill
-                  priority={index === 0}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  className="object-cover w-full h-full"
-                  data-ai-hint={slide.hint}
-                  sizes="(max-width: 768px) 100vw, 1200px"
+                  className="object-cover"
+                  priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent flex items-center p-6 md:p-12">
-                  <div className="max-w-md md:max-w-lg text-white space-y-4">
-                    <h2 className="text-3xl md:text-5xl font-bold leading-tight drop-shadow-md">{title}</h2>
-                    <p className="text-base md:text-lg text-white/90 drop-shadow-sm">{description}</p>
+                <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center p-4">
+                  <h3 className="text-xl md:text-2xl font-bold text-white drop-shadow">{title}</h3>
+                  <p className="text-base md:text-lg text-white/90 drop-shadow-sm">{description}</p>
+
+                  {buttonLink && (
                     <Button asChild size="lg" className={cn("text-white font-semibold transition-transform hover:scale-105", slide.buttonClass)}>
                       <Link href={buttonLink}>{buttonText}</Link>
                     </Button>
-                  </div>
+                  )}
                 </div>
               </div>
             </CarouselItem>
