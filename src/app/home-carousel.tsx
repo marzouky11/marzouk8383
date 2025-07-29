@@ -1,93 +1,111 @@
-'use client'
+'use client';
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import * as React from 'react';
+import Autoplay from 'embla-carousel-autoplay';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/auth-context';
+import { Skeleton } from '@/components/ui/skeleton';
 
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel'
-
-const slides = [
+const slidesData = [
   {
-    image: '/slide1.webp',
-    title: 'منصة توظيفك',
-    description: 'احصل على وظيفة أحلامك بسهولة وسرعة',
-    buttonText: 'تصفح الوظائف',
-    buttonLink: '/jobs',
-    buttonClass: 'bg-blue-500 hover:bg-blue-600',
+    key: 'main',
+    src: "/slide1.webp",
+    alt: "شخص يبدأ رحلته المهنية",
+    hint: "professional journey start",
+    authTitle: "ابدأ بنشر إعلانك الآن",
+    authDescription: "أنشئ عرض عمل أو اطلب وظيفة في ثوانٍ",
+    authButtonText: "أنشئ إعلانك الآن",
+    authButtonLink: "/post-job/select-type",
+    guestTitle: "وظائف مميزة بانتظارك",
+    guestDescription: "استكشف الفرص المناسبة لمهاراتك واهتماماتك",
+    guestButtonText: "سجّل الآن",
+    guestButtonLink: "/signup",
+    buttonClass: "bg-blue-600 hover:bg-blue-700"
   },
   {
-    image: '/slide2.webp',
-    title: 'فرص عمل حقيقية',
-    description: 'نحن نوفر لك فرصًا من شركات موثوقة في العالم العربي والخليج',
-    buttonText: 'ابدأ الآن',
-    buttonLink: '/register',
-    buttonClass: 'bg-green-500 hover:bg-green-600',
+    key: 'explore-jobs',
+    src: "/slide2.webp",
+    alt: "وظائف مميزة",
+    hint: "job opportunities",
+    title: "وظائف مميزة بانتظارك",
+    description: "استكشف الفرص المناسبة لمهاراتك واهتماماتك",
+    buttonText: "استكشف الآن",
+    buttonLink: "/jobs",
+    buttonClass: "bg-green-600 hover:bg-green-700"
   },
   {
-    image: '/slide3.webp',
-    title: 'سجّل سيرتك الذاتية',
-    description: 'اجعل أصحاب العمل يعثرون عليك بسهولة',
-    buttonText: 'سجّل مجاناً',
-    buttonLink: '/cv',
-    buttonClass: 'bg-yellow-500 hover:bg-yellow-600 text-black',
-  },
-]
+    key: 'explore-workers',
+    src: "/slide3.webp",
+    alt: "عامل محترف",
+    hint: "professional worker",
+    title: "عمّال محترفون في جميع المجالات",
+    description: "من البناء إلى التقنية – الجميع هنا",
+    buttonText: "استكشف الآن",
+    buttonLink: "/workers",
+    buttonClass: "bg-red-600 hover:bg-red-700"
+  }
+];
 
-export default function HomeCarousel() {
-  const [mounted, setMounted] = useState(false)
+export function HomeCarousel() {
+  const { user, loading: authLoading } = useAuth();
+  const plugin = React.useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true, playOnInit: true })
+  );
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return null
+  if (authLoading) {
+    return <Skeleton className="w-full h-64 md:h-80 rounded-2xl" />;
+  }
 
   return (
-    <Carousel className="w-full overflow-hidden rounded-xl">
+    <Carousel
+      plugins={[plugin.current]}
+      className="w-full rounded-2xl overflow-hidden shadow-lg"
+      onMouseEnter={plugin.current.stop}
+      onMouseLeave={() => plugin.current.play(true)}
+      opts={{
+        loop: true,
+        direction: 'rtl',
+      }}
+    >
       <CarouselContent>
-        {slides.map((slide, index) => {
-          const { image, title, description, buttonText, buttonLink, buttonClass } = slide
+        {slidesData.map((slide, index) => {
+          const isFirstSlide = index === 0;
+          const title = isFirstSlide ? (user ? slide.authTitle : slide.guestTitle) : slide.title;
+          const description = isFirstSlide ? (user ? slide.authDescription : slide.guestDescription) : slide.description;
+          const buttonText = isFirstSlide ? (user ? slide.authButtonText : slide.guestButtonText) : slide.buttonText;
+          const buttonLink = isFirstSlide ? (user ? slide.authButtonLink : slide.guestButtonLink) : slide.buttonLink;
 
           return (
-            <CarouselItem key={index}>
-              <div className="relative h-[600px] w-full overflow-hidden">
+            <CarouselItem key={slide.key}>
+              <div className="relative h-64 md:h-80">
                 <Image
-                  src={image}
-                  alt={title}
+                  src={slide.src}
+                  alt={slide.alt}
                   fill
-                  className="object-cover"
                   priority={index === 0}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  className="object-cover w-full h-full"
+                  data-ai-hint={slide.hint}
+                  sizes="(max-width: 768px) 100vw, 1200px"
                 />
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-                  <h2 className="text-3xl font-bold text-white drop-shadow-md md:text-5xl">
-                    {title}
-                  </h2>
-                  <p className="mt-4 text-base text-white/90 md:text-lg drop-shadow-sm">
-                    {description}
-                  </p>
-                  <Button
-                    asChild
-                    size="lg"
-                    className={cn(
-                      'mt-6 text-white font-semibold transition-transform hover:scale-105',
-                      buttonClass
-                    )}
-                  >
-                    <Link href={buttonLink}>{buttonText}</Link>
-                  </Button>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent flex items-center p-6 md:p-12">
+                  <div className="max-w-md md:max-w-lg text-white space-y-4">
+                    <h2 className="text-3xl md:text-5xl font-bold leading-tight drop-shadow-md">{title}</h2>
+                    <p className="text-base md:text-lg text-white/90 drop-shadow-sm">{description}</p>
+                    <Button asChild size="lg" className={cn("text-white font-semibold transition-transform hover:scale-105", slide.buttonClass)}>
+                      <Link href={buttonLink}>{buttonText}</Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CarouselItem>
-          )
+          );
         })}
       </CarouselContent>
     </Carousel>
-  )
-                }
+  );
+        }
