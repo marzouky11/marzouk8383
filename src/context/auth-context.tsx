@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const slidesData = [
   {
     key: 'main',
-    src: "/slide1.webp", // ✅ الصورة من مجلد public
+    src: "https://i.postimg.cc/WpDTYW7x/2147923447-2-2-1.webp",
     alt: "شخص يبدأ رحلته المهنية",
     hint: "professional journey start",
     authTitle: "ابدأ بنشر إعلانك الآن",
@@ -28,25 +28,25 @@ const slidesData = [
   },
   {
     key: 'explore-jobs',
-    src: "/slide2.webp", // ✅ الصورة من مجلد public
+    src: "https://i.postimg.cc/NMKqVFRR/2149300698-1-1-2.webp",
     alt: "وظائف مميزة",
     hint: "job opportunities",
     title: "وظائف مميزة بانتظارك",
     description: "استكشف الفرص المناسبة لمهاراتك واهتماماتك",
     buttonText: "استكشف الآن",
     buttonLink: "/jobs",
-    buttonClass: "bg-green-600 hover:bg-green-700"
+    buttonClass: "bg-green-600 hover:bg-green-700" // ✅ أخضر
   },
   {
     key: 'explore-workers',
-    src: "/slide3.webp", // ✅ الصورة من مجلد public
+    src: "https://i.postimg.cc/VkgxknRj/2150995045-1-1.webp",
     alt: "عامل محترف",
     hint: "professional worker",
     title: "عمّال محترفون في جميع المجالات",
     description: "من البناء إلى التقنية – الجميع هنا",
     buttonText: "استكشف الآن",
     buttonLink: "/workers",
-    buttonClass: "bg-destructive hover:bg-destructive/90"
+    buttonClass: "bg-destructive hover:bg-destructive/90" // ✅ أحمر
   }
 ];
 
@@ -108,4 +108,4 @@ export function HomeCarousel() {
       </CarouselContent>
     </Carousel>
   );
-            }
+}
