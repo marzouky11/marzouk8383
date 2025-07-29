@@ -108,4 +108,4 @@ export function HomeCarousel() {
       </CarouselContent>
     </Carousel>
   );
-}
+      }
