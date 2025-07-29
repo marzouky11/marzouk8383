@@ -12,10 +12,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const slidesData = [
   {
-    key: 'main',
-    src: "https://i.postimg.cc/WpDTYW7x/2147923447-2-2-1.webp",
-    alt: "شخص يبدأ رحلته المهنية",
-    hint: "professional journey start",
+    key: 'slide-1',
+    src: "/slide1.webp",
+    alt: "صورة 1",
+    hint: "start career",
     authTitle: "ابدأ بنشر إعلانك الآن",
     authDescription: "أنشئ عرض عمل أو اطلب وظيفة في ثوانٍ",
     authButtonText: "أنشئ إعلانك الآن",
@@ -27,26 +27,26 @@ const slidesData = [
     buttonClass: "bg-blue-600 hover:bg-blue-700"
   },
   {
-    key: 'explore-jobs',
-    src: "https://i.postimg.cc/NMKqVFRR/2149300698-1-1-2.webp",
-    alt: "وظائف مميزة",
-    hint: "job opportunities",
-    title: "وظائف مميزة بانتظارك",
-    description: "استكشف الفرص المناسبة لمهاراتك واهتماماتك",
-    buttonText: "استكشف الآن",
+    key: 'slide-2',
+    src: "/slide2.webp",
+    alt: "صورة 2",
+    hint: "job seekers",
+    title: "اكتشف أحدث فرص العمل",
+    description: "مئات الوظائف المحدثة يومياً في جميع المجالات",
+    buttonText: "تصفح الوظائف",
     buttonLink: "/jobs",
-    buttonClass: "bg-green-600 hover:bg-green-700" // ✅ أخضر
+    buttonClass: "bg-green-600 hover:bg-green-700"
   },
   {
-    key: 'explore-workers',
-    src: "https://i.postimg.cc/VkgxknRj/2150995045-1-1.webp",
-    alt: "عامل محترف",
-    hint: "professional worker",
-    title: "عمّال محترفون في جميع المجالات",
-    description: "من البناء إلى التقنية – الجميع هنا",
-    buttonText: "استكشف الآن",
-    buttonLink: "/workers",
-    buttonClass: "bg-destructive hover:bg-destructive/90" // ✅ أحمر
+    key: 'slide-3',
+    src: "/slide3.webp",
+    alt: "صورة 3",
+    hint: "professionals",
+    title: "ابحث عن عمّال محترفين بسهولة",
+    description: "أضف عرضك واحصل على الأفضل في دقائق",
+    buttonText: "أضف عرضك",
+    buttonLink: "/post-job",
+    buttonClass: "bg-red-600 hover:bg-red-700"
   }
 ];
 
@@ -74,17 +74,17 @@ export function HomeCarousel() {
       <CarouselContent>
         {slidesData.map((slide, index) => {
           const isFirstSlide = index === 0;
-          const title = isFirstSlide ? (user ? slide.authTitle : slide.guestTitle) : slide.title;
-          const description = isFirstSlide ? (user ? slide.authDescription : slide.guestDescription) : slide.description;
-          const buttonText = isFirstSlide ? (user ? slide.authButtonText : slide.guestButtonText) : slide.buttonText;
-          const buttonLink = isFirstSlide ? (user ? slide.authButtonLink : slide.guestButtonLink) : slide.buttonLink;
+          const title = isFirstSlide ? (user ? slide.authTitle : slide.guestTitle) : slide.title!;
+          const description = isFirstSlide ? (user ? slide.authDescription : slide.guestDescription) : slide.description!;
+          const buttonText = isFirstSlide ? (user ? slide.authButtonText : slide.guestButtonText) : slide.buttonText!;
+          const buttonLink = isFirstSlide ? (user ? slide.authButtonLink : slide.guestButtonLink) : slide.buttonLink!;
 
           return (
             <CarouselItem key={slide.key}>
               <div className="relative h-64 md:h-80">
                 <Image
                   src={slide.src}
-                  alt={slide.alt!}
+                  alt={slide.alt}
                   fill
                   priority={index === 0}
                   loading={index === 0 ? 'eager' : 'lazy'}
@@ -97,7 +97,7 @@ export function HomeCarousel() {
                     <h2 className="text-3xl md:text-5xl font-bold leading-tight drop-shadow-md">{title}</h2>
                     <p className="text-base md:text-lg text-white/90 drop-shadow-sm">{description}</p>
                     <Button asChild size="lg" className={cn("text-white font-semibold transition-transform hover:scale-105", slide.buttonClass)}>
-                      <Link href={buttonLink!}>{buttonText}</Link>
+                      <Link href={buttonLink}>{buttonText}</Link>
                     </Button>
                   </div>
                 </div>
@@ -108,4 +108,4 @@ export function HomeCarousel() {
       </CarouselContent>
     </Carousel>
   );
-      }
+              }
