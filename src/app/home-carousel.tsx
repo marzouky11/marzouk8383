@@ -4,6 +4,8 @@ import * as React from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
 import Link from 'next/link';
+import Head from 'next/head'; // ✅ مهم لتحسين تحميل الصور
+
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -13,7 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const slidesData = [
   {
     key: 'main',
-    src: "https://i.postimg.cc/WpDTYW7x/2147923447-2-2-1.webp",
+    src: "https://i.postimg.cc/WpDTYW7x/2147923447-2-2-1.webp", // ✅ هذه هي الصورة الأولى
     alt: "شخص يبدأ رحلته المهنية",
     hint: "professional journey start",
     authTitle: "ابدأ بنشر إعلانك الآن",
@@ -61,58 +63,63 @@ export function HomeCarousel() {
   }
 
   return (
-    <Carousel
-      plugins={[plugin.current]}
-      className="w-full rounded-2xl overflow-hidden shadow-lg"
-      onMouseEnter={plugin.current.stop}
-      onMouseLeave={() => plugin.current.play(true)}
-      opts={{
-        loop: true,
-        direction: 'rtl',
-      }}
-    >
-      <CarouselContent>
-        {slidesData.map((slide, index) => {
-          const isFirstSlide = index === 0;
-          const title = isFirstSlide ? (user ? slide.authTitle : slide.guestTitle) : slide.title;
-          const description = isFirstSlide ? (user ? slide.authDescription : slide.guestDescription) : slide.description;
-          const buttonText = isFirstSlide ? (user ? slide.authButtonText : slide.guestButtonText) : slide.buttonText;
-          const buttonLink = isFirstSlide ? (user ? slide.authButtonLink : slide.guestButtonLink) : slide.buttonLink;
+    <>
+      {/* ✅ تحسين التحميل - preload أول صورة */}
+      <Head>
+        <link
+          rel="preload"
+          as="image"
+          href="https://i.postimg.cc/WpDTYW7x/2147923447-2-2-1.webp"
+          type="image/webp"
+        />
+      </Head>
 
-          return (
-            <CarouselItem key={slide.key}>
-              <div className="relative h-64 md:h-80">
-                <Image
-                  src={slide.src}
-                  alt={slide.alt!}
-                  fill
-                  priority={isFirstSlide}  // تحميل فوري للصورة الأولى فقط
-                  loading={isFirstSlide ? 'eager' : 'lazy'}  // تحميل فوري للصورة الأولى
-                  className="object-cover w-full h-full"
-                  data-ai-hint={slide.hint}
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent flex items-center p-6 md:p-12">
-                  <div className="max-w-md md:max-w-lg text-white space-y-4">
-                    <h2 className="text-3xl md:text-5xl font-bold leading-tight drop-shadow-md">{title}</h2>
-                    <p className="text-base md:text-lg text-white/90 drop-shadow-sm">{description}</p>
-                    {buttonText && buttonLink && (
-                      <Button
-                        asChild
-                        size="lg"
-                        className={cn("text-white font-semibold transition-transform hover:scale-105", slide.buttonClass)}
-                      >
-                        {/* force casting buttonLink as string because we've checked it exists */}
-                        <Link href={buttonLink as string}>{buttonText}</Link>
+      <Carousel
+        plugins={[plugin.current]}
+        className="w-full rounded-2xl overflow-hidden shadow-lg"
+        onMouseEnter={plugin.current.stop}
+        onMouseLeave={() => plugin.current.play(true)}
+        opts={{
+          loop: true,
+          direction: 'rtl',
+        }}
+      >
+        <CarouselContent>
+          {slidesData.map((slide, index) => {
+            const isFirstSlide = index === 0;
+            const title = isFirstSlide ? (user ? slide.authTitle : slide.guestTitle) : slide.title;
+            const description = isFirstSlide ? (user ? slide.authDescription : slide.guestDescription) : slide.description;
+            const buttonText = isFirstSlide ? (user ? slide.authButtonText : slide.guestButtonText) : slide.buttonText;
+            const buttonLink = isFirstSlide ? (user ? slide.authButtonLink : slide.guestButtonLink) : slide.buttonLink;
+
+            return (
+              <CarouselItem key={slide.key}>
+                <div className="relative h-64 md:h-80">
+                  <Image
+                    src={slide.src}
+                    alt={slide.alt!}
+                    fill
+                    priority={isFirstSlide} // ✅ أولوية للصورة الأولى
+                    loading={isFirstSlide ? 'eager' : 'lazy'} // ✅ eager للأولى فقط
+                    className="object-cover w-full h-full"
+                    data-ai-hint={slide.hint}
+                    sizes="(max-width: 768px) 100vw, 1200px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent flex items-center p-6 md:p-12">
+                    <div className="max-w-md md:max-w-lg text-white space-y-4">
+                      <h2 className="text-3xl md:text-5xl font-bold leading-tight drop-shadow-md">{title}</h2>
+                      <p className="text-base md:text-lg text-white/90 drop-shadow-sm">{description}</p>
+                      <Button asChild size="lg" className={cn("text-white font-semibold transition-transform hover:scale-105", slide.buttonClass)}>
+                        <Link href={buttonLink!}>{buttonText}</Link>
                       </Button>
-                    )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CarouselItem>
-          );
-        })}
-      </CarouselContent>
-    </Carousel>
+              </CarouselItem>
+            );
+          })}
+        </CarouselContent>
+      </Carousel>
+    </>
   );
 }
