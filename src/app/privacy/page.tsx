@@ -21,26 +21,26 @@ export default function PrivacyPolicyPage() {
       />
       <div className="container mx-auto max-w-3xl px-4 pb-8">
         <Card>
-          <CardHeader className="md:hidden">
-            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-red-600">
-              <Shield className="h-6 w-6 text-red-600" />
+          <CardHeader>
+            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-red-600 md:text-3xl">
+              <Shield className="h-6 w-6" />
               سياسة الخصوصية
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-green-600 prose-a:text-primary">
+          <CardContent className="space-y-4 text-muted-foreground pt-0 md:pt-2 prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-a:text-primary">
             
             <p>
               أهلاً بك في منصة "توظيفك". نحن ندرك أهمية الخصوصية وأمن المعلومات الشخصية لمستخدمينا. تهدف سياسة الخصوصية هذه إلى توضيح أنواع المعلومات التي نجمعها، وكيفية استخدامها وحمايتها، والخيارات المتاحة لك فيما يتعلق ببياناتك. باستخدامك لخدمات "توظيفك"، فإنك توافق على الممارسات الموضحة في هذه السياسة.
             </p>
             
-            <h3>1. المعلومات التي نجمعها</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">1. المعلومات التي نجمعها</h3>
             <p>
               لتقديم خدماتنا بفعالية، نقوم بجمع نوعين من المعلومات:
             </p>
             <p>
               <strong>أ. المعلومات التي تقدمها لنا مباشرة:</strong>
             </p>
-            <ul>
+            <ul className="list-disc pr-5 space-y-2 mb-4">
               <li>
                 <strong>معلومات إنشاء الحساب:</strong> عند تسجيل حساب جديد، نطلب منك تقديم معلومات أساسية مثل الاسم الكامل، البريد الإلكتروني، وكلمة المرور. قد نطلب أيضًا معلومات إضافية مثل الدولة، المدينة، والجنس.
               </li>
@@ -57,7 +57,7 @@ export default function PrivacyPolicyPage() {
             <p>
               <strong>ب. المعلومات التي نجمعها تلقائيًا:</strong>
             </p>
-            <ul>
+            <ul className="list-disc pr-5 space-y-2 mb-4">
               <li>
                 <strong>بيانات الاستخدام:</strong> نقوم بجمع معلومات حول كيفية تفاعلك مع منصتنا، مثل الصفحات التي تزورها، الإعلانات التي تتصفحها، عمليات البحث التي تجريها، والمدة الزمنية التي تقضيها على الموقع.
               </li>
@@ -69,11 +69,11 @@ export default function PrivacyPolicyPage() {
               </li>
             </ul>
 
-            <h3>2. كيف نستخدم معلوماتك</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">2. كيف نستخدم معلوماتك</h3>
             <p>
               نستخدم المعلومات التي نجمعها للأغراض التالية:
             </p>
-            <ul>
+            <ul className="list-disc pr-5 space-y-2 mb-4">
               <li>
                 <strong>تقديم وتحسين خدماتنا:</strong> لتشغيل المنصة، إدارة حسابك، عرض الإعلانات ذات الصلة، وتحسين وظائف الموقع وتجربة المستخدم.
               </li>
@@ -91,11 +91,11 @@ export default function PrivacyPolicyPage() {
               </li>
             </ul>
 
-            <h3>3. مشاركة وكشف المعلومات</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">3. مشاركة وكشف المعلومات</h3>
             <p>
               نحن لا نبيع أو نؤجر معلوماتك الشخصية لأطراف ثالثة. ومع ذلك، قد نشارك معلوماتك في الحالات التالية:
             </p>
-            <ul>
+            <ul className="list-disc pr-5 space-y-2 mb-4">
               <li>
                 <strong>مع المستخدمين الآخرين:</strong> المعلومات التي تدرجها في ملفك الشخصي العام أو في إعلاناتك ستكون متاحة للزوار والمستخدمين الآخرين للمنصة.
               </li>
@@ -107,27 +107,27 @@ export default function PrivacyPolicyPage() {
               </li>
             </ul>
 
-            <h3>4. أمان البيانات</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">4. أمان البيانات</h3>
             <p>
               نتخذ تدابير أمنية تقنية وتنظيمية معقولة لحماية معلوماتك الشخصية من الفقدان، أو السرقة، أو الوصول غير المصرح به. نستخدم التشفير لحماية البيانات الحساسة (مثل كلمات المرور) ونجري مراجعات أمنية دورية. ومع ذلك، لا يمكن لأي نظام أمان أن يكون مضمونًا بنسبة 100%، لذا نشجعك على استخدام كلمة مرور قوية والحفاظ على سريتها.
             </p>
 
-            <h3>5. حقوقك وخياراتك</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">5. حقوقك وخياراتك</h3>
             <p>
               لديك الحق في الوصول إلى معلوماتك الشخصية وتحديثها أو حذفها. يمكنك القيام بذلك من خلال صفحة ملفك الشخصي وإدارة إعلاناتك. إذا كنت ترغب في حذف حسابك بشكل دائم، يرجى التواصل معنا عبر البريد الإلكتروني الموضح في صفحة <Link href="/contact">اتصل بنا</Link>.
             </p>
 
-            <h3>6. خصوصية الأطفال</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">6. خصوصية الأطفال</h3>
             <p>
               منصة "توظيفك" غير موجهة للأطفال دون سن 18 عامًا. نحن لا نجمع عمدًا أي معلومات شخصية من الأطفال. إذا اكتشفنا أننا قمنا بجمع معلومات من طفل دون موافقة والديه، سنتخذ الخطوات اللازمة لإزالة هذه المعلومات في أسرع وقت ممكن.
             </p>
 
-            <h3>7. التغييرات على سياسة الخصوصية</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">7. التغييرات على سياسة الخصوصية</h3>
             <p>
               قد نقوم بتحديث سياسة الخصوصية هذه من وقت لآخر لتعكس التغييرات في ممارساتنا أو لأسباب تشغيلية أو قانونية. سنقوم بإعلامك بأي تغييرات جوهرية عن طريق نشر السياسة الجديدة على هذه الصفحة وتحديث تاريخ "آخر تحديث". نشجعك على مراجعة هذه الصفحة بشكل دوري لتكون على اطلاع دائم.
             </p>
 
-            <h3>8. الاتصال بنا</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">8. الاتصال بنا</h3>
             <p>
               إذا كانت لديك أي أسئلة أو مخاوف بشأن سياسة الخصوصية هذه، فلا تتردد في التواصل معنا عبر البريد الإلكتروني المتاح على صفحة <Link href="/contact">اتصل بنا</Link>.
             </p>

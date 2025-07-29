@@ -55,8 +55,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: article.title,
     description: article.summary,
+    metadataBase: new URL(baseUrl),
     alternates: {
-        canonical: `${baseUrl}/articles/${article.slug}`,
+        canonical: `/articles/${article.slug}`,
     },
     openGraph: {
         title: article.title,
@@ -95,7 +96,7 @@ export default function ArticlePage({ params }: Props) {
     notFound();
   }
   
-  const contentBlocks = article.content.split('\n\n').map(paragraph => paragraph.trim()).filter(p => p.length > 0);
+  const contentBlocks = article.content.split('\n').map(paragraph => paragraph.trim()).filter(p => p.length > 0);
 
   return (
     <AppLayout>
@@ -133,22 +134,28 @@ export default function ArticlePage({ params }: Props) {
               <div className="prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-green-600 prose-a:text-primary">
                 {contentBlocks.map((block, index) => {
                     if (block.startsWith('### ')) {
-                        return <h3 key={index} className="text-2xl font-bold mt-6 mb-3">{block.replace('### ', '')}</h3>;
+                        return <h3 key={index} className="text-2xl font-bold mt-6 mb-3 text-green-600">{block.replace('### ', '')}</h3>;
                     }
                     if (block.startsWith('**') && block.endsWith('**')) {
                         return <p key={index} className="font-bold">{block.slice(2, -2)}</p>;
                     }
-                    if (/^\d+\./.test(block) || /^-/.test(block) || /^\*/.test(block)) {
-                        const listItems = block.split('\n').map(item => item.trim().replace(/^\d+\.\s*|^- \s*|^\* \s*/, ''));
-                        const isOrdered = /^\d+\./.test(block);
-                        const ListTag = isOrdered ? 'ol' : 'ul';
+                     if (/^\d+\./.test(block)) {
+                        const listItems = block.split('\n').filter(i => i.trim()).map(item => item.trim().replace(/^\d+\.\s*/, ''));
                         return (
-                            <ListTag key={index} className={isOrdered ? 'list-decimal pr-5' : 'list-disc pr-5'}>
-                                {listItems.map((item, i) => <li key={i}>{item}</li>)}
-                            </ListTag>
+                          <ol key={index} className="list-decimal pr-5 space-y-2 mb-4">
+                            {listItems.map((item, i) => <li key={i}>{item}</li>)}
+                          </ol>
                         );
                     }
-                    return <p key={index}>{block}</p>;
+                    if (/^-/.test(block) || /^\*/.test(block)) {
+                       const listItems = block.split('\n').filter(i => i.trim()).map(item => item.trim().replace(/^[-*]\s*/, ''));
+                        return (
+                            <ul key={index} className="list-disc pr-5 space-y-2 mb-4">
+                                {listItems.map((item, i) => <li key={i}>{item}</li>)}
+                            </ul>
+                        );
+                    }
+                    return <p key={index} className="mb-4">{block}</p>;
                 })}
               </div>
             </CardContent>

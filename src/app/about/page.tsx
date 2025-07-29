@@ -20,19 +20,19 @@ export default function AboutUsPage() {
       />
       <div className="container mx-auto max-w-3xl px-4 pb-8">
         <Card>
-          <CardHeader className="md:hidden">
-            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-red-600">
-              <Info className="h-6 w-6 text-red-600" />
+          <CardHeader>
+            <h1 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-red-600 md:text-3xl">
+              <Info className="h-6 w-6" />
               من نحن
             </h1>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground md:pt-6 prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-green-600 prose-a:text-primary">
+          <CardContent className="space-y-4 text-muted-foreground pt-0 md:pt-2 prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-a:text-primary">
             
             <p>
               أهلاً بك في منصة "توظيفك"، الجسر الرقمي الذي يربط بين الطموحات والفرص في قلب العالم العربي. نحن لسنا مجرد موقع إعلانات وظائف، بل مجتمع مهني متكامل يسعى لتمكين كل فرد من تحقيق ذاته، وكل شركة من العثور على الكفاءات التي تدفعها نحو النجاح.
             </p>
 
-            <h3>قصتنا: من فكرة إلى واقع</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">قصتنا: من فكرة إلى واقع</h3>
             <p>
               انطلقت "توظيفك" من ملاحظة بسيطة لكنها جوهرية: وجود فجوة كبيرة في سوق العمل العربي. من جهة، هناك الملايين من المهنيين والحرفيين المهرة الذين يبحثون عن فرصة لإبراز قدراتهم، ومن جهة أخرى، هناك آلاف الشركات وأصحاب المشاريع الذين يجدون صعوبة في الوصول إلى هذه الكفاءات بسرعة وفعالية. كانت الطرق التقليدية للبحث عن عمل أو موظفين تفتقر إلى المرونة والسرعة، وغالبًا ما تكون محصورة في نطاقات جغرافية ضيقة.
             </p>
@@ -40,16 +40,16 @@ export default function AboutUsPage() {
               من هنا، ولدت فكرة إنشاء منصة تجمع بين سهولة الاستخدام وقوة الوصول، منصة تخدم الجميع، من النجار والسباك إلى مهندس البرمجيات ومدير التسويق. أردنا أن نكسر الحواجز ونبني سوق عمل مفتوحًا وشفافًا، حيث القيمة الحقيقية هي للمهارة والخبرة، وليس فقط للشهادات الورقية.
             </p>
 
-            <h3>رؤيتنا: بناء مستقبل مهني أفضل</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">رؤيتنا: بناء مستقبل مهني أفضل</h3>
             <p>
               نطمح في "توظيفك" إلى أن نكون الوجهة الأولى والموثوقة للتوظيف في العالم العربي. رؤيتنا تتجاوز مجرد عرض الوظائف؛ نحن نسعى لبناء نظام بيئي متكامل يدعم النمو الاقتصادي، يعزز من قيمة العمل الحرفي والمهني، ويساهم في تقليل نسب البطالة من خلال توفير فرص حقيقية ومتاحة للجميع.
             </p>
 
-            <h3>مهمتنا: تمكين الأفراد والشركات</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">مهمتنا: تمكين الأفراد والشركات</h3>
             <p>
               مهمتنا واضحة ومحددة:
             </p>
-            <ul>
+            <ul className="list-disc pr-5 space-y-2 mb-4">
                 <li>
                     <strong>تسهيل التواصل:</strong> بناء جسور من الثقة والتواصل المباشر بين أصحاب العمل والباحثين عن فرص، دون وسطاء أو تعقيدات.
                 </li>
@@ -61,11 +61,11 @@ export default function AboutUsPage() {
                 </li>
             </ul>
             
-            <h3>قيمنا الأساسية: المبادئ التي تحكم عملنا</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">قيمنا الأساسية: المبادئ التي تحكم عملنا</h3>
             <p>
               كل ما نقوم به في "توظيفك" يرتكز على مجموعة من القيم الأساسية التي نؤمن بها:
             </p>
-            <ol>
+            <ol className="list-decimal pr-5 space-y-2 mb-4">
               <li>
                 <strong>الثقة والشفافية:</strong> نحن نلتزم بتوفير بيئة آمنة وموثوقة، حيث تكون جميع الإعلانات والمعلومات واضحة وشفافة. نحارب الإعلانات الوهمية ونسعى لضمان مصداقية كل فرصة تُعرض على منصتنا.
               </li>
@@ -80,7 +80,7 @@ export default function AboutUsPage() {
               </li>
             </ol>
 
-            <h3>ما الذي يميز "توظيفك"؟</h3>
+            <h3 className="text-xl font-bold mt-6 mb-3 text-green-600">ما الذي يميز "توظيفك"؟</h3>
             <p>
               في عالم مليء بمنصات التوظيف، نسعى في "توظيفك" لنكون مختلفين. نحن لا نركز فقط على وظائف الشركات الكبرى، بل نولي اهتمامًا خاصًا بالحرف والمهن اليدوية التي تشكل عصب الاقتصاد في العديد من مجتمعاتنا. منصتنا مصممة لتكون سهلة الاستخدام ومباشرة، مما يتيح لأي شخص، حتى لو لم يكن خبيرًا في التكنولوجيا، أن ينشر إعلانه أو يبحث عن فرصة بسهولة.
             </p>
