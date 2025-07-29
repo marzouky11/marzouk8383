@@ -26,17 +26,7 @@ const slidesData = [
     guestButtonLink: "/signup",
     buttonClass: "bg-blue-600 hover:bg-blue-700"
   },
-  {
-    key: 'explore-jobs',
-    src: "https://i.postimg.cc/VkgxknRj/2150995045-1-1.webp",
-    alt: "وظائف مميزة",
-    hint: "job opportunities",
-    title: "وظائف مميزة بانتظارك",
-    description: "استكشف الفرص المناسبة لمهاراتك واهتماماتك",
-    buttonText: "استكشف الآن",
-    buttonLink: "/jobs",
-    buttonClass: "bg-destructive hover:bg-destructive/90"
-  },
+  // كانت الثالثة، أصبحت الثانية
   {
     key: 'explore-workers',
     src: "https://i.postimg.cc/NMKqVFRR/2149300698-1-1-2.webp",
@@ -47,6 +37,18 @@ const slidesData = [
     buttonText: "استكشف الآن",
     buttonLink: "/workers",
     buttonClass: "bg-green-600 hover:bg-green-700"
+  },
+  // كانت الثانية، أصبحت الثالثة
+  {
+    key: 'explore-jobs',
+    src: "https://i.postimg.cc/VkgxknRj/2150995045-1-1.webp",
+    alt: "وظائف مميزة",
+    hint: "job opportunities",
+    title: "وظائف مميزة بانتظارك",
+    description: "استكشف الفرص المناسبة لمهاراتك واهتماماتك",
+    buttonText: "استكشف الآن",
+    buttonLink: "/jobs",
+    buttonClass: "bg-destructive hover:bg-destructive/90"
   }
 ];
 
@@ -84,10 +86,10 @@ export function HomeCarousel() {
               <div className="relative h-64 md:h-80">
                 <Image
                   src={slide.src}
-                  alt={slide.alt!}
+                  alt={slide.alt}
                   fill
-                  priority={isFirstSlide}  // تحميل فوري للصورة الأولى فقط
-                  loading={isFirstSlide ? 'eager' : 'lazy'}  // تحميل فوري للصورة الأولى
+                  priority={isFirstSlide}
+                  loading={isFirstSlide ? 'eager' : 'lazy'}
                   className="object-cover w-full h-full"
                   data-ai-hint={slide.hint}
                   sizes="(max-width: 768px) 100vw, 1200px"
@@ -97,7 +99,7 @@ export function HomeCarousel() {
                     <h2 className="text-3xl md:text-5xl font-bold leading-tight drop-shadow-md">{title}</h2>
                     <p className="text-base md:text-lg text-white/90 drop-shadow-sm">{description}</p>
                     <Button asChild size="lg" className={cn("text-white font-semibold transition-transform hover:scale-105", slide.buttonClass)}>
-                      <Link href={buttonLink!}>{buttonText}</Link>
+                      <Link href={buttonLink}>{buttonText}</Link>
                     </Button>
                   </div>
                 </div>
@@ -108,4 +110,4 @@ export function HomeCarousel() {
       </CarouselContent>
     </Carousel>
   );
-    }
+}
