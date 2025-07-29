@@ -14,7 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const slidesData = [
   {
     key: 'main',
-    src: "https://i.postimg.cc/SKZRd6Zt/2147923447-2-2.jpg",
+    src: "https://i.postimg.cc/WpDTYW7x/2147923447-2-2-1.webp",
     alt: "شخص يبدأ رحلته المهنية",
     hint: "professional journey start",
     authTitle: "ابدأ بنشر إعلانك الآن",
@@ -29,7 +29,7 @@ const slidesData = [
   },
   {
     key: 'explore-jobs',
-    src: "https://i.postimg.cc/XvTSnXXY/2150995045-1-1.jpg",
+    src: "https://i.postimg.cc/VkgxknRj/2150995045-1-1.webp",
     alt: "وظائف مميزة",
     hint: "job opportunities",
     title: "وظائف مميزة بانتظارك",
@@ -40,7 +40,7 @@ const slidesData = [
   },
   {
     key: 'explore-workers',
-    src: "https://i.postimg.cc/BnSJz81W/2149300698-1-1.jpg",
+    src: "https://i.postimg.cc/NMKqVFRR/2149300698-1-1-2.webp",
     alt: "عامل محترف",
     hint: "professional worker",
     title: "عمّال محترفون في جميع المجالات",
