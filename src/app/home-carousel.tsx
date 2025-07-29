@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const slidesData = [
   {
     key: 'main',
-    src: "/slide1.webp", // ✅ الصورة الأولى
+    src: "/slide1.webp",
     alt: "شخص يبدأ رحلته المهنية",
     hint: "professional journey start",
     authTitle: "ابدأ بنشر إعلانك الآن",
@@ -28,7 +28,7 @@ const slidesData = [
   },
   {
     key: 'explore-jobs',
-    src: "/slide2.webp", // ✅ الصورة الثانية
+    src: "/slide2.webp",
     alt: "وظائف مميزة",
     hint: "job opportunities",
     title: "وظائف مميزة بانتظارك",
@@ -39,7 +39,7 @@ const slidesData = [
   },
   {
     key: 'explore-workers',
-    src: "/slide3.webp", // ✅ الصورة الثالثة
+    src: "/slide3.webp",
     alt: "عامل محترف",
     hint: "professional worker",
     title: "عمّال محترفون في جميع المجالات",
@@ -108,4 +108,4 @@ export function HomeCarousel() {
       </CarouselContent>
     </Carousel>
   );
-  
+}
