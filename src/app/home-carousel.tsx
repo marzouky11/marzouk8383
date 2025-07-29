@@ -28,17 +28,6 @@ const slidesData = [
     buttonClass: "bg-blue-600 hover:bg-blue-700"
   },
   {
-    key: 'explore-workers',
-    src: "https://i.postimg.cc/BnSJz81W/2149300698-1-1.jpg",
-    alt: "عامل محترف",
-    hint: "professional worker",
-    title: "عمّال محترفون في جميع المجالات",
-    description: "من البناء إلى التقنية – الجميع هنا",
-    buttonText: "استكشف الآن",
-    buttonLink: "/workers",
-    buttonClass: "bg-destructive hover:bg-destructive/90"
-  },
-  {
     key: 'explore-jobs',
     src: "https://i.postimg.cc/XvTSnXXY/2150995045-1-1.jpg",
     alt: "وظائف مميزة",
@@ -48,6 +37,17 @@ const slidesData = [
     buttonText: "استكشف الآن",
     buttonLink: "/jobs",
     buttonClass: "bg-green-600 hover:bg-green-700"
+  },
+  {
+    key: 'explore-workers',
+    src: "https://i.postimg.cc/BnSJz81W/2149300698-1-1.jpg",
+    alt: "عامل محترف",
+    hint: "professional worker",
+    title: "عمّال محترفون في جميع المجالات",
+    description: "من البناء إلى التقنية – الجميع هنا",
+    buttonText: "استكشف الآن",
+    buttonLink: "/workers",
+    buttonClass: "bg-destructive hover:bg-destructive/90"
   }
 ];
 
