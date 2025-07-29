@@ -26,19 +26,6 @@ const slidesData = [
     guestButtonLink: "/signup",
     buttonClass: "bg-blue-600 hover:bg-blue-700"
   },
-  // كانت الثالثة، أصبحت الثانية
-  {
-    key: 'explore-workers',
-    src: "https://i.postimg.cc/NMKqVFRR/2149300698-1-1-2.webp",
-    alt: "عامل محترف",
-    hint: "professional worker",
-    title: "عمّال محترفون في جميع المجالات",
-    description: "من البناء إلى التقنية – الجميع هنا",
-    buttonText: "استكشف الآن",
-    buttonLink: "/workers",
-    buttonClass: "bg-green-600 hover:bg-green-700"
-  },
-  // كانت الثانية، أصبحت الثالثة
   {
     key: 'explore-jobs',
     src: "https://i.postimg.cc/VkgxknRj/2150995045-1-1.webp",
@@ -49,6 +36,17 @@ const slidesData = [
     buttonText: "استكشف الآن",
     buttonLink: "/jobs",
     buttonClass: "bg-destructive hover:bg-destructive/90"
+  },
+  {
+    key: 'explore-workers',
+    src: "https://i.postimg.cc/NMKqVFRR/2149300698-1-1-2.webp",
+    alt: "عامل محترف",
+    hint: "professional worker",
+    title: "عمّال محترفون في جميع المجالات",
+    description: "من البناء إلى التقنية – الجميع هنا",
+    buttonText: "استكشف الآن",
+    buttonLink: "/workers",
+    buttonClass: "bg-green-600 hover:bg-green-700"
   }
 ];
 
@@ -86,10 +84,10 @@ export function HomeCarousel() {
               <div className="relative h-64 md:h-80">
                 <Image
                   src={slide.src}
-                  alt={slide.alt}
+                  alt={slide.alt!}
                   fill
-                  priority={isFirstSlide}
-                  loading={isFirstSlide ? 'eager' : 'lazy'}
+                  priority={isFirstSlide}  // تحميل فوري للصورة الأولى فقط
+                  loading={isFirstSlide ? 'eager' : 'lazy'}  // تحميل فوري للصورة الأولى
                   className="object-cover w-full h-full"
                   data-ai-hint={slide.hint}
                   sizes="(max-width: 768px) 100vw, 1200px"
@@ -98,9 +96,16 @@ export function HomeCarousel() {
                   <div className="max-w-md md:max-w-lg text-white space-y-4">
                     <h2 className="text-3xl md:text-5xl font-bold leading-tight drop-shadow-md">{title}</h2>
                     <p className="text-base md:text-lg text-white/90 drop-shadow-sm">{description}</p>
-                    <Button asChild size="lg" className={cn("text-white font-semibold transition-transform hover:scale-105", slide.buttonClass)}>
-                      <Link href={buttonLink}>{buttonText}</Link>
-                    </Button>
+                    {buttonText && buttonLink && (
+                      <Button
+                        asChild
+                        size="lg"
+                        className={cn("text-white font-semibold transition-transform hover:scale-105", slide.buttonClass)}
+                      >
+                        {/* force casting buttonLink as string because we've checked it exists */}
+                        <Link href={buttonLink as string}>{buttonText}</Link>
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
