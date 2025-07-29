@@ -32,22 +32,22 @@ const slidesData = [
     src: "https://i.postimg.cc/NMKqVFRR/2149300698-1-1-2.webp",
     alt: "عامل محترف",
     hint: "professional worker",
-    title: "عمّال محترفون في جميع المجالات",
-    description: "من البناء إلى التقنية – الجميع هنا",
+    title: "وظائف مميزة بانتظارك",
+    description: "استكشف الفرص المناسبة لمهاراتك واهتماماتك",
     buttonText: "استكشف الآن",
-    buttonLink: "/workers",
-    buttonClass: "bg-destructive hover:bg-destructive/90"
+    buttonLink: "/jobs",
+    buttonClass: "bg-green-600 hover:bg-green-700"
   },
   {
     key: 'explore-jobs',
     src: "https://i.postimg.cc/VkgxknRj/2150995045-1-1.webp",
     alt: "وظائف مميزة",
     hint: "job opportunities",
-    title: "وظائف مميزة بانتظارك",
-    description: "استكشف الفرص المناسبة لمهاراتك واهتماماتك",
+    title: "عمّال محترفون في جميع المجالات",
+    description: "من البناء إلى التقنية – الجميع هنا",
     buttonText: "استكشف الآن",
-    buttonLink: "/jobs",
-    buttonClass: "bg-green-600 hover:bg-green-700"
+    buttonLink: "/workers",
+    buttonClass: "bg-destructive hover:bg-destructive/90"
   }
 ];
 
