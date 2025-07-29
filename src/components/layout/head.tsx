@@ -1,11 +1,13 @@
 export default function Head() {
   return (
     <>
-      {/* Preload للصورة الأولى في الكاروسيل */}
+      {/* ✅ Preload محسّن للصورة الأولى في الكاروسيل */}
       <link
         rel="preload"
         as="image"
         href="https://i.postimg.cc/WpDTYW7x/2147923447-2-2-1.webp"
+        type="image/webp"
+        fetchpriority="high"
       />
 
       {/* إعدادات أساسية للصفحة */}
@@ -16,4 +18,4 @@ export default function Head() {
       <link rel="icon" href="/favicon.ico" />
     </>
   );
-      }
+}
